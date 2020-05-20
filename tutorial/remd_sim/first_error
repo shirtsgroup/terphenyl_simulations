@@ -1,0 +1,194 @@
+Submitted batch job 4314774
+sim0
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim1
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim2
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim3
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim4
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim5
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim6
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim7
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim8
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim9
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim10
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim11
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim12
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim13
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim14
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim15
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim16
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim17
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim18
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+sim19
+[proxy:0:0@sgpu0301.rc.int.colorado.edu] HYDU_create_process (../../utils/launch/launch.c:825): execvp error on file gmx (No such file or directory)
+                      :-) GROMACS - gmx mdrun, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx mdrun, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymers/tutorial/remd_sim
+Command line:
+  gmx_mpi mdrun -v -multidir sim0 sim1 sim2 sim3 sim4 sim5 sim6 sim7 sim8 sim9 sim10 sim11 sim12 sim13 sim14 sim15 sim16 sim17 sim18 sim19 -deffnm npt -ntomp 6 -nex 8000 -replex 100
+
+Compiled SIMD: SSE4.1, but for this host/run AVX2_256 might be better (see
+log).
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+
+-------------------------------------------------------
+Program:     gmx mdrun, version 2018.1
+Source file: src/gromacs/utility/futil.cpp (line 514)
+MPI rank:    10 (out of 20)
+
+File input/output error:
+npt.tpr
+
+For more information and tips for troubleshooting, please check the GROMACS
+website at http://www.gromacs.org/Documentation/Errors
+-------------------------------------------------------
+
+-------------------------------------------------------
+Program:     gmx mdrun, version 2018.1
+Source file: src/gromacs/utility/futil.cpp (line 514)
+MPI rank:    1 (out of 20)
+
+File input/output error:
+npt.tpr
+
+For more information and tips for troubleshooting, please check the GROMACS
+website at http://www.gromacs.org/Documentation/Errors
+-------------------------------------------------------
+
+-------------------------------------------------------
+Program:     gmx mdrun, version 2018.1
+Source file: src/gromacs/utility/futil.cpp (line 514)
+MPI rank:    9 (out of 20)
+
+File input/output error:
+npt.tpr
+
+For more information and tips for troubleshooting, please check the GROMACS
+website at http://www.gromacs.org/Documentation/Errors
+-------------------------------------------------------
+application called MPI_Abort(MPI_COMM_WORLD, 1) - process 9
+application called MPI_Abort(MPI_COMM_WORLD, 1) - process 10
