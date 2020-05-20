@@ -1,0 +1,1 @@
+python extract_2D_dihedrals.py --file_id RHH_aromatic --dihedral_ids 1 2 3 --struct_file /mnt/summit/octamer_Rchiral/RHH/1/berendsen.gro --traj_files /mnt/summit/octamer_Rchiral/RHH/1/npt_whole.xtc /mnt/summit/octamer_Rchiral/RHH/2/npt_whole.xtc /mnt/summit/octamer_Rchiral/RHH/3/npt_whole.xtc /mnt/summit/octamer_Rchiral/RHH/4/npt_whole.xtc --itp_path MAKE_THIS
