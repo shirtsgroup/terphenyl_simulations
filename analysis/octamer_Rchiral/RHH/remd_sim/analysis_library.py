@@ -57,4 +57,5 @@ def construct_u_kln_matrix(t_list, energies, add_temps = np.linspace(230, 325, 2
         for l in range(K_all):
             u_kln[k,l,:] = betas[l] * energies[k]
 
-    return u_kln, n_samples
+    return u_kln, n_samples, t_list, betas
+
