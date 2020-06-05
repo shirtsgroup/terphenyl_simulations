@@ -1,0 +1,2836 @@
+Submitted batch job 5182655
+sim0
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim0
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 632466398
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 202.891 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.112 0.112 0.112
+Estimate for the relative computational load of the PME mesh part: 0.52
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "I Am a Poor Lonesome Cowboy" (Lucky Luke)
+
+sim1
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim1
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 564036609
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 202.891 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.52
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.112 0.112 0.112
+This run will generate roughly 407 Mb of data
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "Wild Pointers Couldn't Drag Me Away" (K.A. Feenstra)
+
+sim2
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim2
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -944029902
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 205.823 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.112 0.112 0.112
+Estimate for the relative computational load of the PME mesh part: 0.52
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "If humanity has fled shivering from the starry spaces, it has become minutely at home in the interstices of the speck that it inhabits for an instant" (George H. Mead)
+
+sim3
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim3
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 526660143
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 208.797 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.113 0.113 0.113
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.52
+This run will generate roughly 407 Mb of data
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "It's Time to Move On" (F. Black)
+
+sim4
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim4
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -408026762
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 211.815 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.113 0.113 0.113
+Estimate for the relative computational load of the PME mesh part: 0.52
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "Always code as if the person who ends up maintaining your code is a violent psychopath who knows where you live." (Martin Golding)
+
+sim5
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim5
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 1635071377
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 214.876 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.113 0.113 0.113
+Estimate for the relative computational load of the PME mesh part: 0.53
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "You Hear Footsteps Coming From Behind" (Colossal Cave)
+
+sim6
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim6
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 596397336
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 217.982 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.113 0.113 0.113
+Estimate for the relative computational load of the PME mesh part: 0.53
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "You're like them scientists on TV explaining black holes. More you talk, less I get" (Jess Walter)
+
+sim7
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim7
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 668256943
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 221.132 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.53
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.113 0.113 0.113
+This run will generate roughly 407 Mb of data
+
+GROMACS reminds you: "It was something to at least have a choice of nightmares" (Joseph Conrad)
+
+sim8
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim8
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 251938720
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 224.328 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.113 0.113 0.113
+Estimate for the relative computational load of the PME mesh part: 0.53
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "There are two major products that come out of Berkeley: LSD and UNIX. We don't believe this to be a coincidence." (Jeremy Anderson)
+
+sim9
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim9
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -907164548
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 227.57 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.113 0.113 0.113
+Estimate for the relative computational load of the PME mesh part: 0.53
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "'Nay. We are but men.' Rock!" (Tenacious D)
+
+sim10
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim10
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -1095394911
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 230.859 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.113 0.113 0.113
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.53
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "In this house, we OBEY the laws of thermodynamics!" (Homer Simpson)
+
+sim11
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim11
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 1924847225
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 234.196 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.114 0.114 0.114
+Estimate for the relative computational load of the PME mesh part: 0.53
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "In this house, we OBEY the laws of thermodynamics!" (Homer Simpson)
+
+sim12
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim12
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -421703485
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 237.581 K
+[mpiexec@sgpu0402.rc.int.colorado.edu] Sending Ctrl-C to processes as requested
+[mpiexec@sgpu0402.rc.int.colorado.edu] Press Ctrl-C again to force abort
+sim13
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim13
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -1557491470
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 241.014 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.114 0.114 0.114
+Estimate for the relative computational load of the PME mesh part: 0.53
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "If You Want Something Done You Have to Do It Yourself" (Highlander II)
+
+sim14
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim14
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -447270269
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 244.497 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.114 0.114 0.114
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.53
+This run will generate roughly 407 Mb of data
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "I removed all the lambda defaults so that users have to think!" (Berk Hess)
+
+sim15
+[mpiexec@sgpu0402.rc.int.colorado.edu] Sending Ctrl-C to processes as requested
+[mpiexec@sgpu0402.rc.int.colorado.edu] Press Ctrl-C again to force abort
+[mpiexec@sgpu0402.rc.int.colorado.edu] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@sgpu0402.rc.int.colorado.edu] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+[mpiexec@sgpu0402.rc.int.colorado.edu] ui_cmd_cb (../../pm/pmiserv/pmiserv_pmci.c:174): unable to send signal downstream
+[mpiexec@sgpu0402.rc.int.colorado.edu] HYDT_dmxu_poll_wait_for_event (../../tools/demux/demux_poll.c:76): callback returned error status
+[mpiexec@sgpu0402.rc.int.colorado.edu] HYD_pmci_wait_for_completion (../../pm/pmiserv/pmiserv_pmci.c:501): error waiting for event
+[mpiexec@sgpu0402.rc.int.colorado.edu] main (../../ui/mpich/mpiexec.c:1147): process manager error waiting for completion
+sim16
+[mpiexec@sgpu0402.rc.int.colorado.edu] Sending Ctrl-C to processes as requested
+[mpiexec@sgpu0402.rc.int.colorado.edu] Press Ctrl-C again to force abort
+sim17
+[mpiexec@sgpu0402.rc.int.colorado.edu] Sending Ctrl-C to processes as requested
+[mpiexec@sgpu0402.rc.int.colorado.edu] Press Ctrl-C again to force abort
+sim18
+[mpiexec@sgpu0402.rc.int.colorado.edu] Sending Ctrl-C to processes as requested
+[mpiexec@sgpu0402.rc.int.colorado.edu] Press Ctrl-C again to force abort
+sim19
+[mpiexec@sgpu0402.rc.int.colorado.edu] Sending Ctrl-C to processes as requested
+[mpiexec@sgpu0402.rc.int.colorado.edu] Press Ctrl-C again to force abort
+[mpiexec@sgpu0402.rc.int.colorado.edu] HYDU_sock_write (../../utils/sock/sock.c:418): write error (Bad file descriptor)
+[mpiexec@sgpu0402.rc.int.colorado.edu] HYD_pmcd_pmiserv_send_signal (../../pm/pmiserv/pmiserv_cb.c:252): unable to write data to proxy
+[mpiexec@sgpu0402.rc.int.colorado.edu] ui_cmd_cb (../../pm/pmiserv/pmiserv_pmci.c:174): unable to send signal downstream
+[mpiexec@sgpu0402.rc.int.colorado.edu] HYDT_dmxu_poll_wait_for_event (../../tools/demux/demux_poll.c:76): callback returned error status
+[mpiexec@sgpu0402.rc.int.colorado.edu] HYD_pmci_wait_for_completion (../../pm/pmiserv/pmiserv_pmci.c:501): error waiting for event
+[mpiexec@sgpu0402.rc.int.colorado.edu] main (../../ui/mpich/mpiexec.c:1147): process manager error waiting for completion
+sim20
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim20
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 1193109899
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 266.48 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.115 0.115 0.115
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "We are perhaps not far removed from the time when we shall be able to submit the bulk of chemical phenomena to calculation." (Joseph Gay-Lussac, 1808)
+
+sim21
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim21
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 2022170717
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 270.331 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.115 0.115 0.115
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "Jesus Not Only Saves, He Also Frequently Makes Backups." (Myron Bradshaw)
+
+sim22
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim22
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 1595326436
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 274.238 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.115 0.115 0.115
+This run will generate roughly 407 Mb of data
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "Carry Me Away" (Motors)
+
+sim23
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim23
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -1397915447
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 278.202 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.116 0.116 0.116
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "I Need a Little Poison" (Throwing Muses)
+
+sim24
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim24
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 1286245255
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 282.223 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.115 0.115 0.115
+This run will generate roughly 407 Mb of data
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "Push It Real Good" (Salt 'n' Pepa)
+
+sim25
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim25
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -806854784
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 286.301 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.116 0.116 0.116
+This run will generate roughly 407 Mb of data
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "Check Your Output" (P. Ahlstrom)
+
+sim26
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim26
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 1438257632
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 290.439 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.116 0.116 0.116
+This run will generate roughly 407 Mb of data
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "Only entropy comes easy." (Anton Chekov)
+
+sim27
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim27
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -1043483356
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 294.637 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.117 0.117 0.117
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "Why, how now, Claudio ! Whence Comes this Restraint ?" (Lucio in Measure for measure, Act 1, Scene 4, William Shakespeare)
+
+sim28
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim28
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -2104611781
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 298.895 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.117 0.117 0.117
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "You Will Be Surprised At What Resides In Your Inside" (Arrested Development)
+
+sim29
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim29
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -2125096294
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 303.215 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.54
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.117 0.117 0.117
+This run will generate roughly 407 Mb of data
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+
+GROMACS reminds you: "You Fill Your Space So Sweet" (F. Apple)
+
+sim30
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim30
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -628312526
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 307.597 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Using a fourier grid of 48x48x48, spacing 0.118 0.118 0.118
+Estimate for the relative computational load of the PME mesh part: 0.55
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "Ich Bin Ein Berliner" (J.F. Kennedy)
+
+sim31
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim31
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 320142077
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 312.043 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.117 0.117 0.117
+This run will generate roughly 407 Mb of data
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.54
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "The Path Of the Righteous Man is Beset On All Sides With the Iniquities Of the Selfish and the Tyranny Of Evil Men." (Pulp Fiction)
+
+sim32
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim32
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 920180994
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 316.553 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.118 0.118 0.118
+This run will generate roughly 407 Mb of data
+Estimate for the relative computational load of the PME mesh part: 0.55
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "I'd be Safe and Warm if I was in L.A." (The Mamas and the Papas)
+
+sim33
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim33
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -1431063804
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 321.128 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.55
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.118 0.118 0.118
+This run will generate roughly 407 Mb of data
+
+GROMACS reminds you: "X-rays will prove to be a hoax." (Lord Kelvin, while president of the Royal Society)
+
+sim34
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim34
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 475157285
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 325.769 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.118 0.118 0.118
+Estimate for the relative computational load of the PME mesh part: 0.55
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "She's Not Bad, She's Just Genetically Mean" (Captain Beefheart)
+
+sim35
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim35
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 1099238541
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 330.477 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.118 0.118 0.118
+This run will generate roughly 407 Mb of data
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.55
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "This isn't right. This isn't even wrong." (Wolfgang Pauli)
+
+sim36
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim36
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 1575942121
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 335.253 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.119 0.119 0.119
+Estimate for the relative computational load of the PME mesh part: 0.55
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "In science, truth always wins." (Max Perutz)
+
+sim37
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim37
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 1681697518
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 340.098 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 48x48x48, spacing 0.119 0.119 0.119
+This run will generate roughly 407 Mb of data
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.55
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "It all works because Avogadro's number is closer to infinity than to 10." (Ralph Baierlein)
+
+sim38
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim38
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to -623069619
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 345.014 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Using a fourier grid of 48x48x48, spacing 0.119 0.119 0.119
+Estimate for the relative computational load of the PME mesh part: 0.55
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+This run will generate roughly 407 Mb of data
+
+There were 2 notes
+
+GROMACS reminds you: "The farther the experiment is from theory, the closer it is to the Nobel Prize." (Irene Joliot-Curie)
+
+sim39
+                      :-) GROMACS - gmx grompp, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim39
+Command line:
+  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
+
+Ignoring obsolete mdp entry 'title'
+Setting the LD random seed to 322945272
+Generated 78 of the 78 non-bonded parameter combinations
+Generating 1-4 interactions: fudge = 0.5
+Generated 78 of the 78 1-4 parameter combinations
+Excluding 3 bonded neighbours molecule type 'OCT'
+turning H bonds into constraints...
+Excluding 3 bonded neighbours molecule type 'TCM'
+turning H bonds into constraints...
+Removing all charge groups because cutoff-scheme=Verlet
+Analysing residue names:
+There are:  1262      Other residues
+Analysing residues not classified as Protein/DNA/RNA/Water and splitting into groups...
+Number of degrees of freedom in T-Coupling group System is 18606.00
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 350 K
+Calculated rlist for 1x1 atom pair-list as 1.000 nm, buffer size 0.000 nm
+Set rlist, assuming 4x4 atom pair-list, to 1.000 nm, buffer size 0.000 nm
+Note that mdrun will redetermine rlist based on the actual pair-list setup
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 52x52x52, spacing 0.111 0.111 0.111
+This run will generate roughly 407 Mb of data
+
+NOTE 1 [file npt.mdp]:
+  You are using geometric combination rules in LJ-PME, but your non-bonded
+  C6 parameters do not follow these rules. This will introduce very small
+  errors in the forces and energies in your simulations. Dispersion
+  correction will correct total energy and/or pressure for isotropic
+  systems, but not forces or surface tensions.
+
+Estimate for the relative computational load of the PME mesh part: 0.60
+
+NOTE 2 [file npt.mdp]:
+  The optimal PME mesh load for parallel simulations is below 0.5
+  and for highly parallel simulations between 0.25 and 0.33,
+  for higher performance, increase the cut-off and the PME grid spacing.
+
+
+
+There were 2 notes
+
+GROMACS reminds you: "Don't be afraid of hard work. Nothing worthwhile comes easily. Don't let others discourage you or tell you that you can't do it. In my day I was told women didn't go into chemistry. I saw no reason why we couldn't." (Gertrude Elion)
+
+                      :-) GROMACS - gmx mdrun, 2018.1 (-:
+
+                            GROMACS is written by:
+     Emile Apol      Rossen Apostolov      Paul Bauer     Herman J.C. Berendsen
+    Par Bjelkmar    Aldert van Buuren   Rudi van Drunen     Anton Feenstra  
+  Gerrit Groenhof    Aleksei Iupinov   Christoph Junghans   Anca Hamuraru   
+ Vincent Hindriksen Dimitrios Karkoulis    Peter Kasson        Jiri Kraus    
+  Carsten Kutzner      Per Larsson      Justin A. Lemkul    Viveca Lindahl  
+  Magnus Lundborg   Pieter Meulenhoff    Erik Marklund      Teemu Murtola   
+    Szilard Pall       Sander Pronk      Roland Schulz     Alexey Shvetsov  
+   Michael Shirts     Alfons Sijbers     Peter Tieleman    Teemu Virolainen 
+ Christian Wennberg    Maarten Wolf   
+                           and the project leaders:
+        Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2017, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx mdrun, version 2018.1
+Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K
+Command line:
+  gmx_mpi mdrun -v -multidir sim0 sim1 sim2 sim3 sim4 sim5 sim6 sim7 sim8 sim9 sim10 sim11 sim12 sim13 sim14 sim15 sim16 sim17 sim18 sim19 -deffnm npt -ntomp 3 -nex 8000 -replex 100
+
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+
+Back Off! I just backed up npt.log to ./#npt.log.3#
+Compiled SIMD: SSE4.1, but for this host/run AVX2_256 might be better (see
+log).
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+Reading file npt.tpr, VERSION 2018.1 (single precision)
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+Reading file npt.tpr, VERSION 2018.1 (single precision)
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+Reading file npt.tpr, VERSION 2018.1 (single precision)
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+
+-------------------------------------------------------
+Program:     gmx mdrun, version 2018.1
+Source file: src/gromacs/utility/futil.cpp (line 514)
+MPI rank:    30 (out of 40)
+
+File input/output error:
+npt.tpr
+
+For more information and tips for troubleshooting, please check the GROMACS
+website at http://www.gromacs.org/Documentation/Errors
+-------------------------------------------------------
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+
+-------------------------------------------------------
+Program:     gmx mdrun, version 2018.1
+Source file: src/gromacs/utility/futil.cpp (line 514)
+MPI rank:    32 (out of 40)
+
+File input/output error:
+npt.tpr
+
+For more information and tips for troubleshooting, please check the GROMACS
+website at http://www.gromacs.org/Documentation/Errors
+-------------------------------------------------------
+application called MPI_Abort(MPI_COMM_WORLD, 1) - process 32
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+
+-------------------------------------------------------
+Program:     gmx mdrun, version 2018.1
+Source file: src/gromacs/utility/futil.cpp (line 514)
+MPI rank:    34 (out of 40)
+
+File input/output error:
+npt.tpr
+
+For more information and tips for troubleshooting, please check the GROMACS
+website at http://www.gromacs.org/Documentation/Errors
+-------------------------------------------------------
+application called MPI_Abort(MPI_COMM_WORLD, 1) - process 34
+The current CPU can measure timings more accurately than the code in
+gmx mdrun was configured to use. This might affect your simulation
+speed as accurate timings are needed for load-balancing.
+Please consider rebuilding gmx mdrun with the GMX_USE_RDTSCP=ON CMake option.
+
+-------------------------------------------------------
+Program:     gmx mdrun, version 2018.1
+Source file: src/gromacs/utility/futil.cpp (line 514)
+MPI rank:    38 (out of 40)
+
+File input/output error:
+npt.tpr
+
+For more information and tips for troubleshooting, please check the GROMACS
+website at http://www.gromacs.org/Documentation/Errors
+-------------------------------------------------------
+application called MPI_Abort(MPI_COMM_WORLD, 1) - process 38
