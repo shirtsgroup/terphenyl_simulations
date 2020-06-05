@@ -1,7 +1,9 @@
 import os
 import numpy as np
 from scipy.constants import physical_constants
+import mdtraj
 import panedr
+from multiprocessing import Pool
 
 kb = physical_constants["Boltzmann constant"][0] *  physical_constants["Avogadro constant"][0] / 1000 # J (molK)^-1
 
@@ -58,4 +60,36 @@ def construct_u_kln_matrix(t_list, energies, add_temps = np.linspace(230, 325, 2
             u_kln[k,l,:] = betas[l] * energies[k]
 
     return u_kln, n_samples, t_list, betas
+
+class REMD_trajectories:
+    def __init__(self, path, traj_id, traj_file_type, sim_id, top, np = 4):
+        self.path = path
+        self.top = top
+        self.sim_id = sim_id
+        self.n_replicas = len([a for a in os.listdir(self.path) if a.startswith(sim_id)])
+        self.trajs = []
+        self.temps = []
+        self.traj_id = traj_id
+        self.traj_file_type = traj_file_type
+
+        pool = Pool(np)
+        # read-in replica data
+        self.trajs, self.temps =zip(*pool.map(self.read_replica, range(self.n_replicas)))
+
+
+    def read_replica(self, i):
+        print("Replica", i)
+        with open(os.path.join(self.path, self.sim_id + str(i), "npt.mdp"), "r")as f:
+            for line in f.readlines():
+                if "ref-t" in line:
+                    T = float(line.split()[-1])
+        traj_files = []
+        for file in os.listdir(os.path.join(self.path, self.sim_id + str(i),)):
+            if file.startswith(self.traj_id) and file.endswith(self.traj_file_type):
+                traj_files.append(os.path.join(self.path, self.sim_id + str(i),file))
+        traj = mdtraj.load(traj_files, top=self.top)
+        return(traj, T)
+
+
+
 
