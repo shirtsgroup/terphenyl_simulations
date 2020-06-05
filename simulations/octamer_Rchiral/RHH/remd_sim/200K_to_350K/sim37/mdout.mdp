@@ -1,17 +1,17 @@
 ;
 ;	File 'mdout.mdp' was generated
-;	By user: tfobe (1000)
-;	On host: grays-peak
-;	At date: Tue Jun  2 13:44:36 2020
+;	By user: unknown (564249)
+;	On host: sgpu0402.rc.int.colorado.edu
+;	At date: Fri Jun  5 15:37:04 2020
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2018.1 (-:
 ;	
-;	Executable:   /usr/bin/gmx
-;	Data prefix:  /usr
-;	Working dir:  /mnt/summit/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim37
+;	Executable:   /projects/beco4952/pkgs/gromacs/2018_gpu/bin/gmx_mpi
+;	Data prefix:  /projects/beco4952/pkgs/gromacs/2018_gpu
+;	Working dir:  /gpfs/summit/scratch/thfo9888/heteropolymer_simulations/simulations/octamer_Rchiral/RHH/remd_sim/200K_to_350K/sim37
 ;	Command line:
-;	  gmx grompp -f berendsen.mdp -c em_solvated.gro -p topol.top -o berendsen
+;	  gmx_mpi grompp -f npt.mdp -p topol.top -c berendsen.gro -o npt
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -25,7 +25,7 @@ integrator               = md
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 2500000
+nsteps                   = 55000000
 ; For exact run continuation or redoing part of a run
 init-step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -155,7 +155,7 @@ sa-surface-tension       = -1
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling  
-Tcoupl                   = berendsen
+Tcoupl                   = v-rescale
 nsttcouple               = -1
 nh-chain-length          = 10
 print-nose-hoover-chain-variables = no
@@ -165,11 +165,11 @@ tc-grps                  = system
 tau-t                    = 2
 ref-t                    = 340.0983732835388
 ; pressure coupling     
-Pcoupl                   = berendsen
+Pcoupl                   = Parrinello-Rahman
 Pcoupltype               = isotropic
 nstpcouple               = -1
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
-tau-p                    = 1
+tau-p                    = 20
 compressibility          = 4.5e-5
 ref-p                    = 1
 ; Scaling of reference coordinates, No, All or COM
@@ -211,7 +211,7 @@ annealing-time           =
 annealing-temp           = 
 
 ; GENERATE VELOCITIES FOR STARTUP RUN
-gen-vel                  = yes
+gen-vel                  = no
 gen-temp                 = 340.0983732835388
 gen-seed                 = -1
 
@@ -230,7 +230,7 @@ lincs-order              = 4
 ; Number of iterations in the final step of LINCS. 1 is fine for
 ; normal simulations, but use 2 to conserve energy in NVE runs.
 ; For energy minimization with constraints it should be 4 to 8.
-lincs-iter               = 1
+lincs-iter               = 2
 ; Lincs will write a warning to the stderr if in one step a bond
 ; rotates over more degrees than
 lincs-warnangle          = 30

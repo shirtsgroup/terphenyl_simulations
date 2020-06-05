@@ -1,7 +1,7 @@
 title = NPT simulation of solvated.gro at 270.3314894553765 K
 integrator = md
 dt = 0.002
-nsteps = -1
+nsteps = 55000000
 constraints = h-bonds
 constraint-algorithm = lincs
 lincs-order = 4
