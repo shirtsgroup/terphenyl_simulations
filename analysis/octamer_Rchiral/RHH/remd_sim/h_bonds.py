@@ -31,6 +31,9 @@ class REMD_trajectories:
         traj_files = []
         all_files = os.listdir(os.path.join(self.path, self.sim_id + str(i),))
         all_files.sort()
+        all_files.remove(self.traj_id + "." + self.traj_file_type)
+        all_files.insert(0, self.traj_id + "." + self.traj_file_type)
+        
         for file in all_files:
             if file.startswith(self.traj_id) and file.endswith(self.traj_file_type):
                 print(file)
