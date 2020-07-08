@@ -24,7 +24,7 @@ if [ -f sim0/npt.cpt ]; then
         cd ..;
     done
     # Run simulation from top directory
-    mpirun -np 40 gmx_mpi mdrun -v -multidir sim{0..19} -deffnm npt -cpi npt.cpt -noappend -ntomp 3 -nex 8000 -replex 100
+    mpirun -np 40 gmx_mpi mdrun -v -multidir sim{0..39} -deffnm npt -cpi npt.cpt -noappend -ntomp 3 -nex 8000 -replex 100
 else
     # For loop for initializing simulation
     for dir in sim{0..39};
@@ -34,5 +34,5 @@ else
         cd ..;
     done
     # Initial run of simulation
-    mpirun -np 40 gmx_mpi mdrun -v -multidir sim{0..19} -deffnm npt -ntomp 3 -nex 8000 -replex 100
+    mpirun -np 40 gmx_mpi mdrun -v -multidir sim{0..39} -deffnm npt -ntomp 3 -nex 8000 -replex 100
 fi
