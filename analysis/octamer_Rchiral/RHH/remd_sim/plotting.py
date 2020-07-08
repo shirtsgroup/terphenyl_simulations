@@ -27,3 +27,12 @@ def plot_bootstrapped_heat_capacity(mu_cp_boot, sigma_cp_boot, t_list, n_replica
     plt.errorbar(t_list[:n_replicas], mu_cp_boot[:n_replicas], yerr=2*sigma_cp_boot[:n_replicas], fmt=".")
     plt.ylabel("Heat Capacity ($C_p$)")
     plt.xlabel("Temperature (K)")
+
+
+def plot_remd_dihedrals(torsion_matrix, alpha = 0.1, bins = 50):
+    for i_torsion in range(len(torsion_matrix)):
+        plt.figure()
+        for i_rep in range(torsion_matrix[i_torsion]):
+            plt.hist(torsion_matrix[i_torsion][i_rep], alpha = alpha, bins = bins)
+        plt.xlabel("Torsion " + str(i_torsion))
+        plt.ylabel("Density")
