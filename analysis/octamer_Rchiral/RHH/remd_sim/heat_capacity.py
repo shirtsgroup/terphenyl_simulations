@@ -29,7 +29,7 @@ def get_energies(sim_dir_name, path, n_replicas, sim_name = "npt", energy_type =
 
                 edr_file = os.path.join(sim_dir, file)
                 energy_df = panedr.edr_to_df(edr_file)
-                pot_energy = energy_df["Enthalpy"].values
+                pot_energy = energy_df[energy_type].values
                 sim_energies += list(pot_energy)
         sim_energies = np.array(sim_energies)
         energies.append(sim_energies)
