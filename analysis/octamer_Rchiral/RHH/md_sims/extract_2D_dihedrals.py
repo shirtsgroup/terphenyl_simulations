@@ -71,14 +71,13 @@ def main():
     args = parser.parse_args()
 
     # Generate/Load dihedrals from minimized structure
-
-
-    color = cm.get_cmap("Set1", lut=len(args.scatter))
-    extra_points = []
-    for points in args.scatter:
-        extra_points.append(np.load(points, allow_pickle = True))
-    mm2_gellman_dihes = np.load("mm2_torsions_gellman.npy", allow_pickle = True)
-    mmf94_gellman_dihes = np.load("mmf94_torsions_gellman.npy", allow_pickle = True)
+    if args.scatter is not None:
+        color = cm.get_cmap("Set1", lut=len(args.scatter))
+        extra_points = []
+        for points in args.scatter:
+            extra_points.append(np.load(points, allow_pickle = True))
+        mm2_gellman_dihes = np.load("mm2_torsions_gellman.npy", allow_pickle = True)
+        mmf94_gellman_dihes = np.load("mmf94_torsions_gellman.npy", allow_pickle = True)
     # crystal_monomer = [143.962, -6.792, 124.974]
 
     if "outputs" not in args.file_id:
@@ -130,10 +129,12 @@ def main():
                 ax[i, j].set_xlabel(index_to_axis[args.dihedral_ids[i]])
                 ax[i, j].set_ylabel('Probability Density')
                 c_i = 0
-                for extra_point in extra_points:
-                    for each_point in extra_point[args.dihedral_ids[j] - 1]:
-                        ax[i, j].axvline(each_point, ls = "--", color=color(c_i))
-                    c_i += 1
+        
+                if args.scatter is not None:
+                    for extra_point in extra_points:
+                        for each_point in extra_point[args.dihedral_ids[j] - 1]:
+                            ax[i, j].axvline(each_point, ls = "--", color=color(c_i))
+                        c_i += 1
 
             elif i > j:
                 fig.delaxes(ax[i, j])
@@ -155,12 +156,13 @@ def main():
                 # ax[i, j].set_ylabel(index_to_axis[args.dihedral_ids[i]])
                 # ax[i-1, j-1].scatter(crystal_monomer[i-1], crystal_monomer[j-1], color='red')
                 c_i = 0
-                for extra_point in extra_points:
-                    print(extra_point)
-                    print(args.dihedral_ids[j] - 1)
-                    ax[i, j].scatter(extra_point[args.dihedral_ids[j] - 1],
-                                        extra_point[args.dihedral_ids[i] - 1],  s=50, color=color(c_i))
-                    c_i += 1
+                if args.scatter is not None:
+                    for extra_point in extra_points:
+                        print(extra_point)
+                        print(args.dihedral_ids[j] - 1)
+                        ax[i, j].scatter(extra_point[args.dihedral_ids[j] - 1],
+                                            extra_point[args.dihedral_ids[i] - 1],  s=50, color=color(c_i))
+                        c_i += 1
 
     handles, labels = ax[1,1].get_legend_handles_labels()
     print(labels)
