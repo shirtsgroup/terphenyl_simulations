@@ -18,6 +18,7 @@ class REMD_trajectories:
         self.traj_file_type = traj_file_type
 
         pool = Pool(np)
+        
         # read-in replica data
         self.trajs, self.temps = zip(*pool.map(self.read_replica, range(self.n_replicas)))
 
@@ -171,4 +172,4 @@ def main():
         for l in range(h_bonds_kln.shape[0]):
             h_bonds_kln[k,l,:] = n_h_bonds_remd[k]
 
-    mbar_h_bonds = mbar_h_bonds = pymbar.MBAR(u_kln[:,:,:3608], n_samples_h_bonds, verbose = True, relative_tolerance = 1e-10, initial_f_k= None, maximum_iterations=1000)
+    mbar_h_bonds = pymbar.MBAR(u_kln[:,:,:3608], n_samples_h_bonds, verbose = True, relative_tolerance = 1e-10, initial_f_k= None, maximum_iterations=1000)
