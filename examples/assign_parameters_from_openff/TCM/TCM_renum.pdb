@@ -1,0 +1,8 @@
+COMPND    UNNAMED
+ATOM      1 C0   TET     1      -1.503   1.646  -0.053  1.00  0.00          C  
+ATOM      2 Cl1  TET     1      -2.264   2.884  -1.078  1.00  0.00          CL  
+ATOM      3 Cl2  TET     1      -2.098   1.811   1.615  1.00  0.00          CL  
+ATOM      4 H3   TET     1      -1.759   0.638  -0.439  1.00  0.00          H  
+ATOM      5 Cl4  TET     1       0.262   1.860  -0.076  1.00  0.00          CL  
+CONECT    1    2    3    4    5
+END
