@@ -1,0 +1,49 @@
+#
+# Protein solvated by water and ions
+#
+
+
+# All atoms from diferent molecules will be at least 2.0 Angstroms apart
+# at the solution
+
+tolerance 1.5
+nloop0 10000
+
+# The type of the files will be pdb 
+
+filetype pdb
+
+# The name of the output file
+
+output solvated_octamer_dimer.pdb
+
+# The protein will be fixed with its center of mass at center of the
+# box, and no rotation (the first three zeros correspond to the position
+# of the center of mass and the last three correspond to the euler
+# angles of rotation, in radian, relative to the position in the input
+# file). 
+
+structure OCT.pdb
+  number 1
+  chain A
+  fixed 62.9 62.9 52.9 0. 0. 0.
+  centerofmass
+end structure
+
+structure OCT.pdb
+ number 1
+ chain B
+ fixed 62.9 62.9 72.9 0. 0. 0.
+ centerofmass
+end structure
+
+# Water molecules will be put inside a sphere that contains the protein.
+# There will be 16500 water molecules that will be put in a sphere
+# centered in the origin, and a radius of 50. Angstroms.
+
+
+structure TCM.pdb
+  number 7445 
+  inside box 0. 0. 0. 125.9 125.9 125.9
+end structure
+
