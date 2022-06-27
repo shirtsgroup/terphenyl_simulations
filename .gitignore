@@ -11,3 +11,5 @@ oe_license.txt
 *.ipynb_checkpoints*
 __pycache__
 *.txt
+*.png
+*.jpg
