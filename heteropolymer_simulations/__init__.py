@@ -4,6 +4,8 @@ A package for running terphenyl oligomery systems
 """
 
 import heteropolymer_simulations.utils
+import heteropolymer_simulations.observables
+import heteropolymer_simulations.scripts
 
 # Handle versioneer
 from ._version import get_versions
