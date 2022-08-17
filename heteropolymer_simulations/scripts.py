@@ -154,13 +154,13 @@ def plot_edr_observables():
     for i, column_name in enumerate(args.obs):
         if column_name in edf_list[0].columns:
             if args.time_series:
-                time = edf_list[0]["Time"]*0.001
                 figure_name = column_name.replace(" ", "_").lower()
                 figure_name = figure_name.replace("(", "")
                 figure_name = figure_name.replace(")", "")
                 figure_name = figure_name + "_" + args.output_base + ".png"
                 plt.figure(dpi = 300)
                 for edf in edf_list:
+                    time = edf["Time"]*0.001
                     observable = edf[column_name]
                     plt.plot(time, observable)
                 plt.xlabel("Time (ns)")

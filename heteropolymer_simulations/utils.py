@@ -74,6 +74,9 @@ def renumber_pdb_atoms(pdb_file, out_pdb, resname):
 
     Chem.rdmolfiles.MolToPDBFile(rdmol, out_pdb)
 
+def construct_z_matrix()
+    pass
+
 def main():
     top = TopFileObject("test.top")
     write_itp_file(top, "test")
