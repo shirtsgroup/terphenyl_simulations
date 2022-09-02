@@ -89,10 +89,8 @@ def main():
     print("The final torsions we will change are:")
     for t_id in final_torsion_ids:
         print(t_id)
-        ice.write_structure("test_1.gro")    
         ice.set_torsion(t_id, torsions[torsion_ids.index(t_id)] + angle)
         ice.update_internal_coordinates()
-        ice.write_structure("test_2.gro")
 
     ice.write_structure("mop_octamer_cis.gro")   
 
