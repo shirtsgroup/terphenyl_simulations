@@ -1,4 +1,5 @@
 import getpass
+import os
 from datetime import datetime
 from rdkit import Chem
 import platform
@@ -74,8 +75,20 @@ def renumber_pdb_atoms(pdb_file, out_pdb, resname):
 
     Chem.rdmolfiles.MolToPDBFile(rdmol, out_pdb)
 
-def construct_z_matrix()
-    pass
+def make_path(prefix):
+    """
+    Utility function to make a directory for a given prefix if it doesnt
+    exist yet.
+
+    Parameters
+    ----------
+    prefix : string
+        String of a directory path 
+    """
+    prefix_wo_file = "/".join(prefix.split("/")[:-1])
+    if not os.path.exists(prefix_wo_file):
+        os.makedirs(prefix_wo_file)
+
 
 def main():
     top = TopFileObject("test.top")

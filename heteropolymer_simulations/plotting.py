@@ -1,10 +1,20 @@
 import matplotlib.pyplot as plt
+from .utils import make_path
+import mdtraj as md
 import numpy as np
 import seaborn as sns
 from tqdm import tqdm
 from .observables import get_torsions
 
 def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename):
+    """
+    Function for plotting metrics against a grid search of parameters
+    """
+
+    # Create a directory if prefix has "/" in it
+    if "/" in prefix:
+        make_path(filename)
+    
     # combination metric figure
     fig = plt.figure(dpi = 300)
     ax = fig.add_subplot(111)
@@ -19,8 +29,14 @@ def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename
     ax.set_xlabel(x_label)
     ax.set_ylabel(x_label)
     plt.savefig(filename)
+    plt.close()
 
 def plot_neighbor_dependent_2D_histogram(traj_obj, torsions_atom_names_pair, torsion_ids, prefix, n_bins = 50, legend = None, mirror_sym = False):
+    
+    # Create a directory if prefix has "/" in it
+    if "/" in prefix:
+        make_path(prefix)
+    
     # Get 2D distriubtion from pairs
     torsions = [get_torsions(traj_obj, torsions_atom_names_pair[i]) for i in range(len(torsions_atom_names_pair)) ]
 
@@ -34,8 +50,7 @@ def plot_neighbor_dependent_2D_histogram(traj_obj, torsions_atom_names_pair, tor
     n_rows = len(torsions_atom_names_pair)
     fig, axes = plt.subplots(nrows = n_rows, ncols = n_rows, dpi = 300, figsize = [2 * n_rows, 2 * n_rows])
 
-    print("Plotting probability distributions...")
-    for i in range(len(tqdm(torsions_atom_names_pair))):
+    for i in range(len(torsions_atom_names_pair)):
         for j in range(len(torsions_atom_names_pair)):
             if i == j:
                 # 1D distribution
@@ -55,8 +70,37 @@ def plot_neighbor_dependent_2D_histogram(traj_obj, torsions_atom_names_pair, tor
 
     plt.tight_layout()
     plt.savefig(prefix + "_2d_torsions.png")
+    plt.close()
 
-def plot_torsions_distributions(traj_obj_list, torsion_atom_names, torsion_id, prefix, n_bins = 50, legend = None, mirror_sym = False):
+def plot_torsions_distributions(traj_obj_list, torsion_atom_names, x_axis, prefix, title, n_bins = 50, legend = None, mirror_sym = False):
+    """
+    Function for plotting 1D torsion distributions using MDTraj objects
+
+    Parameters
+    ----------
+    traj_obj_list : list
+        List of mdtraj.trajectory objects to plot torsions for
+    torsion_atom_names : list
+        List of Lists of atom name strings used to define atoms to use when getting torsions from trajectory
+    x_axis : string
+        Label for x axis. y axis defaults to Density
+    prefix : string
+        Prefix for file name. Can include directories.
+    n_bins : int
+        Number of bins to use across total angle space
+    legend : list
+        List of legend entries for plot. No legend plotted if left as None
+    mirror_sym : bool
+        Collapse 360 degrees histogram to 180 degree histogram. Useful for symetric torsions
+    """
+
+    if type(traj_obj_list) == md.Trajectory:
+        traj_obj_list = [traj_obj_list]
+
+    # Create a directory if prefix has "/" in it
+    if "/" in prefix:
+        make_path(prefix)
+
     # Setup figure
     plt.figure(dpi = 300)
     sns.set_palette("plasma", n_colors = len(traj_obj_list))
@@ -68,12 +112,14 @@ def plot_torsions_distributions(traj_obj_list, torsion_atom_names, torsion_id, p
     bin_centers = np.array([(bin_edges[i] + bin_edges[i+1]) * 0.5 for i in range(len(bin_edges) - 1) ])
 
     # Get torsions, bin and plot
-    for traj_obj in tqdm(traj_obj_list):
+    for traj_obj in traj_obj_list:
         torsions = get_torsions(traj_obj, torsion_atom_names, mirror_sym = mirror_sym)
         hist, bin_edges_out = np.histogram(np.array(torsions), bins = bin_edges, density = True)
         plt.plot(bin_centers, hist)
-        plt.xlabel(torsion_id)
+        plt.xlabel(x_axis)
         plt.ylabel("Density")
+        plt.title(title)
     if legend is not None:
         plt.legend(legend)
     plt.savefig(prefix + "_torsions.png")
+    plt.close()
