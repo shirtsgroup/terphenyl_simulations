@@ -56,3 +56,20 @@ def get_edr_obs(edr_df, key):
     time = edr_df["Time"]*0.002
     observable = edr_df[key]
     return(time, observable)
+
+
+def get_torsions(traj_obj, torsion_atom_names, mirror_sym = False):
+    top = traj_obj.topology
+    torsions_inds = []
+    for torsion_atoms in torsion_atom_names:
+        torsion_i =[top.select("name " + atom)[0] for atom in torsion_atoms]
+        torsions_inds.append(torsion_i)
+
+    # torsions_inds = np.array(torsions_inds)
+    torsions = md.compute_dihedrals(traj_obj, torsions_inds, periodic=False)
+    torsions = torsions.reshape(-1)
+    if mirror_sym:
+        for i in range(len(torsions)):
+            if torsions[i] <= 0:
+                torsions[i] = torsions[i] + np.pi
+    return torsions
