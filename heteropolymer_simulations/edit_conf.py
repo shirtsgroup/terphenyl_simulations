@@ -98,7 +98,7 @@ class InternalCoordinateEditor:
         for i, torsion_id in enumerate(self.torsion_ids):
             include = 0
             for atom_id in atom_list:
-                if any(i.isdigit() for i in atom_id):
+                if any(c.isdigit() for c in atom_id):
                     if atom_id in torsion_id.split(" "):
                         include += 1
                 else:
@@ -115,6 +115,35 @@ class InternalCoordinateEditor:
         
         
         return result, torsions
+
+    def filter_torsions(self, torsion_id, torsions, exclusion_atoms, exlusion_positions):
+        """
+        This function is to filter torsion IDs based on 
+        """
+
+        # Should rework above function to include position  specification
+        pass
+
+    def identify_chain_prop_torsion(self, torsion_id_list, ):
+        """
+        This function identifies the torsion id that propagates downstream changes to
+        the overall structure. Provided torsion IDs must contain the same internal atoms.
+
+        Parameters
+        ----------
+        torsion_id_list : list
+            List of strings of torsion ids
+
+        Returns
+        -------
+        torsion_id : string
+            The torsion id that propagates movements downstream
+        """
+        central_atoms = torsion_id_list[0].split(" ")[1:3]
+        
+        for c_atoms in central_atoms:
+            pass
+
     
     def set_torsion(self, torsion_id, new_torsion):
         """
