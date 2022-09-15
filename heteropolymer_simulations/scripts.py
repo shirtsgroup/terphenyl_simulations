@@ -26,18 +26,10 @@ def renumber_pdb_atoms():
             help = "output file name to write new pdb file"
         )
 
-        parser.add_argument(
-            "--resname",
-            type = str,
-            help = "output file name to write new pdb file",
-            default = "TET"
-        )
-
-
         return parser.parse_args()
     
     args = parse_args()
-    hs.utils.renumber_pdb_atoms(args.file, args.output, args.resname)
+    hs.utils.renumber_pdb_atoms(args.file, args.output)
 
 def top_to_itp():
     def parse_args():

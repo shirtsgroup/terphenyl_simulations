@@ -190,7 +190,7 @@ class InternalCoordinateEditor:
             torsion_index = self.torsion_ids.index(torsion_id)
             self.torsions[torsion_index] = new_torsion
             self.ic_list[self.torsion_indices[0] + 9 + torsion_index] = new_torsion
-            print("Setting", torsion_id, "to", new_torsion * 180 / np.pi)
+            # print("Setting", torsion_id, "to", new_torsion * 180 / np.pi)
         else:
             print(torsion_id, "is not a valid torsion ID.")
 

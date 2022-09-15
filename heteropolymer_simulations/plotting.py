@@ -86,6 +86,8 @@ def plot_torsions_distributions(traj_obj_list, torsion_atom_names, x_axis, prefi
         Label for x axis. y axis defaults to Density
     prefix : string
         Prefix for file name. Can include directories.
+    title: str
+        Plot title
     n_bins : int
         Number of bins to use across total angle space
     legend : list
