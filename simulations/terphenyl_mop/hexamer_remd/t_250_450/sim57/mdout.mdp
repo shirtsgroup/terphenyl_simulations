@@ -1,17 +1,17 @@
 ;
 ;	File 'mdout.mdp' was generated
-;	By user: unknown (66213)
-;	On host: r231.ib.bridges2.psc.edu
-;	At date: Thu Jul 28 05:14:42 2022
+;	By user: tfobe (1000)
+;	On host: grayspeak
+;	At date: Fri Sep 16 14:35:46 2022
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
 ;	
-;	Executable:   /jet/home/tfobe/software/gromacs-2022.2/bin/gmx_mpi
-;	Data prefix:  /jet/home/tfobe/software/gromacs-2022.2
-;	Working dir:  /ocean/projects/cts160011p/tfobe/heteropolymer_simulations/simulations/terphenyl_mop/hexamer_remd/t_250_450/sim57
+;	Executable:   /usr/local/gromacs/bin/gmx
+;	Data prefix:  /usr/local/gromacs
+;	Working dir:  /home/tfobe/Research/heteropolymer_simulations/simulations/terphenyl_mop/hexamer_remd/t_250_450/sim57
 ;	Command line:
-;	  gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system.top -o npt_new -maxwarn 1
+;	  gmx grompp -f berendsen_nvt.mdp -c em.gro -p system.top -o berendsen_nvt -maxwarn 1
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -25,7 +25,7 @@ integrator               = md
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 50000000
+nsteps                   = 2500000
 ; For exact run continuation or redoing part of a run
 init-step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -103,7 +103,7 @@ rcoulomb                 = 1
 epsilon-r                = 1
 epsilon-rf               = 0
 ; Method for doing Van der Waals
-vdwtype                  = cutoff
+vdwtype                  = PME
 vdw-modifier             = Potential-shift-Verlet
 ; cut-off lengths       
 rvdw-switch              = 0
@@ -131,7 +131,7 @@ implicit-solvent         = no
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling  
-Tcoupl                   = v-rescale
+Tcoupl                   = berendsen
 nsttcouple               = -1
 nh-chain-length          = 10
 print-nose-hoover-chain-variables = no
@@ -141,13 +141,13 @@ tc-grps                  = system
 tau-t                    = 2
 ref-t                    = 425.5012562392498
 ; pressure coupling     
-Pcoupl                   = Parrinello-Rahman
-Pcoupltype               = isotropic
+Pcoupl                   = no
+pcoupltype               = Isotropic
 nstpcouple               = -1
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
-tau-p                    = 20
+tau-p                    = 1
 compressibility          = 4.5e-5
-ref-p                    = 1
+ref-p                    = 
 ; Scaling of reference coordinates, No, All or COM
 refcoord-scaling         = No
 
@@ -167,9 +167,9 @@ annealing-time           =
 annealing-temp           = 
 
 ; GENERATE VELOCITIES FOR STARTUP RUN
-gen-vel                  = no
+gen-vel                  = yes
 gen-temp                 = 425.5012562392498
-gen-seed                 = -1679821003
+gen-seed                 = -302519561
 
 ; OPTIONS FOR BONDS    
 constraints              = h-bonds
@@ -182,11 +182,11 @@ Shake-SOR                = no
 ; Relative tolerance of shake
 shake-tol                = 0.0001
 ; Highest order in the expansion of the constraint coupling matrix
-lincs-order              = 8
+lincs_order              = 4
 ; Number of iterations in the final step of LINCS. 1 is fine for
 ; normal simulations, but use 2 to conserve energy in NVE runs.
 ; For energy minimization with constraints it should be 4 to 8.
-lincs-iter               = 2
+lincs_iter               = 1
 ; Lincs will write a warning to the stderr if in one step a bond
 ; rotates over more degrees than
 lincs-warnangle          = 30

@@ -3,6 +3,7 @@ import argparse
 import panedr
 import pandas as pd
 import heteropolymer_simulations as hs
+import parmed as pmd
 import matplotlib.pyplot as plt
 
 def renumber_pdb_atoms():
@@ -177,7 +178,50 @@ def plot_edr_observables():
                     plt.xlabel(column_name)
                 plt.savefig(figure_name)
 
+def hmr_topology():
+    """
+    Quick script to apply HMR to a GROMACS topology file
+    """
 
+    def parse_args():
+        parser = argparse.ArgumentParser(
+            description = "A quick script to run HMR on  .top \
+                        files"
+                        )
+
+        parser.add_argument(
+            "-t", "--top",
+            type = str,
+            help = "file name of original .top file to convert"
+        )
+
+        parser.add_argument(
+            "-o", "--output",
+            type = str,
+            help = "output file name to write new .itp file"
+        )
+
+        parser.add_argument(
+            "--hmr_ratio",
+            type = float,
+            help = "ratio of the the HMR hydrogen mass to the original mass.\
+                An hmr_ratio of 3 will scale the hydrogen masses by 3."
+        )
+
+        return parser.parse_args()
+    
+    args = parse_args()
+    gmx_top = pmd.load_file(args.top)
+
+    for atom in gmx_top.atoms:
+        if atom.element_name == "H":
+            new_mass = atom.mass * args.hmr_ratio
+            d_mass = new_mass - atom.mass
+            for b_atom in atom.bond_partners:
+                b_atom.mass -= d_mass
+            atom.mass = new_mass
+
+    gmx_top.write(args.output)
 
     
 
