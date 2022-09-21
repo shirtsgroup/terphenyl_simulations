@@ -1,7 +1,7 @@
 title = NPT simulation of solvated.gro at 333.8491608618884 K ; updated for better performance
 integrator = md
-dt = 0.002 
-nsteps = 2500000
+dt = 0.004
+nsteps = 1250000
 nstxout-compressed = 50000
 nstxout = 50000
 nstvout = 50000
@@ -29,5 +29,5 @@ gen-temp = 333.8491608618884
 DispCorr = EnerPres
 constraints = h-bonds
 constraint-algorithm = lincs
-lincs-order = 8
-lincs-iter = 2 
+lincs_iter              = 2         ; accuracy of LINCS
+lincs_order             = 8         ; also related to accuracy

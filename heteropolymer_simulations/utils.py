@@ -1,6 +1,8 @@
+#!/usr/bin/env python
 import getpass
 import os
 from datetime import datetime
+import rdkit
 from rdkit import Chem
 import platform
 

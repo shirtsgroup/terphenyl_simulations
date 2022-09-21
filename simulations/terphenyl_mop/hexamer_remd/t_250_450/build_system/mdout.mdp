@@ -2,7 +2,7 @@
 ;	File 'mdout.mdp' was generated
 ;	By user: unknown (66213)
 ;	On host: r001.ib.bridges2.psc.edu
-;	At date: Wed Jul 27 23:31:14 2022
+;	At date: Fri Sep 16 15:43:06 2022
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
@@ -11,7 +11,7 @@
 ;	Data prefix:  /jet/home/tfobe/software/gromacs-2022.2
 ;	Working dir:  /ocean/projects/cts160011p/tfobe/heteropolymer_simulations/simulations/terphenyl_mop/hexamer_remd/t_250_450/build_system
 ;	Command line:
-;	  gmx_mpi grompp -f em.mdp -c solvated_pom_hexamer.gro -p system.top -o em -maxwarn 1
+;	  gmx_mpi grompp -f em.mdp -c solvated_mop_hexamer_box.gro -p system.top -o em_new -maxwarn 1
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -169,7 +169,7 @@ annealing-temp           =
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen-vel                  = no
 gen-temp                 = 300
-gen-seed                 = -52699473
+gen-seed                 = -21021457
 
 ; OPTIONS FOR BONDS    
 constraints              = none

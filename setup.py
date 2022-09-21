@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Heteropolymer Simulations
 A package for running terphenyl oligomery systems
