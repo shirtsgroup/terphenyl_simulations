@@ -1,6 +1,7 @@
 import MDAnalysis as mda
 from MDAnalysis.analysis.bat import BAT
 from MDAnalysis.analysis.rms import RMSD
+import sys
 import copy
 import numpy as np
 
@@ -72,7 +73,45 @@ class InternalCoordinateEditor:
         assert(len(self.bonds) == len(self.bond_angles))
         assert(len(self.bonds) == len(self.torsions))
 
-    def find_torsions(self, atom_list, set_op = "or"):
+    def find_bonds(self, atom_list):
+        """
+        Return a list of bond ids with a given atoms
+
+        Parameters
+        ----------
+        atom_list : list
+            List of strings of atom names used to identify bond
+
+        Returns
+        -------
+        result : list
+            List of bond ids including atoms in atom_list
+        bond_length : list
+            List of bond lengths corresponding to bond IDs
+        """
+
+        result = []
+        bond_lengths = []
+        for i, torsion_id in enumerate(self.torsion_ids):
+            bond_id = torsion_id.split(" ")[0:2]
+            include = 0
+            for atom_id in atom_list:
+                if any(c.isdigit() for c in atom_id):
+                    if any(atom_id in b_atom for b_atom in bond_id):
+                        include += 1
+                else:
+                    if atom_id in " ".join(bond_id):
+                        include += 1
+            if include == len(atom_list):
+                result.append(" ".join(bond_id))
+                bond_lengths.append(self.bonds[i])
+        
+        return result, bond_lengths
+
+
+
+
+    def find_torsions(self, atom_list, positions = None):
         """
         Return a list of torsions ids from with a specific atoms
         
@@ -81,8 +120,8 @@ class InternalCoordinateEditor:
         atom_list : list
             List of atom names used to identify torsions including those atoms. Here you
             can use specific atom names or elements names.
-        set_op : string
-            Set operator defining how selection should be dealt with multiple atom identifiers.
+        positions : list
+            List of integers indicating which positions to search for provided atom names
         
         Returns
         -------
@@ -97,24 +136,43 @@ class InternalCoordinateEditor:
 
         for i, torsion_id in enumerate(self.torsion_ids):
             include = 0
+            torsion_id_list = torsion_id.split(" ")
+            # Filter torsion_id positions based on given position selection
+            if positions is not None:
+                torsion_id_list = [i for i in torsion_id_list if torsion_id_list.index(i) in positions]
             for atom_id in atom_list:
-                if any(i.isdigit() for i in atom_id):
-                    if atom_id in torsion_id.split(" "):
+                if any(c.isdigit() for c in atom_id):
+                    if any(atom_id in t_atom for t_atom in torsion_id_list):
                         include += 1
                 else:
                     if atom_id in torsion_id:
                         include += 1
-            if set_op == "or":
-                if include > 0:
-                    result.append(torsion_id)
-                    torsions.append(self.torsions[i])
-            if set_op == "and":
+            if include == len(atom_list):
                 if include == len(atom_list):
                     result.append(torsion_id)
                     torsions.append(self.torsions[i])
-        
-        
         return result, torsions
+
+    def identify_chain_prop_torsion(self, torsion_id_list):
+        """
+        This function identifies the torsion id that propagates downstream changes to
+        the overall structure. Provided torsion IDs must contain the same internal atoms.
+
+        Parameters
+        ----------
+        torsion_id_list : list
+            List of strings of torsion ids
+
+        Returns
+        -------
+        torsion_id : string
+            The torsion id that propagates movements downstream
+        """
+        # Check for the earliest definition of a given torsion
+        # Earlier torsions propagate chains
+        t_inds = [self.torsion_ids.index(t_id) for t_id in torsion_id_list]
+        min_index = np.argmin(t_inds)
+        return torsion_id_list[min_index]
     
     def set_torsion(self, torsion_id, new_torsion):
         """
@@ -132,7 +190,7 @@ class InternalCoordinateEditor:
             torsion_index = self.torsion_ids.index(torsion_id)
             self.torsions[torsion_index] = new_torsion
             self.ic_list[self.torsion_indices[0] + 9 + torsion_index] = new_torsion
-
+            # print("Setting", torsion_id, "to", new_torsion * 180 / np.pi)
         else:
             print(torsion_id, "is not a valid torsion ID.")
 

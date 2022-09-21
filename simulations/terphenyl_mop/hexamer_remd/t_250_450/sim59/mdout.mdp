@@ -1,17 +1,31 @@
 ;
 ;	File 'mdout.mdp' was generated
+<<<<<<< HEAD
 ;	By user: unknown (66213)
 ;	On host: v021.ib.bridges2.psc.edu
 ;	At date: Mon Sep 19 21:23:31 2022
+=======
+;	By user: tfobe (1000)
+;	On host: grayspeak
+;	At date: Fri Sep 16 14:35:46 2022
+>>>>>>> bf65f96d18a0a618169adf372e25c3659108591b
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
 ;	
+<<<<<<< HEAD
 ;	Executable:   /jet/home/tfobe/software/gromacs-2022.2_gpu/bin/gmx_mpi
 ;	Data prefix:  /jet/home/tfobe/software/gromacs-2022.2_gpu
 ;	Working dir:  /ocean/projects/cts160011p/tfobe/heteropolymer_simulations/simulations/terphenyl_mop/hexamer_remd/t_250_450/sim59
 ;	Command line:
 ;	  gmx_mpi grompp -f berendsen_nvt.mdp -c em.gro -p system_hmr.top -o berendsen_nvt -maxwarn 1
+=======
+;	Executable:   /usr/local/gromacs/bin/gmx
+;	Data prefix:  /usr/local/gromacs
+;	Working dir:  /home/tfobe/Research/heteropolymer_simulations/simulations/terphenyl_mop/hexamer_remd/t_250_450/sim59
+;	Command line:
+;	  gmx grompp -f berendsen_nvt.mdp -c em.gro -p system.top -o berendsen_nvt -maxwarn 1
+>>>>>>> bf65f96d18a0a618169adf372e25c3659108591b
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -24,8 +38,13 @@ define                   =
 integrator               = md
 ; Start time and timestep in ps
 tinit                    = 0
+<<<<<<< HEAD
 dt                       = 0.004
 nsteps                   = 1250000
+=======
+dt                       = 0.002
+nsteps                   = 2500000
+>>>>>>> bf65f96d18a0a618169adf372e25c3659108591b
 ; For exact run continuation or redoing part of a run
 init-step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -169,7 +188,11 @@ annealing-temp           =
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen-vel                  = yes
 gen-temp                 = 433.51560554220805
+<<<<<<< HEAD
 gen-seed                 = -813966365
+=======
+gen-seed                 = -1650722343
+>>>>>>> bf65f96d18a0a618169adf372e25c3659108591b
 
 ; OPTIONS FOR BONDS    
 constraints              = h-bonds
@@ -182,11 +205,19 @@ Shake-SOR                = no
 ; Relative tolerance of shake
 shake-tol                = 0.0001
 ; Highest order in the expansion of the constraint coupling matrix
+<<<<<<< HEAD
 lincs_order              = 8
 ; Number of iterations in the final step of LINCS. 1 is fine for
 ; normal simulations, but use 2 to conserve energy in NVE runs.
 ; For energy minimization with constraints it should be 4 to 8.
 lincs_iter               = 2
+=======
+lincs_order              = 4
+; Number of iterations in the final step of LINCS. 1 is fine for
+; normal simulations, but use 2 to conserve energy in NVE runs.
+; For energy minimization with constraints it should be 4 to 8.
+lincs_iter               = 1
+>>>>>>> bf65f96d18a0a618169adf372e25c3659108591b
 ; Lincs will write a warning to the stderr if in one step a bond
 ; rotates over more degrees than
 lincs-warnangle          = 30

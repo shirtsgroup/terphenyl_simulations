@@ -1,17 +1,17 @@
 ;
 ;	File 'mdout.mdp' was generated
-;	By user: unknown (66213)
-;	On host: v021.ib.bridges2.psc.edu
-;	At date: Mon Sep 19 21:22:45 2022
+;	By user: tfobe (1000)
+;	On host: grayspeak
+;	At date: Fri Sep 16 14:35:37 2022
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
 ;	
-;	Executable:   /jet/home/tfobe/software/gromacs-2022.2_gpu/bin/gmx_mpi
-;	Data prefix:  /jet/home/tfobe/software/gromacs-2022.2_gpu
-;	Working dir:  /ocean/projects/cts160011p/tfobe/heteropolymer_simulations/simulations/terphenyl_mop/hexamer_remd/t_250_450/sim0
+;	Executable:   /usr/local/gromacs/bin/gmx
+;	Data prefix:  /usr/local/gromacs
+;	Working dir:  /home/tfobe/Research/heteropolymer_simulations/simulations/terphenyl_mop/hexamer_remd/t_250_450/sim0
 ;	Command line:
-;	  gmx_mpi grompp -f berendsen_nvt.mdp -c em.gro -p system_hmr.top -o berendsen_nvt -maxwarn 1
+;	  gmx grompp -f berendsen_nvt.mdp -c em.gro -p system.top -o berendsen_nvt -maxwarn 1
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -169,7 +169,7 @@ annealing-temp           =
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen-vel                  = yes
 gen-temp                 = 250.0
-gen-seed                 = -1713636867
+gen-seed                 = -1360037218
 
 ; OPTIONS FOR BONDS    
 constraints              = h-bonds

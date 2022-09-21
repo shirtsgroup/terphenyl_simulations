@@ -65,14 +65,13 @@ def write_itp_file(top_object, filename, itp_sections = None):
                     f.write(line)
                 f.write("\n\n")
 
-def renumber_pdb_atoms(pdb_file, out_pdb, resname):
+def renumber_pdb_atoms(pdb_file, out_pdb):
     rdmol = Chem.rdmolfiles.MolFromPDBFile(pdb_file, removeHs=False)
     
     for atom in rdmol.GetAtoms():
         ri = atom.GetPDBResidueInfo()
         new_name = '{0:<4}'.format(atom.GetSymbol()+str(atom.GetIdx()+1))
         ri.SetName(new_name)
-        ri.SetResidueName(resname)
         ri.SetIsHeteroAtom(False)
 
     Chem.rdmolfiles.MolToPDBFile(rdmol, out_pdb)

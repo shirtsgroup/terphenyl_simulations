@@ -76,7 +76,7 @@ def main():
                 ice.write_structure("test_"+t_id.replace(" ", "_") + ".gro")
 
                 # Reset to original coordinates
-                # ice.universe.atoms.positions = copy.deepcopy(old_coordinates)
+                ice.universe.atoms.positions = copy.deepcopy(old_coordinates)
                 ice.torsions = copy.deepcopy(old_torsions)
                 ice.ic_list = copy.deepcopy(old_ic_list)
                 ice.update_internal_coordinates()
