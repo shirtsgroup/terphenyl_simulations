@@ -2,7 +2,7 @@
 ;   File system_hmr.top  was generated
 ;   By user: tfobe (1000)
 ;   On host: grayspeak
-;   At date: Mon. September  1 14:55:40 2022
+;   At date: Wed. September  3 13:42:19 2022
 ;
 ;   This is a standalone topology file
 ;
@@ -308,6 +308,7 @@ H126           1   1.007947  0.00000000  A     0.26445434    0.066021356
 c1             6  12.010780  0.00000000  A     0.33996695      0.4577296
 cl1           17  35.453200  0.00000000  A     0.34709414        1.10876
 cl2           17  35.453200  0.00000000  A     0.34709414        1.10876
+h1             1   1.007947  0.00000000  A     0.21149936      0.0656888
 cl3           17  35.453200  0.00000000  A     0.34709414        1.10876
 
 
@@ -3279,10 +3280,10 @@ TCM          3
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
 ; residue    1 TCM rtp TCM q 0.0
-    1         c1      1    TCM     C1      1 0.22431000  12.010780   ; qtot 0.224310
+    1         c1      1    TCM     C1      1 0.22431000   9.994886   ; qtot 0.224310
     2        cl1      1    TCM    Cl1      2 -0.11438000  35.453200   ; qtot 0.109930
     3        cl2      1    TCM    Cl2      3 -0.11438000  35.453200   ; qtot -0.004450
-    4         c1      1    TCM     H1      4 0.11883000   1.007947   ; qtot 0.114380
+    4         h1      1    TCM     H1      4 0.11883000   3.023841   ; qtot 0.114380
     5        cl3      1    TCM    Cl3      5 -0.11438000  35.453200   ; qtot 0.000000
 
 [ bonds ]
