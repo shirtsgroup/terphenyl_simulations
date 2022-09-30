@@ -72,7 +72,7 @@ def plot_neighbor_dependent_2D_histogram(traj_obj, torsions_atom_names_pair, tor
     plt.savefig(prefix + "_2d_torsions.png")
     plt.close()
 
-def plot_torsions_distributions(traj_obj_list, torsion_atom_names, x_axis, prefix, title, n_bins = 50, legend = None, mirror_sym = False):
+def plot_torsions_distributions(traj_obj_list, torsion_atom_names, x_axis, prefix, title, n_bins = 50, legend = None, mirror_sym = False, offsets = None):
     """
     Function for plotting 1D torsion distributions using MDTraj objects
 
@@ -81,7 +81,10 @@ def plot_torsions_distributions(traj_obj_list, torsion_atom_names, x_axis, prefi
     traj_obj_list : list
         List of mdtraj.trajectory objects to plot torsions for
     torsion_atom_names : list
-        List of Lists of atom name strings used to define atoms to use when getting torsions from trajectory
+        List of lists of strings of atom name strings used to define atoms to use when
+        getting torsions from trajectory. If multiple list of lists are provided,
+        the function will iterate over each list of lists for a given multiple provided 
+        trajectory files.
     x_axis : string
         Label for x axis. y axis defaults to Density
     prefix : string
@@ -94,6 +97,9 @@ def plot_torsions_distributions(traj_obj_list, torsion_atom_names, x_axis, prefi
         List of legend entries for plot. No legend plotted if left as None
     mirror_sym : bool
         Collapse 360 degrees histogram to 180 degree histogram. Useful for symetric torsions
+    offsets : list
+        If any distributions need to be shifted by a number of degrees, providing a
+        list of offset values will apply the offset a given dataset based on index.
     """
 
     if type(traj_obj_list) == md.Trajectory:
@@ -114,8 +120,13 @@ def plot_torsions_distributions(traj_obj_list, torsion_atom_names, x_axis, prefi
     bin_centers = np.array([(bin_edges[i] + bin_edges[i+1]) * 0.5 for i in range(len(bin_edges) - 1) ])
 
     # Get torsions, bin and plot
-    for traj_obj in traj_obj_list:
-        torsions = get_torsions(traj_obj, torsion_atom_names, mirror_sym = mirror_sym)
+    for i, traj_obj in enumerate(traj_obj_list):
+        if type(torsion_atom_names[0]) is str:
+            torsions = get_torsions(traj_obj, torsion_atom_names, mirror_sym = mirror_sym)
+        if type(torsion_atom_names[0]) is list:
+            torsions = get_torsions(traj_obj, torsion_atom_names[i], mirror_sym = mirror_sym)
+        if offsets is not None:
+            torsions += offsets[i]
         hist, bin_edges_out = np.histogram(np.array(torsions), bins = bin_edges, density = True)
         plt.plot(bin_centers, hist)
         plt.xlabel(x_axis)
