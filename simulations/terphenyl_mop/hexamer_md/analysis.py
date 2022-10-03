@@ -103,8 +103,6 @@ def main():
     )
 
     hbonds.run(verbose=True)
-    print(hbonds.results.hbonds)
-
 
     # Number of hydrogen bonds
     plt.figure(dpi = 300)
@@ -131,12 +129,12 @@ def main():
     plt.figure(dpi = 300)
     plt.hist(angles, density = True, bins = 40)
     plt.title("Distribution of hydrogen bond angles", weight="bold")
-    plt.xlabel("Distance (A)")
+    plt.xlabel("Angle (Degrees)")
     plt.ylabel("Density")
     plt.savefig("h_bond_angles.png")
     plt.close()
-
     
+    print(hbonds.count_by_type())
 
 
 
