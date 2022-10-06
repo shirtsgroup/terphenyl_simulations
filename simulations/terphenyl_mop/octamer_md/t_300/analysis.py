@@ -97,7 +97,7 @@ def main():
         donors_sel = None,
         hydrogens_sel = "name H14 H33 H52 H71 H90 H109 H128 H147",
         acceptors_sel = "element O",
-        d_a_cutoff = 4.0,
+        d_a_cutoff = 3.5,
         d_h_a_angle_cutoff = 150,
         update_selections = False
     )
