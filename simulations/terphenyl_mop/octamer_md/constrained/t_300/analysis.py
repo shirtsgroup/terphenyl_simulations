@@ -134,8 +134,35 @@ def main():
     plt.savefig("h_bond_angles.png")
     plt.close()
 
-    print(hbonds.count_by_type())
+    hb_types = list(hbonds.count_by_type())
+    hb_types.sort(key = lambda x: int(x[2]), reverse = True)
+    counts = np.array([int(hb_entry[2]) for hb_entry in hb_types])
+    percentage = counts / hexamer_u.trajectory.n_frames
+    names = [hb_entry[0].split(":")[1] + " " + hb_entry[1].split(":")[1] for hb_entry in hb_types]
 
+    plt.figure(dpi = 300)
+    plt.bar(range(len(percentage)), percentage, tick_label = names)
+    plt.xticks(rotation=90)
+    plt.xlabel("Hydrogen Bond Types")
+    plt.ylabel("Percentage of Total Simulation Time")
+    plt.tight_layout()
+    plt.savefig("h_bond_types.png",  bbox_inches = "tight")
+    plt.close()
+
+    # Clustering first 100 ns
+    # This will take sometime
+
+    hs.clustering.clustering_grid_search(
+        "npt_new.whole.xtc",
+        "berendsen_npt.gro", 
+        "resname OCT",
+        n_min_samples = 40,
+        n_eps = 40,
+        n_processes = 32,
+        prefix = "grid_search",
+        min_sample_limits = [0.01, 0.1],
+        eps_limits = [0.1, 0.4]
+    )
     
 
 

@@ -1,5 +1,5 @@
 #
-# Terphenyl mo-o-p tetramer solvated by chloroform
+# Terphenyl p-o-m tetramer solvated by chloroform
 #
 
 
@@ -15,7 +15,7 @@ filetype pdb
 
 # The name of the output file
 
-output solvated_octamer.pdb
+output solvated_pom_hexamer.pdb
 
 # The protein will be fixed with its center of mass at center of the
 # box, and no rotation (the first three zeros correspond to the position
@@ -23,7 +23,7 @@ output solvated_octamer.pdb
 # angles of rotation, in radian, relative to the position in the input
 # file). 
 
-structure em_terphenyl_mop_octamer.pdb
+structure em_pom_hexamer.pdb
   number 1
   chain A
   fixed 34.6 34.6 34.6 45. 45. 45.

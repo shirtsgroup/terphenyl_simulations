@@ -72,7 +72,7 @@ def n_clusters_metric(rmsd_matrix, dbscan_object):
 def combination_metric(rmsd_matrix, dbscan_object):
     pass
 
-def clustering_grid_search(file_list, top_file, selection, n_min_samples = 40, n_eps = 40, n_processes =16, eps_limits = [0.01, 0.5], min_sample_limits = [0.005, 0.25], prefix = "grid_search"):
+def clustering_grid_search(file_list, top_file, selection, n_min_samples = 40, n_eps = 40, n_processes =16, eps_limits = [0.01, 0.5], min_sample_limits = [0.005, 0.25], prefix = "grid_search", frame_start = 0, frame_end = -1, frame_stride = 1):
     # Load trajectory
     traj = md.load(file_list, top = top_file)
     

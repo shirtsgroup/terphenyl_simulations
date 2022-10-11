@@ -12,7 +12,7 @@ def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename
     """
 
     # Create a directory if prefix has "/" in it
-    if "/" in prefix:
+    if "/" in filename:
         make_path(filename)
     
     # combination metric figure
@@ -27,7 +27,7 @@ def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename
     ax.set_xticklabels(x_ticks)
     ax.set_yticklabels(y_ticks)
     ax.set_xlabel(x_label)
-    ax.set_ylabel(x_label)
+    ax.set_ylabel(y_label)
     plt.savefig(filename)
     plt.close()
 
