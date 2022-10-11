@@ -155,17 +155,18 @@ def main():
     hs.clustering.clustering_grid_search(
         "npt_new.whole.xtc",
         "berendsen_npt.gro", 
-        "resname OCT",
+        "resname OCT or resname CAP",
         n_min_samples = 40,
         n_eps = 40,
         n_processes = 32,
         prefix = "grid_search",
         min_sample_limits = [0.01, 0.1],
-        eps_limits = [0.1, 0.4]
+        eps_limits = [0.01, 0.4],
+        frame_start = 0,
+        frame_end = 500, # first 100 ns
+        frame_stride = 1
     )
     
-
-
 
 if __name__ == "__main__":
     main()

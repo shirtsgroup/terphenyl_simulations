@@ -77,17 +77,50 @@ def backoff_directory(dir_name):
     sh.move(dir_name, old_path)
 
 
-def silhouette_score_metric(rmsd_matrix, dbscan_object):
-    pass
+def silhouette_score_metric(rmsd_matrix, dbscan_list_of_lists):
+    result = np.zeros((len(dbscan_list_of_lists), len(dbscan_list_of_lists[0])))
+    print("Calculating Silhouette Scores...")
+    for i in tqdm(range(len(dbscan_list_of_lists))):
+        for j in range(len(dbscan_list_of_lists[i])):
+            dbscan, labels = dbscan_list_of_lists[i][j]
+            if len(np.unique(labels)) > 2:
+                result[i, j] = metrics.silhouette_score(rmsd_matrix, labels)
+            else:
+                result[i, j] = np.nan
+    return result
+
+def n_clusters_metric(rmsd_matrix, dbscan_list_of_lists):
+    result = np.zeros((len(dbscan_list_of_lists), len(dbscan_list_of_lists[0])))
+    print("Getting N Clusters...")
+    for i in tqdm(range(len(dbscan_list_of_lists))):
+        for j in range(len(dbscan_list_of_lists[i])):
+            dbscan, labels = dbscan_list_of_lists[i][j]
+            result[i,j] = len(np.unique(labels))
+
+    return result
 
 
-def n_clusters_metric(rmsd_matrix, dbscan_object):
-    pass
+def combination_metric(rmsd_matrix, dbscan_list_of_lists):
+    ss = np.zeros((len(dbscan_list_of_lists), len(dbscan_list_of_lists[0])))
+    n_clusters = np.zeros((len(dbscan_list_of_lists), len(dbscan_list_of_lists[0])))
+    print("Calculating Combined Metrics...")
+    for i in tqdm(range(len(dbscan_list_of_lists))):
+        for j in range(len(dbscan_list_of_lists[i])):
+            dbscan, labels = dbscan_list_of_lists[i][j]
+            n_clusters[i,j] = len(np.unique(labels))
+            if len(np.unique(labels)) > 2:
+                ss[i,j] = metrics.silhouette_score(rmsd_matrix, labels)
+            else:
+                ss[i,j] = np.nan
 
+    m1 = (ss - np.nanmin(ss)) / (np.nanmax(ss) - np.nanmin(ss))
+    m2 = (-n_clusters - np.min(-n_clusters)) / (
+        np.max(-n_clusters) - np.min(-n_clusters)
+    )
 
-def combination_metric(rmsd_matrix, dbscan_object):
-    pass
+    result = np.power(m1, 2) + np.power(m2, 2)
 
+    return result  
 
 def clustering_grid_search(
     file_list,
@@ -102,6 +135,8 @@ def clustering_grid_search(
     frame_start=0,
     frame_end=-1,
     frame_stride=1,
+    metric_list = [silhouette_score_metric, n_clusters_metric, combination_metric],
+    plot_filename_list = ["ss.png", "n_clusters.png", "combo.png"]
 ):
     # Load trajectory
     if type(file_list) == list:
@@ -136,62 +171,44 @@ def clustering_grid_search(
     min_samples_values = [int(a) for a in min_sample_values]
     ss = np.zeros((len(eps_values), len(min_sample_values)))
     n_clusters = np.zeros((len(eps_values), len(min_sample_values)))
+    dbscans_list_of_lists = []
     print("Performing grid search...")
     for i, eps in enumerate(tqdm(eps_values)):
+        dbscan_list = []
         for j, ms in enumerate(min_samples_values):
             dbscan, labels = DBSCAN_RMSD_clustering(
                 rmsd_matrix, eps, ms, parallel=n_processes
             )
+            dbscan_list.append((dbscan, labels))
             n_clusters[i, j] = len(np.unique(labels))
             if len(np.unique(labels)) > 2:
                 ss[i, j] = metrics.silhouette_score(rmsd_matrix, labels)
             else:
                 ss[i, j] = np.nan
+        dbscans_list_of_lists.append(dbscan_list)
+    
+    metric_matrices = []
+    # Move plotting functions to each of these metrics functions
+    for metric, fn in zip(metric_list, plot_filename_list):
+        result_matrix = metric(rmsd_matrix, dbscans_list_of_lists)
+        metric_matrices.append(result_matrix)
 
-    m1 = (ss - np.nanmin(ss)) / (np.nanmax(ss) - np.nanmin(ss))
-    m2 = (-n_clusters - np.min(-n_clusters)) / (
-        np.max(-n_clusters) - np.min(-n_clusters)
-    )
+        plot_grid_search(
+            result_matrix,
+            min_samples_values,
+            [round(eps, 2) for eps in eps_values],
+            "Min. Samples",
+            "$\epsilon_{DBSCAN}$",
+            prefix  + "_" + fn,
+        )
 
-    combination = np.power(m1, 2) + np.power(m2, 2)
+    # Get max value of first metric
 
-    # SS figure
-    plot_grid_search(
-        ss,
-        min_samples_values,
-        [round(eps, 2) for eps in eps_values],
-        "Min. Samples",
-        "$\epsilon_{DBSCAN}$",
-        "grid_search_ss.png",
-    )
+    max_metric = np.nanmax(metric_matrices[0])
 
-    # n_clusters figure
-    plot_grid_search(
-        n_clusters,
-        min_samples_values,
-        [round(eps, 2) for eps in eps_values],
-        "Min. Samples",
-        "$\epsilon_{DBSCAN}$",
-        "grid_search_n_clusters.png",
-    )
+    max_indices = list(zip(*np.where(metric_matrices[0] == max_metric)))
 
-    # combination metric figure
-    plot_grid_search(
-        combination,
-        min_samples_values,
-        [round(eps, 2) for eps in eps_values],
-        "Min. Samples",
-        "$\epsilon_{DBSCAN}$",
-        "grid_search_combo.png",
-    )
-
-    # Get max value where silhouette score is maximized and cluster number is minimized
-
-    max_metric = np.nanmax(ss)
-
-    max_indices = list(zip(*np.where(ss == max_metric)))
-
-    print("The maximum metric value of:", combination[max_indices[0]])
+    print("The maximum metric value of:", metric_matrices[0][max_indices[0]])
     print(
         "N Clusters:",
         int(n_clusters[max_indices[0]]),
