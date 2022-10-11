@@ -6,27 +6,28 @@ import rdkit
 from rdkit import Chem
 import platform
 
+
 class TopFileObject:
     def __init__(self, filename):
         self.filename = filename
-        with open(self.filename, 'r') as f:
+        with open(self.filename, "r") as f:
             self.top_file = f.readlines()
         self.parse_file()
-    
+
     def parse_file(self):
         section_name = None
         section_data = {}
         for i, line in enumerate(self.top_file):
             # Skip commented lines
-            if  line[0] == ";":
+            if line[0] == ";":
                 continue
             # New section
-            if "[" in line  and "]" in line:
+            if "[" in line and "]" in line:
                 section_name = line.split()[1]
-                section_data[section_name] = {"data" : []}
+                section_data[section_name] = {"data": []}
                 # Use legends to store values a dict
-                if self.top_file[i+1][0] == ";":
-                    labels = self.top_file[i+1]
+                if self.top_file[i + 1][0] == ";":
+                    labels = self.top_file[i + 1]
                     section_data[section_name]["labels"] = labels
                 else:
                     labels = None
@@ -39,10 +40,18 @@ class TopFileObject:
                     continue
         self.__dict__.update(**section_data)
 
-def write_itp_file(top_object, filename, itp_sections = None):
+
+def write_itp_file(top_object, filename, itp_sections=None):
 
     if itp_sections is None:
-        itp_sections = ["moleculetype", "atoms", "bonds", "pairs", "angles", "dihedrals"]
+        itp_sections = [
+            "moleculetype",
+            "atoms",
+            "bonds",
+            "pairs",
+            "angles",
+            "dihedrals",
+        ]
 
     if ".itp" not in filename:
         filename += ".itp"
@@ -53,7 +62,7 @@ def write_itp_file(top_object, filename, itp_sections = None):
         f.write("; Original file: " + top_object.filename + "\n")
         f.write("; Author: " + getpass.getuser() + "\n")
         f.write("; Date: " + datetime.now().strftime("%A, %d. %B %Y") + "\n")
-        f.write("; Time: " + datetime.now().strftime("%I:%M%p")+ "\n")
+        f.write("; Time: " + datetime.now().strftime("%I:%M%p") + "\n")
         f.write("; System: " + platform.platform() + "\n\n")
 
         for itp_s in itp_sections:
@@ -65,16 +74,18 @@ def write_itp_file(top_object, filename, itp_sections = None):
                     f.write(line)
                 f.write("\n\n")
 
+
 def renumber_pdb_atoms(pdb_file, out_pdb):
     rdmol = Chem.rdmolfiles.MolFromPDBFile(pdb_file, removeHs=False)
-    
+
     for atom in rdmol.GetAtoms():
         ri = atom.GetPDBResidueInfo()
-        new_name = '{0:<4}'.format(atom.GetSymbol()+str(atom.GetIdx()+1))
+        new_name = "{0:<4}".format(atom.GetSymbol() + str(atom.GetIdx() + 1))
         ri.SetName(new_name)
         ri.SetIsHeteroAtom(False)
 
     Chem.rdmolfiles.MolToPDBFile(rdmol, out_pdb)
+
 
 def make_path(prefix):
     """
@@ -84,7 +95,7 @@ def make_path(prefix):
     Parameters
     ----------
     prefix : string
-        String of a directory path 
+        String of a directory path
     """
     prefix_wo_file = "/".join(prefix.split("/")[:-1])
     if not os.path.exists(prefix_wo_file):
@@ -95,16 +106,6 @@ def main():
     top = TopFileObject("test.top")
     write_itp_file(top, "test")
 
+
 if __name__ == "__main__":
     main()
-
-
-
-                
-
-
-
-
-                
-
-            
