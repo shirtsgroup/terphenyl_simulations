@@ -74,7 +74,16 @@ def combination_metric(rmsd_matrix, dbscan_object):
 
 def clustering_grid_search(file_list, top_file, selection, n_min_samples = 40, n_eps = 40, n_processes =16, eps_limits = [0.01, 0.5], min_sample_limits = [0.005, 0.25], prefix = "grid_search", frame_start = 0, frame_end = -1, frame_stride = 1):
     # Load trajectory
-    traj = md.load(file_list, top = top_file)
+    if type(file_list) == list:
+        traj = md.load(file_list[0], top = top_file)
+        for i in range(1, len(file_list)):
+            tmp_traj = md.load(file_list[i])
+            tmp_traj = tmp_traj[frame_start:frame_end:frame_stride]
+            traj.join(traj, tmp_traj)
+        
+    else:
+        traj = md.load(file_list, top = top_file)
+        traj  = traj[frame_start:frame_end:frame_stride]
     
     # Remove solvent
     top = traj.topology
