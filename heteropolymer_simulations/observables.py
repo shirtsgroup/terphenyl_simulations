@@ -8,7 +8,8 @@ import matplotlib
 import pandas as pd
 import os
 
-def get_COM_distance(traj_object, selection1, selection2, time_per_frame = 0.1):
+
+def get_COM_distance(traj_object, selection1, selection2, time_per_frame=0.1):
     # Get COM1 Trajectory
     top = traj_object.topology
     sel_1 = top.select(selection1)
@@ -29,13 +30,16 @@ def get_COM_distance(traj_object, selection1, selection2, time_per_frame = 0.1):
     d_com = np.zeros(com_2.shape[0])
     for i_frame in range(com_2.shape[0]):
         # apply PBCs to COM_2
-        com_2[i_frame] = com_2[i_frame] - box_lenghts[i_frame] * np.floor(com_2[i_frame]/(box_lenghts[i_frame]) + 0.5)
+        com_2[i_frame] = com_2[i_frame] - box_lenghts[i_frame] * np.floor(
+            com_2[i_frame] / (box_lenghts[i_frame]) + 0.5
+        )
         d_com[i_frame] = np.sqrt(np.dot(com_2[i_frame], com_2[i_frame]))
 
-    time = np.array(range(com_1.shape[0]))*time_per_frame
-    return(time, d_com)
+    time = np.array(range(com_1.shape[0])) * time_per_frame
+    return (time, d_com)
 
-def get_ROG_distance(traj_object, selection, time_per_frame = 0.1):
+
+def get_ROG_distance(traj_object, selection, time_per_frame=0.1):
     # Get COM1 trajectory
     top = traj_object.topology
     sel = top.select(selection)
@@ -46,23 +50,23 @@ def get_ROG_distance(traj_object, selection, time_per_frame = 0.1):
     print("nsteps:", com_1.shape[0])
     for i_frame in range(com_1.shape[0]):
         sel_traj.xyz[i_frame, :, :] = sel_traj.xyz[i_frame, :, :] - com_1[i_frame]
-    
+
     rg = md.compute_rg(sel_traj)
-    time = np.array(range(com_1.shape[0]))*time_per_frame
-    return(time, rg)
-                
+    time = np.array(range(com_1.shape[0])) * time_per_frame
+    return (time, rg)
+
 
 def get_edr_obs(edr_df, key):
-    time = edr_df["Time"]*0.002
+    time = edr_df["Time"] * 0.002
     observable = edr_df[key]
-    return(time, observable)
+    return (time, observable)
 
 
-def get_torsions(traj_obj, torsion_atom_names, mirror_sym = False):
+def get_torsions(traj_obj, torsion_atom_names, mirror_sym=False):
     top = traj_obj.topology
     torsions_inds = []
     for torsion_atoms in torsion_atom_names:
-        torsion_i =[top.select("name " + atom)[0] for atom in torsion_atoms]
+        torsion_i = [top.select("name " + atom)[0] for atom in torsion_atoms]
         torsions_inds.append(torsion_i)
 
     # torsions_inds = np.array(torsions_inds)

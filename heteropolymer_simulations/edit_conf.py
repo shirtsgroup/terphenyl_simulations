@@ -18,7 +18,7 @@ class InternalCoordinateEditor:
         structure_file : string
             String of structure file to run MDAnalysis BAT method on
         topology_file : string
-            String of the topology file used to identify internal coordinates. Compatible with all 
+            String of the topology file used to identify internal coordinates. Compatible with all
             MDAnalysis compatible topology files.
         """
         self._structure_file = structure_file
@@ -26,9 +26,7 @@ class InternalCoordinateEditor:
         self.universe = mda.Universe(self._top_file, self._structure_file)
         self.get_IC_lists()
 
-
-
-    def get_IC_lists(self, frame = 0):
+    def get_IC_lists(self, frame=0):
         """
         Function used to extract all torsions from a given structure file.
         This function assumes a single structure and will default to reading
@@ -52,7 +50,7 @@ class InternalCoordinateEditor:
         self.ic_list = self.bat.results.bat[frame, :]
         z_matrix_header = self.ic_list[0:9]
         z_matrix_body = self.ic_list[9:]
-        
+
         # Extract root atoms and information
         self.root_atoms = self.bat._root.names
         self.root_atom_com = z_matrix_header[0:3]
@@ -62,16 +60,16 @@ class InternalCoordinateEditor:
         # Extract remaining atoms and internal coorinates
         n_entries = int(len(z_matrix_body) / 3)
         self.bond_indices = [0, n_entries]
-        self.bond_angle_indices = [n_entries, 2*n_entries]
-        self.torsion_indices = [2*n_entries, 3*n_entries]
+        self.bond_angle_indices = [n_entries, 2 * n_entries]
+        self.torsion_indices = [2 * n_entries, 3 * n_entries]
 
         self.bonds = z_matrix_body[0:n_entries]
-        self.bond_angles = z_matrix_body[n_entries:2*n_entries]
-        self.torsions = z_matrix_body[2*n_entries:3*n_entries]
+        self.bond_angles = z_matrix_body[n_entries : 2 * n_entries]
+        self.torsions = z_matrix_body[2 * n_entries : 3 * n_entries]
         self.torsion_ids = [" ".join(torsion.names) for torsion in self.bat._torsions]
 
-        assert(len(self.bonds) == len(self.bond_angles))
-        assert(len(self.bonds) == len(self.torsions))
+        assert len(self.bonds) == len(self.bond_angles)
+        assert len(self.bonds) == len(self.torsions)
 
     def find_bonds(self, atom_list):
         """
@@ -105,16 +103,13 @@ class InternalCoordinateEditor:
             if include == len(atom_list):
                 result.append(" ".join(bond_id))
                 bond_lengths.append(self.bonds[i])
-        
+
         return result, bond_lengths
 
-
-
-
-    def find_torsions(self, atom_list, positions = None):
+    def find_torsions(self, atom_list, positions=None):
         """
         Return a list of torsions ids from with a specific atoms
-        
+
         Parameters
         ----------
         atom_list : list
@@ -122,7 +117,7 @@ class InternalCoordinateEditor:
             can use specific atom names or elements names.
         positions : list
             List of integers indicating which positions to search for provided atom names
-        
+
         Returns
         -------
         result : list
@@ -139,7 +134,9 @@ class InternalCoordinateEditor:
             torsion_id_list = torsion_id.split(" ")
             # Filter torsion_id positions based on given position selection
             if positions is not None:
-                torsion_id_list = [i for i in torsion_id_list if torsion_id_list.index(i) in positions]
+                torsion_id_list = [
+                    i for i in torsion_id_list if torsion_id_list.index(i) in positions
+                ]
             for atom_id in atom_list:
                 if any(c.isdigit() for c in atom_id):
                     if any(atom_id in t_atom for t_atom in torsion_id_list):
@@ -173,7 +170,7 @@ class InternalCoordinateEditor:
         t_inds = [self.torsion_ids.index(t_id) for t_id in torsion_id_list]
         min_index = np.argmin(t_inds)
         return torsion_id_list[min_index]
-    
+
     def set_torsion(self, torsion_id, new_torsion):
         """
         Set a torsion, specified by its torsion id, to a new value
