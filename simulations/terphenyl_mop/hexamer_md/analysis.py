@@ -95,9 +95,9 @@ def main():
     hbonds = HydrogenBondAnalysis(
         hexamer_u,
         donors_sel = None,
-        hydrogens_sel = "name H14 H33 H52 H71 H90 H109",
+        hydrogens_sel = "name H14 H33 H52 H71 H90 H109 H128 H147",
         acceptors_sel = "element O",
-        d_a_cutoff = 4.0,
+        d_a_cutoff = 3.5,
         d_h_a_angle_cutoff = 150,
         update_selections = False
     )
@@ -112,6 +112,8 @@ def main():
     plt.ylabel(r"$N_{HB}$")
     plt.savefig("n_hydrogen_bonds.png")
     plt.close()
+
+    print("Average number of H-bonds:", np.mean(hbonds.count_by_time()))
 
     # Distribution of hydrogen bond distances
 
@@ -129,14 +131,44 @@ def main():
     plt.figure(dpi = 300)
     plt.hist(angles, density = True, bins = 40)
     plt.title("Distribution of hydrogen bond angles", weight="bold")
-    plt.xlabel("Angle (Degrees)")
+    plt.xlabel("Distance (A)")
     plt.ylabel("Density")
     plt.savefig("h_bond_angles.png")
     plt.close()
+
+    hb_types = list(hbonds.count_by_type())
+    hb_types.sort(key = lambda x: int(x[2]), reverse = True)
+    counts = np.array([int(hb_entry[2]) for hb_entry in hb_types])
+    percentage = counts / hexamer_u.trajectory.n_frames
+    names = [hb_entry[0].split(":")[1] + " " + hb_entry[1].split(":")[1] for hb_entry in hb_types]
+
+    plt.figure(dpi = 300)
+    plt.bar(range(len(percentage)), percentage, tick_label = names)
+    plt.xticks(rotation=90)
+    plt.xlabel("Hydrogen Bond Types")
+    plt.ylabel("Percentage of Total Simulation Time")
+    plt.tight_layout()
+    plt.savefig("h_bond_types.png",  bbox_inches = "tight")
+    plt.close()
+
+    # Clustering first 100 ns
+    # This will take sometime
+
+    hs.clustering.clustering_grid_search(
+        "npt_new.whole.xtc",
+        "berendsen_npt.gro", 
+        "resname HEX or resname CAP",
+        n_min_samples = 40,
+        n_eps = 40,
+        n_processes = 32,
+        prefix = "grid_search",
+        min_sample_limits = [0.01, 0.1],
+        eps_limits = [0.01, 0.4],
+        frame_start = 0,
+        frame_end = -1,
+        frame_stride = 1
+    )
     
-    print(hbonds.count_by_type())
-
-
 
 if __name__ == "__main__":
     main()

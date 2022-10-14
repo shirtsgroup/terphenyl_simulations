@@ -16,7 +16,7 @@ sns.color_palette("bwr", as_cmap=True)
 def main():
     t1 = time.time()
     # Clustering workflow
-    # hs.clustering.clustering_grid_search(["sim0/npt_new.whole.xtc", "sim1/npt_new.whole.xtc", "sim2/npt_new.whole.xtc", "sim3/npt_new.whole.xtc", "sim4/npt_new.whole.xtc"], "sim0/berendsen_npt.gro", "resname HEX", n_min_samples = 40, n_eps = 40, n_processes = 32, prefix = "grid_search", min_sample_limits = [0.005, 0.25])
+    hs.clustering.clustering_grid_search(["sim0/npt_new.whole.xtc", "sim1/npt_new.whole.xtc", "sim2/npt_new.whole.xtc", "sim3/npt_new.whole.xtc", "sim4/npt_new.whole.xtc"], "sim0/berendsen_npt.gro", "resname HEX", n_min_samples = 40, n_eps = 40, n_processes = 32, prefix = "grid_search", min_sample_limits = [0.005, 0.25])
     
     # Read in cluster outputs and REMD trajs
     cluster_file_list = os.listdir("clustering_output")
