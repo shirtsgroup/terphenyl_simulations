@@ -160,10 +160,10 @@ def plot_torsions_distributions(
     # Get torsions, bin and plot
     for i, traj_obj in enumerate(traj_obj_list):
         if type(torsion_atom_names[0]) is str:
-            torsions = get_torsions(traj_obj, torsion_atom_names, mirror_sym=mirror_sym)
+            torsions = get_torsions(traj_obj, [torsion_atom_names], mirror_sym=mirror_sym)
         if type(torsion_atom_names[0]) is list:
             torsions = get_torsions(
-                traj_obj, torsion_atom_names[i], mirror_sym=mirror_sym
+                traj_obj, torsion_atom_names, mirror_sym=mirror_sym
             )
         if offsets is not None:
             torsions += offsets[i]

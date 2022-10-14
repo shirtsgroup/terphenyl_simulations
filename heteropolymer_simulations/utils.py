@@ -101,6 +101,43 @@ def make_path(prefix):
     if not os.path.exists(prefix_wo_file):
         os.makedirs(prefix_wo_file)
 
+def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 0):
+    """
+    Using an MDAnalysis universe file with proper residue definitions, this function
+    will extract the torsion ids of all torsions propagated along the chain. Specifically
+    torsions should try to be fully defined within a single residue.
+    
+    Parameters
+    ----------
+    universe : MDAnalysis.Universe
+        MDAnalysis universe of trajectory files used to get torsion ids
+    resname : string
+        Residue name from which the torsions are defined
+    torsion_id : list of strings
+        Atom names that make up the torsion in the provided residue
+    template_residue_i : int, default 0
+        Residue in which the atom names are defined
+
+    Returns
+    -------
+    dihedral_ids : list of lists of strings
+        List of atom names defining the torsion provided by torsion_id
+        propaged in for each residue with name resname.
+    """
+
+    # Get index in residue
+    atoms_in_residue = [a.name for a in universe.residues[template_residue_i].atoms]
+    residue_atom_index  = [atoms_in_residue.index(a) for a in torsion_id if a in atoms_in_residue ]    
+    dihedral_ids = []
+    for residue in universe.residues:
+        if residue.resname == resname:
+            torsion_atoms = [residue.atoms[i] for i in residue_atom_index]
+            dihedral_ids.append([ta.name for ta in torsion_atoms])
+    
+    return(dihedral_ids)
+
+
+
 
 def main():
     top = TopFileObject("test.top")

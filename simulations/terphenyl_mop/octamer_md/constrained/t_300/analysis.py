@@ -45,7 +45,7 @@ def main():
     # Read in MD trajectory (both as an MDAnlysis and MDTraj object)
     print("Loading trajectories...")
     traj = md.load("npt_new.whole.xtc", top = "berendsen_npt.gro")
-    hexamer_u = mda.Universe("npt_new.tpr", "npt_new.whole.xtc")
+    octamer_u = mda.Universe("npt_new.tpr", "npt_new.whole.xtc")
     
     # Load helix cluster trajectory and get torsion IDs
     with open("old_hexamer_torsion_ids.yml", 'r') as yaml_file:
@@ -54,7 +54,7 @@ def main():
 
 
 
-    hexamer_r1_torsions = {
+    octamer_r1_torsions = {
         "a1" : ["C4", "C5", "C6", "C7"],
         "a2" : ["C6", "C7", "C13", "C14"],
         "p1" : ["C18", "C17", "C19", "N1"],
@@ -63,8 +63,8 @@ def main():
     }
 
     octamer_torsions = {}
-    for torsion_type in hexamer_r1_torsions.keys():
-        t_ids = get_torsion_ids(hexamer_u, "OCT", hexamer_r1_torsions[torsion_type])
+    for torsion_type in octamer_r1_torsions.keys():
+        t_ids = hs.utils.get_torsion_ids(octamer_u, "OCT", octamer_r1_torsions[torsion_type])
         octamer_torsions[torsion_type] = t_ids
         
         # Need to adjust some of the torsion distributions
@@ -93,7 +93,7 @@ def main():
     # Hydogen Bond analysis
 
     hbonds = HydrogenBondAnalysis(
-        hexamer_u,
+        octamer_u,
         donors_sel = None,
         hydrogens_sel = "name H14 H33 H52 H71 H90 H109 H128 H147",
         acceptors_sel = "element O",
@@ -137,7 +137,7 @@ def main():
     hb_types = list(hbonds.count_by_type())
     hb_types.sort(key = lambda x: int(x[2]), reverse = True)
     counts = np.array([int(hb_entry[2]) for hb_entry in hb_types])
-    percentage = counts / hexamer_u.trajectory.n_frames
+    percentage = counts / octamer_u.trajectory.n_frames
     names = [hb_entry[0].split(":")[1] + " " + hb_entry[1].split(":")[1] for hb_entry in hb_types]
 
     plt.figure(dpi = 300)
