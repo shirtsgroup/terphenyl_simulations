@@ -4,22 +4,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn import metrics
-from sklearn import preprocessing 
+from sklearn import preprocessing
 import time
 import sys
 import os
 from tqdm import tqdm
+
 # sns.set_style('whitegrid')
 sns.color_palette("bwr", as_cmap=True)
-    
-        
+
+
 def main():
     t1 = time.time()
 
     # Read REMD trajectory files
     remd_file_list = ["sim" + str(i) + "/npt_new.xtc" for i in range(64)]
     print("Loading REMD trajectory files...")
-    remd_trajs = [md.load(xtc_file, top = "sim0/berendsen_npt.gro") for xtc_file in tqdm(remd_file_list)]
+    remd_trajs = [
+        md.load(xtc_file, top="sim0/berendsen_npt.gro")
+        for xtc_file in tqdm(remd_file_list)
+    ]
 
     # A1 Torsion
     print("Working on Aromatic Torsions 1...")
@@ -31,14 +35,14 @@ def main():
         ["C24", "C106", "C100", "C105"],
         ["C87", "C86", "C83", "C82"],
     ]
-        
-    hs.plotting.plot_torsions_distributions(remd_trajs,
-                               torsion_atom_names,
-                               "Aromatic Torsion 1 (radians)",
-                               "remd_a1",
-                               mirror_sym = True
-                            )
 
+    hs.plotting.plot_torsions_distributions(
+        remd_trajs,
+        torsion_atom_names,
+        "Aromatic Torsion 1 (radians)",
+        "remd_a1",
+        mirror_sym=True,
+    )
 
     # A2 Torsion
     print("Working on Aromatic Torsions 2...")
@@ -51,13 +55,9 @@ def main():
         ["C83", "C84", "C92", "C93"],
     ]
 
-    hs.plotting.plot_torsions_distributions(remd_trajs,
-                               torsion_atom_names,
-                               "Aromatic Torsion 2",
-                               "remd_a2",
-                               mirror_sym = True
-                            )
-
+    hs.plotting.plot_torsions_distributions(
+        remd_trajs, torsion_atom_names, "Aromatic Torsion 2", "remd_a2", mirror_sym=True
+    )
 
     # P1 Torsion
     print("Working on Peptide Torsions 1...")
@@ -70,11 +70,12 @@ def main():
         ["C95", "C94", "C98", "N5"],
     ]
 
-    hs.plotting.plot_torsions_distributions(remd_trajs,
-                               torsion_atom_names,
-                               "Peptide Torsion 1",
-                               "remd_p1",
-                            )
+    hs.plotting.plot_torsions_distributions(
+        remd_trajs,
+        torsion_atom_names,
+        "Peptide Torsion 1",
+        "remd_p1",
+    )
 
     # P2 Torsion
     print("Working on Peptide Torsions 2...")
@@ -87,11 +88,12 @@ def main():
         ["C94", "C98", "N5", "C16"],
     ]
 
-    hs.plotting.plot_torsions_distributions(remd_trajs,
-                               torsion_atom_names,
-                               "Peptide Torsion 2",
-                               "remd_p2",
-                            )
+    hs.plotting.plot_torsions_distributions(
+        remd_trajs,
+        torsion_atom_names,
+        "Peptide Torsion 2",
+        "remd_p2",
+    )
 
     # P3 Torsion
     print("Working on Peptide Torsions 3...")
@@ -104,12 +106,9 @@ def main():
         ["N3", "C2", "C8", "C34"],
     ]
 
-    hs.plotting.plot_torsions_distributions(remd_trajs,
-                               torsion_atom_names,
-                               "Peptide Torsion 3",
-                               "remd_p3",
-                               mirror_sym = True
-                            )
+    hs.plotting.plot_torsions_distributions(
+        remd_trajs, torsion_atom_names, "Peptide Torsion 3", "remd_p3", mirror_sym=True
+    )
 
     p2_names = [
         [["C130", "C136", "N6", "C28"]],
@@ -120,13 +119,18 @@ def main():
         [["C94", "C98", "N5", "C16"]],
     ]
 
-    hs.plotting.plot_neighbor_dependent_2D_histogram(remd_trajs[0], p2_names, ["p2_r1", "p2_r2", "p2_r3", "p2_r4", "p2_r5", "p2_r6"], "p2_neighbors_remd_0", n_bins = 50)
+    hs.plotting.plot_neighbor_dependent_2D_histogram(
+        remd_trajs[0],
+        p2_names,
+        ["p2_r1", "p2_r2", "p2_r3", "p2_r4", "p2_r5", "p2_r6"],
+        "p2_neighbors_remd_0",
+        n_bins=50,
+    )
 
     t2 = time.time()
 
     print("Analysis took:", round(t2 - t1, 2), "seconds.")
 
-    
 
 if __name__ == "__main__":
     main()

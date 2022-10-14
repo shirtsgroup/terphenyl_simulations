@@ -142,7 +142,7 @@ def clustering_grid_search(
     if type(file_list) == list:
         traj = md.load(file_list[0], top=top_file)
         for i in range(1, len(file_list)):
-            tmp_traj = md.load(file_list[i])
+            tmp_traj = md.load(file_list[i], top = top_file)
             tmp_traj = tmp_traj[frame_start:frame_end:frame_stride]
             traj.join(traj, tmp_traj)
 
