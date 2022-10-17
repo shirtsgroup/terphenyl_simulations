@@ -139,7 +139,7 @@ class InternalCoordinateEditor:
                 ]
             for atom_id in atom_list:
                 if any(c.isdigit() for c in atom_id):
-                    if any(atom_id in t_atom for t_atom in torsion_id_list):
+                    if any(atom_id == t_atom for t_atom in torsion_id_list):
                         include += 1
                 else:
                     if atom_id in torsion_id:
