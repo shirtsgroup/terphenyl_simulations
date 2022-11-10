@@ -97,7 +97,13 @@ def make_path(prefix):
     prefix : string
         String of a directory path
     """
-    prefix_wo_file = "/".join(prefix.split("/")[:-1])
+
+    prefix_list = prefix.split("/")
+    if "." in prefix_list[-1]:
+        prefix_list.pop()
+    prefix_wo_file = "/".join(prefix_list)
+    if len(prefix_wo_file) == 0:
+        return
     if not os.path.exists(prefix_wo_file):
         os.makedirs(prefix_wo_file)
 

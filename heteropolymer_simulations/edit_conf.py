@@ -171,6 +171,22 @@ class InternalCoordinateEditor:
         min_index = np.argmin(t_inds)
         return torsion_id_list[min_index]
 
+    def get_torsion(self, torsion_id):
+        """
+        Get torsion value for a specified torsion id string
+
+        Parameters
+        ----------
+        torsion_id : string
+            Torsion ID for torsion value to return
+        """
+        if torsion_id in self.torsion_ids:
+            torsion_index = self.torsion_ids.index(torsion_id)
+            return self.torsions[torsion_index]
+        else:
+            print(torsion_id, "is not a valid torsion ID. Available torsion \
+                can be found in InternalCoordinateEditor.torsion_ids")
+
     def set_torsion(self, torsion_id, new_torsion):
         """
         Set a torsion, specified by its torsion id, to a new value
