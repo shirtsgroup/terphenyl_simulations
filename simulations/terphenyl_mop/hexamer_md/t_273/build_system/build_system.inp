@@ -23,7 +23,7 @@ output solvated_mop_hexamer.pdb
 # angles of rotation, in radian, relative to the position in the input
 # file). 
 
-structure em_adjusted.pdb
+structure em_hexamer.pdb
   number 1
   chain A
   fixed 34.6 34.6 34.6 45. 45. 45.

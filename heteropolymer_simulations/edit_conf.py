@@ -66,7 +66,7 @@ class InternalCoordinateEditor:
         self.bonds = z_matrix_body[0:n_entries]
         self.bond_angles = z_matrix_body[n_entries : 2 * n_entries]
         self.torsions = z_matrix_body[2 * n_entries : 3 * n_entries]
-        self.torsion_ids = [" ".join(torsion.names) for torsion in self.bat._torsions]
+        self.torsion_ids = [list(torsion.names) for torsion in self.bat._torsions]
 
         assert len(self.bonds) == len(self.bond_angles)
         assert len(self.bonds) == len(self.torsions)
@@ -91,17 +91,17 @@ class InternalCoordinateEditor:
         result = []
         bond_lengths = []
         for i, torsion_id in enumerate(self.torsion_ids):
-            bond_id = torsion_id.split(" ")[0:2]
+            bond_id = torsion_id[0:2]
             include = 0
             for atom_id in atom_list:
                 if any(c.isdigit() for c in atom_id):
                     if any(atom_id in b_atom for b_atom in bond_id):
                         include += 1
                 else:
-                    if atom_id in " ".join(bond_id):
+                    if atom_id in bond_id:
                         include += 1
             if include == len(atom_list):
-                result.append(" ".join(bond_id))
+                result.append(bond_id)
                 bond_lengths.append(self.bonds[i])
 
         return result, bond_lengths
@@ -131,7 +131,7 @@ class InternalCoordinateEditor:
 
         for i, torsion_id in enumerate(self.torsion_ids):
             include = 0
-            torsion_id_list = torsion_id.split(" ")
+            torsion_id_list = torsion_id
             # Filter torsion_id positions based on given position selection
             if positions is not None:
                 torsion_id_list = [
@@ -158,11 +158,11 @@ class InternalCoordinateEditor:
         Parameters
         ----------
         torsion_id_list : list
-            List of strings of torsion ids
+            List of lists of atom ids
 
         Returns
         -------
-        torsion_id : string
+        torsion_id : list
             The torsion id that propagates movements downstream
         """
         # Check for the earliest definition of a given torsion
@@ -177,15 +177,53 @@ class InternalCoordinateEditor:
 
         Parameters
         ----------
-        torsion_id : string
+        torsion_id : list
             Torsion ID for torsion value to return
         """
         if torsion_id in self.torsion_ids:
             torsion_index = self.torsion_ids.index(torsion_id)
             return self.torsions[torsion_index]
         else:
-            print(torsion_id, "is not a valid torsion ID. Available torsion \
+            print(" ".join(torsion_id), "is not a valid torsion ID. Available torsion \
                 can be found in InternalCoordinateEditor.torsion_ids")
+    
+    def get_bond_angle(self, bond_angle_id):
+        """
+        Get bond angle value for a specified angle id
+
+        Parameters
+        angle_id : string
+            Angle ID for desired angle
+        """
+
+        ice_angle_ids = [t_id[1:] for t_id in self.torsion_ids]
+        if bond_angle_id in ice_angle_ids:
+            angle_index = ice_angle_ids.index(bond_angle_id)
+            return self.bond_angles[angle_index]
+        elif bond_angle_id == self.root_atoms or bond_angle_id == self.root_atoms[::-1]:
+            return self.root_ics[2]
+        else:
+            print(bond_angle_id, "is not a valid angle ID.")
+
+    def get_bond(self, bond_id):
+        """
+        Get bond length value for a specified bond id
+
+        Parameters
+        bond_id : list
+            Bond ID for desired bond length
+        """
+
+        ice_bond_ids = [t_id[2:] for t_id in self.torsion_ids]
+        if bond_id in ice_bond_ids:
+            bond_index = ice_bond_ids.index(bond_id)
+            return self.bond_angles[bond_index]
+        elif bond_id in self.root_atoms[:2] or bond_id in self.root_atoms[:2][::-1]:
+            return self.root_ics[0]
+        elif bond_id in self.root_atoms[2:] or bond_id in self.root_atoms[2:][::-1]:
+            return self.root_ics[1]
+        else:
+            print(bond_id, "is not a valid angle ID.")
 
     def set_torsion(self, torsion_id, new_torsion):
         """
@@ -206,6 +244,44 @@ class InternalCoordinateEditor:
             # print("Setting", torsion_id, "to", new_torsion * 180 / np.pi)
         else:
             print(torsion_id, "is not a valid torsion ID.")
+    
+    def set_angle(self, angle_id, new_angle):
+        """
+        Set a new angle within the InternalCoordinateEditor specified by its atom ids
+
+        Parameters
+        ----------
+        angle_id : string
+            Angle ID with atom names in angle
+        new_angle : float
+            New angle value in radians
+        """
+
+        # print("Angle ID:", angle_id)
+        # print("fwd:", angle_id in [t_id[:-1] for t_id in self.torsion_ids])
+        # print("bwd:", angle_id[::-1] in [t_id[:-1] for t_id in self.torsion_ids])
+        angle_ids = [t_id[:-1] for t_id in self.torsion_ids]
+
+        if angle_id in angle_ids:
+            # print("1) Setting angle", angle_id, "to", new_angle * 180 / np.pi)
+            angle_index = angle_ids.index(angle_id)
+            self.bond_angles[angle_index] = new_angle
+            self.ic_list[self.bond_angle_indices[0] + 9 + angle_index] = new_angle
+        if angle_id[::-1] in angle_ids:
+            # print("2) Setting angle", angle_id[::-1], "to", new_angle * 180 / np.pi)
+            angle_index = angle_ids.index(angle_id[::-1])
+            self.bond_angles[angle_index] = new_angle
+            self.ic_list[self.bond_angle_indices[0] + 9 + angle_index] = new_angle
+        if angle_id == list(self.root_atoms):
+            # print("root atoms")
+            self.root_ics[2] = new_angle
+            self.ic_list[8] = new_angle
+        if angle_id[::-1] == list(self.root_atoms):
+            # print("root atoms")
+            self.root_ics[2] = new_angle
+            self.ic_list[8] = new_angle
+        else:
+            print(angle_id, "is not a valid angle ID.")
 
     def update_internal_coordinates(self):
         """

@@ -5,7 +5,8 @@ from datetime import datetime
 import rdkit
 from rdkit import Chem
 import platform
-
+import numpy as np 
+import sys
 
 class TopFileObject:
     def __init__(self, filename):
@@ -107,7 +108,7 @@ def make_path(prefix):
     if not os.path.exists(prefix_wo_file):
         os.makedirs(prefix_wo_file)
 
-def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 0):
+def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 1):
     """
     Using an MDAnalysis universe file with proper residue definitions, this function
     will extract the torsion ids of all torsions propagated along the chain. Specifically
@@ -132,16 +133,97 @@ def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 0):
     """
 
     # Get index in residue
-    atoms_in_residue = [a.name for a in universe.residues[template_residue_i].atoms]
-    residue_atom_index  = [atoms_in_residue.index(a) for a in torsion_id if a in atoms_in_residue ]    
-    dihedral_ids = []
-    for residue in universe.residues:
-        if residue.resname == resname:
-            torsion_atoms = [residue.atoms[i] for i in residue_atom_index]
-            dihedral_ids.append([ta.name for ta in torsion_atoms])
-    
+    atoms_in_residue = [a.name for a in universe.select_atoms("resid " + str(template_residue_i + 1)).atoms]
+
+    # Case where all atoms in dihedral are defined the given residue
+    if all([atom_id in atoms_in_residue for atom_id in torsion_id]):
+        residue_atom_index  = [atoms_in_residue.index(a) for a in torsion_id if a in atoms_in_residue ]    
+        dihedral_ids = []
+        for residue in universe.residues:
+            if residue.resname == resname:
+                torsion_atoms = [residue.atoms[i] for i in residue_atom_index]
+                dihedral_ids.append([ta.name for ta in torsion_atoms])
+    # Case where 1 or more atoms in dihedral are not in given residue
+    elif any([atom_id in atoms_in_residue for atom_id in torsion_id]):
+        if all([universe.select_atoms("name " + atom_id).resnames[0] == resname for atom_id in torsion_id]):
+            dihedral_ids = []
+            resid_in_torsion = np.array([universe.select_atoms("name " + atom_id).resids[0] for atom_id in torsion_id])
+            resid_diff = resid_in_torsion - template_residue_i - 1
+            atom_resid_res_inds = []
+            for i, atom in enumerate(torsion_id):
+                atoms_in_res_i = [a.name for a in universe.select_atoms("resid " + str(resid_in_torsion[i])).atoms]
+                atom_res_index = atoms_in_res_i.index(atom)
+                atom_resid_index = (resid_in_torsion[i] - template_residue_i - 1, atom_res_index)
+                atom_resid_res_inds.append(atom_resid_index)
+            for i in range(len(universe.residues)):
+                if np.max(np.array(resid_diff) + i) == len(universe.residues):
+                    continue
+                if all([universe.residues[i].resname == universe.residues[i + diff].resname for diff in resid_diff]) and universe.residues[i].resname == resname:
+                    torsion_atoms = [universe.residues[i + diff].atoms[j].name for diff, j in atom_resid_res_inds]
+                    dihedral_ids.append(torsion_atoms)
+    else:
+        return(None)
+
+        
     return(dihedral_ids)
 
+def get_angle_ids(universe, resname, angle_id, template_residue_i = 0):
+    """
+    Using an MDAnalysis universe with proper residue definitions, this function
+    will extract the angle atom ids of all angles propagated along the chain. Specifically
+    bond-angles should try to be fully defined within a single residue.
+    
+    Parameters
+    ----------
+    universe : MDAnalysis.Universe
+        MDAnalysis universe of trajectory files used to get torsion ids
+    resname : string
+        Residue name from which the torsions are defined
+    torsion_id : list of strings
+        Atom names that make up the torsion in the provided residue
+    template_residue_i : int, default 0
+        Residue in which the atom names are defined
+
+    Returns
+    -------
+    angle_ids : list of lists of strings
+        List of atom names defining the torsion provided by torsion_id
+        propaged in for each residue with name resname.
+    """
+
+    # Get index in residue
+    atoms_in_residue = [a.name for a in universe.select_atoms("resid " + str(template_residue_i + 1)).atoms]
+    
+    if all([atom_id in atoms_in_residue for atom_id in angle_id]):
+        residue_atom_index  = [atoms_in_residue.index(a) for a in angle_id if a in atoms_in_residue ]    
+        angle_ids = []
+        for residue in universe.residues:
+            if residue.resname == resname:
+                angle_atoms = [residue.atoms[i] for i in residue_atom_index]
+                angle_ids.append([ta.name for ta in angle_atoms])
+        return(angle_ids)
+
+    # Case where 1 or more atoms in dihedral are not in given residue
+    elif any([atom_id in atoms_in_residue for atom_id in angle_id]):
+        if all([universe.select_atoms("name " + atom_id).resnames[0] == resname for atom_id in angle_id]):
+            angle_ids = []
+            resid_in_torsion = np.array([universe.select_atoms("name " + atom_id).resids[0] for atom_id in angle_id])
+            resid_diff = resid_in_torsion - template_residue_i - 1
+            atom_resid_res_inds = []
+            for i, atom in enumerate(angle_id):
+                atoms_in_res_i = [a.name for a in universe.select_atoms("resid " + str(resid_in_torsion[i])).atoms]
+                atom_res_index = atoms_in_res_i.index(atom)
+                atom_resid_index = (resid_in_torsion[i] - template_residue_i - 1, atom_res_index)
+                atom_resid_res_inds.append(atom_resid_index)
+            for i in range(len(universe.residues)):
+                if np.max(np.array(resid_diff) + i) == len(universe.residues):
+                    continue
+                if all([universe.residues[i].resname == universe.residues[i + diff].resname for diff in resid_diff]) and universe.residues[i].resname == resname:
+                    torsion_atoms = [universe.residues[i + diff].atoms[j].name for diff, j in atom_resid_res_inds]
+                    angle_ids.append(torsion_atoms)
+    else:
+        pass
+    return(angle_ids)
 
 
 

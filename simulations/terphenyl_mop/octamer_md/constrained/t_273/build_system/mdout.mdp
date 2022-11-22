@@ -1,17 +1,17 @@
 ;
 ;	File 'mdout.mdp' was generated
 ;	By user: tfobe (1000)
-;	On host: grayspeak
-;	At date: Wed Sep 28 16:26:29 2022
+;	On host: grays-peak
+;	At date: Tue Nov 22 12:16:06 2022
 ;
 ;	Created by:
-;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
+;	             :-) GROMACS - gmx grompp, 2020.1-Ubuntu-2020.1-1 (-:
 ;	
-;	Executable:   /usr/local/gromacs/bin/gmx
-;	Data prefix:  /usr/local/gromacs
-;	Working dir:  /home/tfobe/Research/heteropolymer_simulations/simulations/terphenyl_mop/octamer_md/build_system
+;	Executable:   /usr/bin/gmx
+;	Data prefix:  /usr
+;	Working dir:  /home/tfobe/Research/heteropolymer_simulations/simulations/terphenyl_mop/octamer_md/constrained/t_273/build_system
 ;	Command line:
-;	  gmx grompp -f em.mdp -c solvated_mop_octamer.gro -p system.top -o em_solvated_helix -maxwarn 1
+;	  gmx grompp -f em.mdp -c hexamer_helix.gro -p ../../../../hexamer_remd/t_250_450/build_system/terphenyl_mop_hexamer.top -o em_hexamer
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -30,8 +30,6 @@ nsteps                   = -1
 init-step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
 simulation-part          = 1
-; Multiple time-stepping
-mts                      = no
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
@@ -153,8 +151,28 @@ refcoord-scaling         = No
 
 ; OPTIONS FOR QMMM calculations
 QMMM                     = no
-; Groups treated with MiMiC
+; Groups treated Quantum Mechanically
 QMMM-grps                = 
+; QM method             
+QMmethod                 = 
+; QMMM scheme           
+QMMMscheme               = normal
+; QM basisset           
+QMbasis                  = 
+; QM charge             
+QMcharge                 = 
+; QM multiplicity       
+QMmult                   = 
+; Surface Hopping       
+SH                       = 
+; CAS space options     
+CASorbitals              = 
+CASelectrons             = 
+SAon                     = 
+SAoff                    = 
+SAsteps                  = 
+; Scale factor for MM charges
+MMChargeScaleFactor      = 1
 
 ; SIMULATED ANNEALING  
 ; Type of annealing for each temperature group (no/single/periodic)
@@ -169,7 +187,7 @@ annealing-temp           =
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen-vel                  = no
 gen-temp                 = 300
-gen-seed                 = 926609087
+gen-seed                 = -1
 
 ; OPTIONS FOR BONDS    
 constraints              = none
@@ -259,15 +277,11 @@ temperature-lambdas      =
 calc-lambda-neighbors    = 1
 init-lambda-weights      = 
 dhdl-print-energy        = no
-sc-function              = beutler
 sc-alpha                 = 0
 sc-power                 = 1
 sc-r-power               = 6
 sc-sigma                 = 0.3
 sc-coul                  = no
-sc-gapsys-scale-linpoint-lj = 0.85
-sc-gapsys-scale-linpoint-q = 0.3
-sc-gapsys-sigma-lj       = 0.3
 separate-dhdl-file       = yes
 dhdl-derivatives         = yes
 dh_hist_size             = 0
@@ -314,6 +328,3 @@ electric-field-z         = 0 0 0 0
 
 ; Density guided simulation
 density-guided-simulation-active = false
-
-; QM/MM with CP2K
-qmmm-cp2k-active         = false

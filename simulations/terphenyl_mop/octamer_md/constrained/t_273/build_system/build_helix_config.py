@@ -4,6 +4,7 @@ import mdtraj as md
 import numpy as np
 import scipy as sp#
 import sys
+import yaml
 
 def main():
     # Torsion ids for torsions of interest
@@ -34,7 +35,7 @@ def main():
     
     # Load hexamer helical cluster
     print("Loading Cluster trajectory files...")
-    cluster_traj = md.load("clustering_output/cluster_9.gro")
+    cluster_traj = md.load("cluster_9.gro")
 
 
     for torsion_type in list(octamer_torsions.keys()):
@@ -43,7 +44,7 @@ def main():
         #   continue
 
         print("Working on torsion", torsion_type + "...")
-        torsion_atom_names = hexamer_torsions_old[torsion_type]
+        torsion_atom_names = old_hexamer_torsions[torsion_type]
 
         print("Old Torsion Atoms:")
         for t_id in torsion_atom_names:
@@ -76,14 +77,14 @@ def main():
         # For p2 take the 2nd largest peak
         torsion_max_density = bin_centers[np.argmax(hist)]
 
-        if torsion_type == "a1":
-            torsion_max_density -= np.pi
-        if torsion_type == "a2":
-            torsion_max_density += np.pi - 25 * np.pi/180
-        if torsion_type == "p2":
-           torsion_max_density += -np.pi + 45 * np.pi/180
-        if torsion_type == "p3":
-           torsion_max_density += np.pi
+        #if torsion_type == "a1":
+        #    torsion_max_density -= np.pi
+        #if torsion_type == "a2":
+        #    torsion_max_density += np.pi - 25 * np.pi/180
+        #if torsion_type == "p2":
+        #   torsion_max_density += -np.pi + 45 * np.pi/180
+        #if torsion_type == "p3":
+        #   torsion_max_density += np.pi
 
 
         print("Setting", torsion_type, "to", torsion_max_density*180/np.pi)
@@ -95,12 +96,16 @@ def main():
             torsion_ids, torsions = ice.find_torsions(center_torsion_atoms[i], positions = [1, 2])
             prop_torsion_id = ice.identify_chain_prop_torsion(torsion_ids)
             set_non_prop_torsion(ice, prop_torsion_id, octamer_torsions[torsion_type][i], torsion_max_density)
-            ice.update_internal_coordinates()
             # if torsion_type == "p1":
             #     if skip == 0:
             #        break
             #     else:
             #         skip += 1
+    
+    shift = ice.torsions[ice.bat._primary_torsion_indices]
+    shift[ice.bat._unique_primary_torsion_indices] = 0
+    ice.torsions -= shift
+    ice.update_internal_coordinates()
     ice.write_structure("octamer_adjusted.gro")
 
 
