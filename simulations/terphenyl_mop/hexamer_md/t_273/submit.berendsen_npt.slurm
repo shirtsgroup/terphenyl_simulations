@@ -14,7 +14,7 @@ source /jet/home/tfobe/software/gromacs-2022.2/bin/GMXRC
 
 
 # Run grompp on all berendsen_nvt files
-mpirun -np 1 gmx_mpi grompp -f berendsen_npt.mdp -c berendsen_nvt.gro -p system_hmr.top -o berendsen_npt -maxwarn 2
+mpirun -np 1 gmx_mpi grompp -f berendsen_npt.mdp -c berendsen_nvt.gro -p system_hmr_rest.top -r em_solvated.gro -o berendsen_npt -maxwarn 2
 
 # Run all berendsen_nvt simulations in parallel
 mpirun -np 8  gmx_mpi mdrun -v -deffnm berendsen_npt -ntomp 1
