@@ -3271,6 +3271,8 @@ system1          3
      57     76     54     58     4  180.0000000  1.5341333  2
      93     94    115     92     4  180.0000000  1.5341333  2
 
+#include "posre.itp"
+
 
 [ moleculetype ]
 ; Name            nrexcl
