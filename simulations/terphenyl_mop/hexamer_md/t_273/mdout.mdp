@@ -1,8 +1,8 @@
 ;
 ;	File 'mdout.mdp' was generated
 ;	By user: unknown (66213)
-;	On host: r007.ib.bridges2.psc.edu
-;	At date: Tue Nov 22 18:49:42 2022
+;	On host: r005.ib.bridges2.psc.edu
+;	At date: Wed Nov 23 13:25:34 2022
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
@@ -11,7 +11,7 @@
 ;	Data prefix:  /jet/home/tfobe/software/gromacs-2022.2
 ;	Working dir:  /ocean/projects/cts160011p/tfobe/heteropolymer_simulations/simulations/terphenyl_mop/hexamer_md/t_273
 ;	Command line:
-;	  gmx_mpi grompp -f berendsen_nvt.mdp -c em_test.gro -p system_hmr_rest.top -o berendsen_nvt -maxwarn 1 -r em_solvated.gro
+;	  gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system_hmr.top -o npt_new
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -25,7 +25,7 @@ integrator               = md
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.004
-nsteps                   = 1250000
+nsteps                   = 25000000
 ; For exact run continuation or redoing part of a run
 init-step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -103,7 +103,7 @@ rcoulomb                 = 1
 epsilon-r                = 1
 epsilon-rf               = 0
 ; Method for doing Van der Waals
-vdwtype                  = PME
+vdwtype                  = cutoff
 vdw-modifier             = Potential-shift-Verlet
 ; cut-off lengths       
 rvdw-switch              = 0
@@ -131,7 +131,7 @@ implicit-solvent         = no
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling  
-Tcoupl                   = berendsen
+Tcoupl                   = v-rescale
 nsttcouple               = -1
 nh-chain-length          = 10
 print-nose-hoover-chain-variables = no
@@ -141,13 +141,13 @@ tc-grps                  = system
 tau-t                    = 2
 ref-t                    = 273.15
 ; pressure coupling     
-Pcoupl                   = no
-pcoupltype               = Isotropic
+Pcoupl                   = Parrinello-Rahman
+Pcoupltype               = isotropic
 nstpcouple               = -1
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
-tau-p                    = 1
+tau-p                    = 20
 compressibility          = 4.5e-5
-ref-p                    = 
+ref-p                    = 1
 ; Scaling of reference coordinates, No, All or COM
 refcoord-scaling         = No
 
@@ -167,9 +167,9 @@ annealing-time           =
 annealing-temp           = 
 
 ; GENERATE VELOCITIES FOR STARTUP RUN
-gen-vel                  = yes
+gen-vel                  = no
 gen-temp                 = 273.15
-gen-seed                 = -438308884
+gen-seed                 = -268451869
 
 ; OPTIONS FOR BONDS    
 constraints              = h-bonds

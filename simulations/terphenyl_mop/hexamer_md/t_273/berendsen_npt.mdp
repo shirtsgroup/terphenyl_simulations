@@ -31,3 +31,4 @@ constraints = h-bonds
 constraint-algorithm = lincs
 lincs_iter              = 2         ; accuracy of LINCS
 lincs_order             = 8         ; also related to accuracy
+refcoord-scaling = com
