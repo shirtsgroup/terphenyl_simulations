@@ -2,7 +2,7 @@
 ;	File 'mdout.mdp' was generated
 ;	By user: tfobe (1000)
 ;	On host: grays-peak
-;	At date: Tue Nov 22 12:16:06 2022
+;	At date: Mon Nov 28 11:25:34 2022
 ;
 ;	Created by:
 ;	             :-) GROMACS - gmx grompp, 2020.1-Ubuntu-2020.1-1 (-:
@@ -11,7 +11,7 @@
 ;	Data prefix:  /usr
 ;	Working dir:  /home/tfobe/Research/heteropolymer_simulations/simulations/terphenyl_mop/octamer_md/constrained/t_273/build_system
 ;	Command line:
-;	  gmx grompp -f em.mdp -c hexamer_helix.gro -p ../../../../hexamer_remd/t_250_450/build_system/terphenyl_mop_hexamer.top -o em_hexamer
+;	  gmx grompp -f em.mdp -c octamer_helix.gro -p terphenyl_mop_octamer.top -o em_octamer_helix
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
