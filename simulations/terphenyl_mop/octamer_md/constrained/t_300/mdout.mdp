@@ -1,8 +1,8 @@
 ;
 ;	File 'mdout.mdp' was generated
 ;	By user: unknown (66213)
-;	On host: r005.ib.bridges2.psc.edu
-;	At date: Thu Oct  6 21:46:34 2022
+;	On host: r027.ib.bridges2.psc.edu
+;	At date: Mon Nov 28 19:15:44 2022
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
@@ -139,7 +139,7 @@ print-nose-hoover-chain-variables = no
 tc-grps                  = system
 ; Time constant (ps) and reference temperature (K)
 tau-t                    = 2
-ref-t                    = 300.0
+ref-t                    = 300
 ; pressure coupling     
 Pcoupl                   = Parrinello-Rahman
 Pcoupltype               = isotropic
@@ -168,8 +168,8 @@ annealing-temp           =
 
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen-vel                  = no
-gen-temp                 = 300.0
-gen-seed                 = 1271920565
+gen-temp                 = 300
+gen-seed                 = 938965883
 
 ; OPTIONS FOR BONDS    
 constraints              = h-bonds

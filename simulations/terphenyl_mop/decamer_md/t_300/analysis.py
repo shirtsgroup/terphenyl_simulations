@@ -45,26 +45,26 @@ def main():
     # Read in MD trajectory (both as an MDAnlysis and MDTraj object)
     print("Loading trajectories...")
     traj = md.load("npt_new.whole.xtc", top = "berendsen_npt.gro")
-    hexamer_u = mda.Universe("npt_new.tpr", "npt_new.whole.xtc")
+    octamer_u = mda.Universe("npt_new.tpr", "npt_new.whole.xtc")
     
     # Load helix cluster trajectory and get torsion IDs
     with open("old_hexamer_torsion_ids.yml", 'r') as yaml_file:
         old_hexamer_torsions = yaml.safe_load(yaml_file)
-    helix_cluster = md.load("build_system/clustering_output/cluster_9.gro")
+    helix_cluster = md.load("../../octamer_md/constrained/t_300/build_system/clustering_output/cluster_9.gro")
 
 
 
-    hexamer_r1_torsions = {
-        "a1" : ["C4", "C5", "C6", "C7"],
-        "a2" : ["C6", "C7", "C13", "C14"],
-        "p1" : ["C18", "C17", "C19", "N1"],
-        "p2" : ["C17", "C19", "N1", "H14"],
-        "p3" : ["O1", "C1", "C2", "C3"],
+    octamer_r1_torsions = {
+        "a1" : ["C7", "C6", "C5", "C13"],
+        "a2" : ["C5", "C13", "C14", "C15"],
+        "p1" : ["C15", "C16", "C17", "N1"],
+        "p2" : ["C16", "C17", "N1", "H15"],
+        "p3" : ["O2", "C10", "C9", "C8"],
     }
 
     octamer_torsions = {}
-    for torsion_type in hexamer_r1_torsions.keys():
-        t_ids = get_torsion_ids(hexamer_u, "OCT", hexamer_r1_torsions[torsion_type])
+    for torsion_type in octamer_r1_torsions.keys():
+        t_ids = hs.utils.get_torsion_ids(octamer_u, "DEC", octamer_r1_torsions[torsion_type])
         octamer_torsions[torsion_type] = t_ids
         
         # Need to adjust some of the torsion distributions
@@ -77,27 +77,36 @@ def main():
             offsets = [-np.pi, 0]
         if torsion_type == "p2":
             offsets = [np.pi, 0]
-    
+
         # Get torsions from simulation
         hs.plotting.plot_torsions_distributions(
             [traj, helix_cluster],
             [octamer_torsions[torsion_type], old_hexamer_torsions[torsion_type]],
             torsion_type + " Torsion (Radians)",
-            torsion_type,
+            "torsion_plots/" + torsion_type,
             torsion_type + " Torsion Plot",
             legend = ["Helix MD", "Helix Cluster"],
             mirror_sym = False,
             offsets = offsets
         )
 
-    # Hydogen Bond analysis
+        hs.plotting.plot_torsion_timeseries(
+            traj,
+            octamer_torsions[torsion_type],
+            [torsion_type + "_res_" + str(i+1) + ".png" for i in range(len(octamer_torsions[torsion_type]))],
+            titles = [torsion_type.upper() + " torsion for residue " + str(i+1) for i in range(len(octamer_torsions[torsion_type]))],
+            degrees = True
+        )
 
+    # Hydogen Bond analysis
+    hbond_dir = "hbonds"
+    hs.utils.make_path(hbond_dir)
     hbonds = HydrogenBondAnalysis(
-        hexamer_u,
+        octamer_u,
         donors_sel = None,
-        hydrogens_sel = "name H14 H33 H52 H71 H90 H109 H128 H147",
+        hydrogens_sel = "name H15 H34 H53 H72 H91 H110 H129 H148 167 186",
         acceptors_sel = "element O",
-        d_a_cutoff = 4.0,
+        d_a_cutoff = 3.5,
         d_h_a_angle_cutoff = 150,
         update_selections = False
     )
@@ -110,7 +119,7 @@ def main():
     plt.title("Number of hydrogen bonds over time", weight="bold")
     plt.xlabel("Time (ps)")
     plt.ylabel(r"$N_{HB}$")
-    plt.savefig("n_hydrogen_bonds.png")
+    plt.savefig(hbond_dir + "/n_hydrogen_bonds.png")
     plt.close()
 
     # Distribution of hydrogen bond distances
@@ -123,7 +132,7 @@ def main():
     plt.title("Distribution of hydrogen bond distances", weight="bold")
     plt.xlabel("Distance (A)")
     plt.ylabel("Density")
-    plt.savefig("h_bond_distances.png")
+    plt.savefig(hbond_dir + "/h_bond_distances.png")
     plt.close()
 
     plt.figure(dpi = 300)
@@ -131,14 +140,42 @@ def main():
     plt.title("Distribution of hydrogen bond angles", weight="bold")
     plt.xlabel("Distance (A)")
     plt.ylabel("Density")
-    plt.savefig("h_bond_angles.png")
+    plt.savefig(hbond_dir + "/h_bond_angles.png")
     plt.close()
 
-    print(hbonds.count_by_type())
+    hb_types = list(hbonds.count_by_type())
+    hb_types.sort(key = lambda x: int(x[2]), reverse = True)
+    counts = np.array([int(hb_entry[2]) for hb_entry in hb_types])
+    percentage = counts / octamer_u.trajectory.n_frames
+    names = [hb_entry[0].split(":")[1] + " " + hb_entry[1].split(":")[1] for hb_entry in hb_types]
 
+    plt.figure(dpi = 300)
+    plt.bar(range(len(percentage)), percentage, tick_label = names)
+    plt.xticks(rotation=90)
+    plt.xlabel("Hydrogen Bond Types")
+    plt.ylabel("Fraction of Total Simulation Time")
+    plt.tight_layout()
+    plt.savefig(hbond_dir + "/h_bond_types.png",  bbox_inches = "tight")
+    plt.close()
+
+    # Clustering first 100 ns
+    # This will take sometime
+
+    hs.clustering.clustering_grid_search(
+        "npt_new.whole.xtc",
+        "berendsen_npt.gro", 
+        "resname DEC or resname CAP",
+        n_min_samples = 40,
+        n_eps = 40,
+        n_processes = 16,
+        prefix = "grid_search",
+        min_sample_limits = [0.01, 0.1],
+        eps_limits = [0.01, 0.4],
+        frame_start = 0,
+        frame_end = 500, # first 100 ns
+        frame_stride = 1
+    )
     
-
-
 
 if __name__ == "__main__":
     main()

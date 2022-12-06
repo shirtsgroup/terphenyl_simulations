@@ -401,7 +401,7 @@ cl3           17  35.453200  0.00000000  A     0.34709414        1.10876
 
 [ moleculetype ]
 ; Name            nrexcl
-system1          3
+OCT          3
 
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
@@ -4257,7 +4257,7 @@ system1          3
      20     19     37     15     4  180.0000000  1.5341333  2
      94     93     95    112     4  180.0000000  1.5341333  2
     288    289    307    270     4  180.0000000  1.5341333  2
-     20     37     15     19     4  index match180.0000000  1.5341333  2
+     20     37     15     19     4  180.0000000  1.5341333  2
       6      5      7     24     4  180.0000000  1.5341333  2
     225    247    224    226     4  180.0000000  1.5341333  2
     135    136    157    133     4  180.0000000  1.5341333  2
@@ -4321,5 +4321,5 @@ Terphenyl MOP hexamer system in chloroform
 
 [ molecules ]
 ; Compound       #mols
-system1              1
+OCT              1
 TCM               1238

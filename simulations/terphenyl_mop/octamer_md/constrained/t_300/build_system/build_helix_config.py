@@ -2,75 +2,15 @@ import heteropolymer_simulations as hs
 import MDAnalysis as mda
 import mdtraj as md
 import numpy as np
-import scipy as sp
+import scipy as sp#
 import sys
-
-def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 0):
-    """
-    Using an MDAnalysis universe file with proper residue definitions, this function
-    will extract the torsion ids of all torsions propagated along the chain. Specifically
-    torsions should try to be fully defined within a single residue.
-    """
-
-    # Get index in residue
-    atoms_in_residue = [a.name for a in universe.residues[template_residue_i].atoms]
-    residue_atom_index  = [atoms_in_residue.index(a) for a in torsion_id if a in atoms_in_residue ]    
-    dihedral_ids = []
-    for residue in universe.residues:
-        if residue.resname == resname:
-            torsion_atoms = [residue.atoms[i] for i in residue_atom_index]
-            dihedral_ids.append([ta.name for ta in torsion_atoms])
-    
-    return(dihedral_ids)
-
+import yaml
 
 def main():
-
     # Torsion ids for torsions of interest
 
-    hexamer_torsions_old = {
-        "a1" : [
-            ["C131", "C66", "C61", "C65"],
-            ["C70", "C70", "C33", "C32"],
-            ["C5", "C7", "C99", "C25"],
-            ["C123", "C50", "C44", "C11"],
-            ["C24", "C106", "C100", "C105"],
-            ["C91", "C86", "C83", "C84"],
-        ],
-        "a2" : [
-            ["C61", "C65", "C74", "C73"],
-            ["C33", "C32", "C72", "C9"],
-            ["C99", "C57", "C53", "C1"],
-            ["C44", "C11", "C47", "C48"],
-            ["C100", "C105", "C108", "C109"],
-            ["C83", "C84", "C92", "C93"],
-        ],
-        "p1" : [
-            ["C73", "C130", "C136", "N6"],
-            ["C9", "C114", "C116", "N1"],
-            ["C1", "C56", "C31", "N3"],
-            ["C48", "C35", "C124", "N4"],
-            ["C21", "C15", "C36", "N2"],
-            ["C95", "C94", "C98", "N5"],
-        ],
-        "p2" : [
-            ["C130", "C136", "N6", "C28"],
-            ["C114", "C116", "N1", "C43"],
-            ["C56", "C31", "N3", "C2"],
-            ["C35", "C124", "N4", "C37"],
-            ["C15", "C36", "N2", "C97"],
-            ["C94", "C98", "N5", "C16"],
-        ],
-        "p3" : [
-            ["N6", "C28", "C68", "C20"],
-            ["N1", "C43", "C119", "C117"],
-            ["N3", "C2", "C8", "C34"],
-            ["N4", "C37", "C40", "C39"],
-            ["N2", "C97", "C89", "C88"],
-            ["N3", "C2", "C8", "C34"],
-        ],
-    }
-
+    with open("old_hexamer_torsion_ids.yml", 'r') as yaml_file:
+        old_hexamer_torsions = yaml.safe_load(yaml_file)
 
     octamer_u = mda.Universe("terphenyl_mop_octamer.itp", "em_octamer.gro")
 
@@ -82,9 +22,12 @@ def main():
         "p3" : ["O1", "C1", "C2", "C3"],
     }
 
+    # Get all torsions defined in residue 1
+    
+
     octamer_torsions = {}
     for torsion_type in octamer_r1_torsions.keys():
-        t_ids = get_torsion_ids(octamer_u, "OCT", octamer_r1_torsions[torsion_type])
+        t_ids = hs.utils.get_torsion_ids(octamer_u, "OCT", octamer_r1_torsions[torsion_type])
         octamer_torsions[torsion_type] = t_ids
 
     # Build ICE object
@@ -92,7 +35,7 @@ def main():
     
     # Load hexamer helical cluster
     print("Loading Cluster trajectory files...")
-    cluster_traj = md.load("clustering_output/cluster_9.gro")
+    cluster_traj = md.load("cluster_9.gro")
 
 
     for torsion_type in list(octamer_torsions.keys()):
@@ -101,7 +44,7 @@ def main():
         #   continue
 
         print("Working on torsion", torsion_type + "...")
-        torsion_atom_names = hexamer_torsions_old[torsion_type]
+        torsion_atom_names = old_hexamer_torsions[torsion_type]
 
         print("Old Torsion Atoms:")
         for t_id in torsion_atom_names:
@@ -134,14 +77,14 @@ def main():
         # For p2 take the 2nd largest peak
         torsion_max_density = bin_centers[np.argmax(hist)]
 
-        if torsion_type == "a1":
-            torsion_max_density -= np.pi
-        if torsion_type == "a2":
-            torsion_max_density += np.pi - 25 * np.pi/180
-        if torsion_type == "p2":
-           torsion_max_density += -np.pi + 45 * np.pi/180
-        if torsion_type == "p3":
-           torsion_max_density += np.pi
+        #if torsion_type == "a1":
+        #    torsion_max_density -= np.pi
+        #if torsion_type == "a2":
+        #    torsion_max_density += np.pi - 25 * np.pi/180
+        #if torsion_type == "p2":
+        #   torsion_max_density += -np.pi + 45 * np.pi/180
+        #if torsion_type == "p3":
+        #   torsion_max_density += np.pi
 
 
         print("Setting", torsion_type, "to", torsion_max_density*180/np.pi)
@@ -153,12 +96,16 @@ def main():
             torsion_ids, torsions = ice.find_torsions(center_torsion_atoms[i], positions = [1, 2])
             prop_torsion_id = ice.identify_chain_prop_torsion(torsion_ids)
             set_non_prop_torsion(ice, prop_torsion_id, octamer_torsions[torsion_type][i], torsion_max_density)
-            ice.update_internal_coordinates()
             # if torsion_type == "p1":
             #     if skip == 0:
             #        break
             #     else:
             #         skip += 1
+    
+    shift = ice.torsions[ice.bat._primary_torsion_indices]
+    shift[ice.bat._unique_primary_torsion_indices] = 0
+    ice.torsions -= shift
+    ice.update_internal_coordinates()
     ice.write_structure("octamer_adjusted.gro")
 
 

@@ -1,4 +1,4 @@
-; position restraints for DEC_CAP of Terphenyl MOP hexamer system in chloroform
+; position restraints for DEC_CAP of ; position restraints for DEC_CAP of 
 
 [ position_restraints ]
 ;  i funct       fcx        fcy        fcz
