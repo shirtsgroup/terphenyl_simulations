@@ -107,6 +107,23 @@ class REMDLogFile:
         fig.tight_layout()
         fig.savefig("test.png", dpi=300)
 
+def calculate_roundtrip_times(remd_logfile):
+    rtts = []
+    for state_i in range(len(remd_logfile.state_trajs)):
+        state_traj = np.array(remd_logfile.state_trajs[state_i])
+        index_state_0 = np.argwhere(state_traj == 0)
+        index_state_max = np.argwhere(state_traj == len(remd_logfile.state_trajs) - 1)
+
+        if len(index_state_0) > 0 and len(index_state_max) > 0:
+            t_init = remd_logfile.times[index_state_0[0]][0]
+            if len(index_state_max[index_state_max > index_state_0[0]]) > 0:
+                index_max = index_state_max[index_state_max > index_state_0[0]][0]
+                if len(index_state_0[index_state_0 > index_max]) > 0:
+                    t_final = remd_logfile.times[index_state_0[index_state_0 > index_max][0]]
+                    rt_time = t_final - t_init
+                    rtts.append(rt_time)
+    return(rtts)
+
 
 def main():
     t1 = time.time()
