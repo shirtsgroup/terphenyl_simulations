@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from .utils import make_path
 import mdtraj as md
+import os
 import numpy as np
 import seaborn as sns
 from tqdm import tqdm
@@ -141,10 +142,6 @@ def plot_torsions_distributions(
     if type(traj_obj_list) == md.Trajectory:
         traj_obj_list = [traj_obj_list]
 
-    # Create a directory if prefix has "/" in it
-    if "/" in prefix:
-        make_path(prefix)
-
     # Setup figure
     plt.figure(dpi=300)
     sns.set_palette("plasma", n_colors=len(traj_obj_list))
@@ -162,9 +159,14 @@ def plot_torsions_distributions(
         if type(torsion_atom_names[0]) is str:
             torsions = get_torsions(traj_obj, [torsion_atom_names], mirror_sym=mirror_sym)
         if type(torsion_atom_names[0]) is list:
-            torsions = get_torsions(
-                traj_obj, torsion_atom_names, mirror_sym=mirror_sym
-            )
+            if type(torsion_atom_names[0][0]) is str:
+                torsions = get_torsions(
+                    traj_obj, torsion_atom_names, mirror_sym=mirror_sym
+                )
+            if type(torsion_atom_names[0][0]) is list:
+                torsions = get_torsions(
+                    traj_obj, torsion_atom_names[i], mirror_sym=mirror_sym
+                )        
         if offsets is not None:
             torsions += offsets[i]
         hist, bin_edges_out = np.histogram(
@@ -176,5 +178,51 @@ def plot_torsions_distributions(
         plt.title(title)
     if legend is not None:
         plt.legend(legend)
+    make_path(prefix + "_torsions.png")
     plt.savefig(prefix + "_torsions.png")
     plt.close()
+
+
+def plot_torsion_timeseries(traj_obj, torsion_atom_names, filenames, titles = None, time_per_frame = 0.2, output_dir = "torsion_timeseries", degrees = False):
+    """
+    Function for plotting time series of a set of torsions
+
+    Parameters
+    ----------
+    traj_obj : mdtraj.Trajectory
+        mdtraj trajectory object to pull torsions from
+    torsion_atom_names : list
+        list of torsions to create time series for
+    filename : str
+        filename of output plot
+    time_per_frame : float
+        number of ns per frame
+    titles : list (None)
+        plot titles for each individual torsion timeseries
+    output_dir : str (torsion_timeseries)
+        string of directory to output all plot files
+    degrees : bool (False)
+        Whether to plot torsion in degrees or radians
+    """
+    time = np.array(list(range(traj_obj.n_frames))) * time_per_frame
+    if titles is None:
+        titles = ["Plot " + str(i) for i in range(len(torsion_atom_names))]
+
+    make_path(output_dir)
+
+    for i, torsion_id in enumerate(torsion_atom_names):
+        torsions = get_torsions(traj_obj, [torsion_id])
+        if degrees is True:
+            torsions *= 180 / np.pi
+        plt.figure(dpi = 300)
+        plt.scatter(time, torsions, s=5)
+        plt.xlabel("Time (ns)")
+        if degrees is True:
+            plt.ylabel("Torsion (Degrees)")
+            plt.ylim([-180, 180])
+        else:
+            plt.ylabel("Torsion (Radians)")
+            plt.ylim([-np.pi, np.pi])
+        plt.title(titles[i])
+        plt.savefig(os.path.join(output_dir, filenames[i]))
+        plt.close()

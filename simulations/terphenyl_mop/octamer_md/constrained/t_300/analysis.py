@@ -77,21 +77,30 @@ def main():
             offsets = [-np.pi, 0]
         if torsion_type == "p2":
             offsets = [np.pi, 0]
-    
+
         # Get torsions from simulation
         hs.plotting.plot_torsions_distributions(
             [traj, helix_cluster],
             [octamer_torsions[torsion_type], old_hexamer_torsions[torsion_type]],
             torsion_type + " Torsion (Radians)",
-            torsion_type,
+            "torsion_plots/" + torsion_type,
             torsion_type + " Torsion Plot",
             legend = ["Helix MD", "Helix Cluster"],
             mirror_sym = False,
             offsets = offsets
         )
 
-    # Hydogen Bond analysis
+        hs.plotting.plot_torsion_timeseries(
+            traj,
+            octamer_torsions[torsion_type],
+            [torsion_type + "_res_" + str(i+1) + ".png" for i in range(len(octamer_torsions[torsion_type]))],
+            titles = [torsion_type.upper() + " torsion for residue " + str(i+1) for i in range(len(octamer_torsions[torsion_type]))],
+            degrees = True
+        )
 
+    # Hydogen Bond analysis
+    hbond_dir = "hbonds"
+    hs.utils.make_path(hbond_dir)
     hbonds = HydrogenBondAnalysis(
         octamer_u,
         donors_sel = None,
@@ -110,7 +119,7 @@ def main():
     plt.title("Number of hydrogen bonds over time", weight="bold")
     plt.xlabel("Time (ps)")
     plt.ylabel(r"$N_{HB}$")
-    plt.savefig("n_hydrogen_bonds.png")
+    plt.savefig(hbond_dir + "/n_hydrogen_bonds.png")
     plt.close()
 
     # Distribution of hydrogen bond distances
@@ -123,7 +132,7 @@ def main():
     plt.title("Distribution of hydrogen bond distances", weight="bold")
     plt.xlabel("Distance (A)")
     plt.ylabel("Density")
-    plt.savefig("h_bond_distances.png")
+    plt.savefig(hbond_dir + "/h_bond_distances.png")
     plt.close()
 
     plt.figure(dpi = 300)
@@ -131,7 +140,7 @@ def main():
     plt.title("Distribution of hydrogen bond angles", weight="bold")
     plt.xlabel("Distance (A)")
     plt.ylabel("Density")
-    plt.savefig("h_bond_angles.png")
+    plt.savefig(hbond_dir + "/h_bond_angles.png")
     plt.close()
 
     hb_types = list(hbonds.count_by_type())
@@ -146,7 +155,7 @@ def main():
     plt.xlabel("Hydrogen Bond Types")
     plt.ylabel("Percentage of Total Simulation Time")
     plt.tight_layout()
-    plt.savefig("h_bond_types.png",  bbox_inches = "tight")
+    plt.savefig(hbond_dir + "/h_bond_types.png",  bbox_inches = "tight")
     plt.close()
 
     # Clustering first 100 ns
@@ -158,7 +167,7 @@ def main():
         "resname OCT or resname CAP",
         n_min_samples = 40,
         n_eps = 40,
-        n_processes = 32,
+        n_processes = 16,
         prefix = "grid_search",
         min_sample_limits = [0.01, 0.1],
         eps_limits = [0.01, 0.4],
