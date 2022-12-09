@@ -6,6 +6,8 @@ import pandas as pd
 import heteropolymer_simulations as hs
 import parmed as pmd
 import matplotlib.pyplot as plt
+import time
+import numpy as np
 
 
 def renumber_pdb_atoms():
@@ -216,3 +218,35 @@ def hmr_topology():
             atom.mass = new_mass
 
     gmx_top.write(args.output)
+
+
+def calculate_average_rtt():
+    """
+    Quick script to calculate average REMD replica round trip time for a
+    set of REMD simulation data.
+    """
+
+    def parse_args():
+        parser = argparse.ArgumentParser(
+            description="A quick script to calculate average \
+                replica round trip time."
+        )
+
+        parser.add_argument(
+            "-l", "--log_file", type=str, help="file name of original .top file to convert"
+        )
+
+        return parser.parse_args()
+
+    args = parse_args()
+
+    t1 = time.time()
+    log_file = args.log_file
+    log_file_obj = hs.remd_utils.REMDLogFile(log_file)
+    rtts = hs.remd_utils.calculate_roundtrip_times(log_file_obj)
+
+    print(len(rtts), "out of",log_file_obj.n_states ,"simulations complete at least 1 RT.")
+    print("Average RTT: ", np.mean(rtts), "ns +/-", np.std(rtts))
+
+    t2 = time.time()
+    print("This analysis took:", round(t2 - t1), "second(s).")

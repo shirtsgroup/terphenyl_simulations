@@ -68,7 +68,8 @@ setup(
             'renumber_pdb_atoms = heteropolymer_simulations.scripts:renumber_pdb_atoms',
             'top_to_itp = heteropolymer_simulations.scripts:top_to_itp',
             'plot_edr_observable = heteropolymer_simulations.scripts:plot_edr_observables',
-            'hmr_topology = heteropolymer_simulations.scripts:hmr_topology'
+            'hmr_topology = heteropolymer_simulations.scripts:hmr_topology',
+            'average_rtt = heteropolymer_simulations.scripts:calculate_average_rtt',
         ]
     }
 
