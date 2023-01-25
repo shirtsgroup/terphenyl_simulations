@@ -68,7 +68,8 @@ setup(
             'renumber_pdb_atoms = heteropolymer_simulations.scripts:renumber_pdb_atoms',
             'top_to_itp = heteropolymer_simulations.scripts:top_to_itp',
             'plot_edr_observable = heteropolymer_simulations.scripts:plot_edr_observables',
-            'hmr_topology = heteropolymer_simulations.scripts:hmr_topology'
+            'hmr_topology = heteropolymer_simulations.scripts:hmr_topology',
+            'parameterize_foldamer = heteropolymer_simulations.scripts:parameterize_foldamer'
         ]
     }
 
