@@ -1,8 +1,8 @@
 ;
 ;	File 'mdout.mdp' was generated
 ;	By user: unknown (66213)
-;	On host: r342.ib.bridges2.psc.edu
-;	At date: Fri Jul 29 08:11:39 2022
+;	On host: r412.ib.bridges2.psc.edu
+;	At date: Tue Jan 17 18:44:12 2023
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
@@ -11,7 +11,7 @@
 ;	Data prefix:  /jet/home/tfobe/software/gromacs-2022.2
 ;	Working dir:  /ocean/projects/cts160011p/tfobe/heteropolymer_simulations/simulations/terphenyl_mom/tetramer_remd/t_250_450/sim53
 ;	Command line:
-;	  gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system.top -o npt_new -maxwarn 1
+;	  gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system_hmr.top -o npt_new -maxwarn 1
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -24,8 +24,8 @@ define                   =
 integrator               = md
 ; Start time and timestep in ps
 tinit                    = 0
-dt                       = 0.002
-nsteps                   = 50000000
+dt                       = 0.004
+nsteps                   = 25000000
 ; For exact run continuation or redoing part of a run
 init-step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -169,7 +169,7 @@ annealing-temp           =
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen-vel                  = no
 gen-temp                 = 409.9142994611741
-gen-seed                 = -68176002
+gen-seed                 = 1373601503
 
 ; OPTIONS FOR BONDS    
 constraints              = h-bonds

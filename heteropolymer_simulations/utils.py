@@ -2,7 +2,6 @@
 import getpass
 import os
 from datetime import datetime
-import rdkit
 from rdkit import Chem
 import platform
 import numpy as np 
@@ -162,6 +161,9 @@ def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 1):
                     torsion_atoms = [universe.residues[i + diff].atoms[j].name for diff, j in atom_resid_res_inds]
                     dihedral_ids.append(torsion_atoms)
     else:
+        print("All atoms in the dihedral are not present in the template residue. " + \
+            "Please change `template_residue_i` to be consistent with the residue  " + \
+            "where the atom names are originally from.")
         return(None)
 
         

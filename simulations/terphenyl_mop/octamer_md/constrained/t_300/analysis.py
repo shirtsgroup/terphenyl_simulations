@@ -64,7 +64,7 @@ def main():
 
     octamer_torsions = {}
     for torsion_type in octamer_r1_torsions.keys():
-        t_ids = hs.utils.get_torsion_ids(octamer_u, "OCT", octamer_r1_torsions[torsion_type])
+        t_ids = hs.utils.get_torsion_ids(octamer_u, "OCT", octamer_r1_torsions[torsion_type], template_residue_i=0)
         octamer_torsions[torsion_type] = t_ids
         
         # Need to adjust some of the torsion distributions
@@ -119,7 +119,13 @@ def main():
     plt.title("Number of hydrogen bonds over time", weight="bold")
     plt.xlabel("Time (ps)")
     plt.ylabel(r"$N_{HB}$")
+    # plt.figtext("Mean: " + str(np.mean(hbonds.count_by_time())))
+    # plt.figtext("STD: " + str(np.std(hbonds.count_by_time())))
     plt.savefig(hbond_dir + "/n_hydrogen_bonds.png")
+
+    print("Average number of H-bonds:", np.mean(hbonds.count_by_time()))
+    print("STD of H-bonds:", np.std(hbonds.count_by_time()))
+
     plt.close()
 
     # Distribution of hydrogen bond distances

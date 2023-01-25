@@ -36,6 +36,38 @@ def DBSCAN_RMSD_clustering(rmsd_matrix, eps, min_samples, parallel=True):
     # print("Identified", len(cluster_ids), "cluster(s)!")
     return dbscan, labels
 
+def write_medoids_to_file(
+    labels,
+    sil_scores,
+    traj_object,
+    output_dir = "clustering_output",
+    prefix = None,
+    output_format="gro",
+    backoff = False
+):
+    if os.path.isdir(output_dir):
+        if backoff:
+            backoff_directory(output_dir)
+            os.mkdir(output_dir)
+        else:
+            pass
+    else:
+        os.mkdir(output_dir)
+
+    if prefix is not None:
+        prefix += "_"
+    else:
+        prefix = ""
+
+    for label in np.unique(labels):
+        cluster_traj = traj_object[np.where(labels == label)]
+        ss_cluster = sil_scores[np.where(labels == label)]
+        medoid = cluster_traj[np.argmax(ss_cluster)]
+        medoid_filename = os.path.join(
+            output_dir, prefix + "medoid_" + str(label) + "." + output_format
+        )
+        medoid.save(medoid_filename)
+    
 
 def write_clusters_to_file(
     labels,
@@ -43,13 +75,19 @@ def write_clusters_to_file(
     output_dir="clustering_output",
     prefix=None,
     output_format="gro",
+    backoff = True
 ):
 
     # Write to output directory
     # print("Writing output files...")
     if os.path.isdir(output_dir):
-        backoff_directory(output_dir)
-    os.mkdir(output_dir)
+        if backoff:
+            backoff_directory(output_dir)
+            os.mkdir(output_dir)
+        else:
+            pass
+    else:
+        os.mkdir(output_dir)
 
     if prefix is not None:
         prefix += "_"
@@ -153,15 +191,15 @@ def clustering_grid_search(
     # Remove solvent
     top = traj.topology
     selection = top.select(selection)
-    oct_traj = traj.atom_slice(selection)
+    traj_object = traj.atom_slice(selection)
 
     # Construct RMSD matrix once
-    rmsd_matrix = construct_rmsd_matrix(oct_traj)
+    rmsd_matrix = construct_rmsd_matrix(traj_object)
 
     # Grid search for DBSCAN hyperparameters
     max_rmsd = np.max(rmsd_matrix)
     eps_values = np.linspace(eps_limits[0] * max_rmsd, eps_limits[1] * max_rmsd, n_eps)
-    total_frames = oct_traj.n_frames
+    total_frames = traj_object.n_frames
     min_sample_values = np.linspace(
         min_sample_limits[0] * total_frames,
         min_sample_limits[1] * total_frames,
@@ -203,9 +241,7 @@ def clustering_grid_search(
         )
 
     # Get max value of first metric
-
     max_metric = np.nanmax(metric_matrices[0])
-
     max_indices = list(zip(*np.where(metric_matrices[0] == max_metric)))
 
     print("The maximum metric value of:", metric_matrices[0][max_indices[0]])
@@ -227,7 +263,11 @@ def clustering_grid_search(
         eps_values[max_indices[0][0]],
         min_samples_values[max_indices[0][1]],
     )
-    write_clusters_to_file(labels, oct_traj)
+
+    # Identify cluster medoids
+    sil_scores = metrics.silhouette_samples(rmsd_matrix, labels)
+    write_clusters_to_file(labels, traj_object)
+    write_medoids_to_file(labels, sil_scores, traj_object)
 
 
 def main():
@@ -257,16 +297,16 @@ def main():
         # Remove solvent
         top = test_traj.topology
         selection = top.select("resname TET")
-        oct_traj = test_traj.atom_slice(selection)
+        traj_object = test_traj.atom_slice(selection)
 
         # Frame Stride
-        oct_traj = oct_traj[::]
-        oct_traj.save_hdf5("npt_new_preloaded.h5")
+        traj_object = traj_object[::]
+        traj_object.save_hdf5("npt_new_preloaded.h5")
     else:
-        oct_traj = md.load("npt_new_preloaded.h5")
+        traj_object = md.load("npt_new_preloaded.h5")
 
     # Run clustering
-    dbscan, labels = DBSCAN_RMSD_clustering(oct_traj, 0.3, 6 * 50, parallel=16)
+    dbscan, labels = DBSCAN_RMSD_clustering(traj_object, 0.3, 6 * 50, parallel=16)
 
 
 if __name__ == "__main__":
