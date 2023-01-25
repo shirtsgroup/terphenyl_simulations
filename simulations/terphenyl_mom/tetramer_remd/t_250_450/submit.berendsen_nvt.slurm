@@ -13,7 +13,7 @@ source /jet/home/tfobe/software/gromacs-2022.2/bin/GMXRC
 
 
 # Run grompp on all berendsen_nvt files
-for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi grompp -f berendsen_nvt.mdp -c em.gro -p system.top -o berendsen_nvt -maxwarn 1; cd ..; done
+for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi grompp -f berendsen_nvt.mdp -c em_solvated.gro -p system_hmr.top -o berendsen_nvt -maxwarn 1; cd ..; done
 
 
 # Run all berendsen_nvt simulations in parallel

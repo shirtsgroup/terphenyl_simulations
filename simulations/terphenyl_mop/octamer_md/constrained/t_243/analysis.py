@@ -98,7 +98,7 @@ def main():
             degrees = True
         )
 
-    # Hydogen Bond analysis
+    # Hydogen Bond analysis I need to package this into a analysis function
     hbond_dir = "hbonds"
     hs.utils.make_path(hbond_dir)
     hbonds = HydrogenBondAnalysis(

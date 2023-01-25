@@ -16,3 +16,5 @@ __pycache__
 *.gif
 *.lock
 *.npz
+*mdout.mdp
+*.mp4
