@@ -1,4 +1,14 @@
 #!/usr/bin/env python
+
+try:
+    from openmm import app
+except ImportError:
+    from simtk.openmm import app
+
+from openff.toolkit.topology import FrozenMolecule, Molecule, Topology
+from openff.toolkit.typing.engines.smirnoff import ForceField
+from openff.interchange.components.interchange import Interchange
+import pdb
 import os
 import argparse
 import panedr
@@ -218,6 +228,82 @@ def hmr_topology():
             atom.mass = new_mass
 
     gmx_top.write(args.output)
+
+def parameterize_foldamer():
+
+    def parse_args():
+        parser = argparse.ArgumentParser(
+            description="A script to assign parameters using OpenFF workflow"
+        )
+
+        parser.add_argument(
+            "--mol", type=str, help="MOL file of the polymer to be parameterized"
+        )
+
+        parser.add_argument(
+            "--pdb", type=str, help="PDB structure file of polymer to be parameterized"
+        )
+
+        parser.add_argument(
+            "--output",
+            type=str,
+            help="Output name of files"
+        )
+
+        parser.add_argument(
+            "--sdf", type=str, help="Optional SDF file if AM1-BCC charges are already assigned"
+        )
+
+        parser.add_argument(
+            "--ff", type=str, help="Force field XML file to assign parameters from"
+        )
+
+        return parser.parse_args()
+
+    args = parse_args()
+
+    # Read MOL and PDB files and get OMM topology
+    print("Reading input structures...")
+    molecule = Molecule.from_file(args.mol)
+    pdbfile = app.PDBFile(args.pdb)
+    omm_topology = pdbfile.topology
+
+    # Create OpenFF topology
+    off_topology = Topology.from_openmm(
+        omm_topology, unique_molecules=[molecule]
+    )
+
+    # Calculate or Read in partial charges
+    print("Getting partial charges...")
+    if args.sdf is None:
+        args.sdf = args.output + ".sdf"
+
+    if not os.path.exists(args.sdf):
+        molecule.assign_partial_charges(partial_charge_method="am1bcc")
+        molecule.to_file(args.sdf, file_format = 'sdf')
+    else:
+        molecule = Molecule.from_file(args.sdf)
+
+    # Load OpenFF force field
+    print("Assigning FF parameters...")
+    if args.ff is None:
+        args.ff = "openFF-2.0.0.offxml"
+    forcefield = ForceField(args.ff)
+
+    # Prepare OpenMM system
+    omm_system = forcefield.create_openmm_system(off_topology, charge_from_molecule = [molecule])
+
+    # Create Interchange object
+    interchange = Interchange.from_smirnoff(
+        force_filed=forcefield,
+        topology=off_topology,
+        charge_from_molecules = [molecule]
+    )
+    interchange.positions = pdbfile.positions
+
+    # Export to Gromacs Files
+    interchange.to_top(args.output + ".top")
+    interchange.to_top(args.output + ".gro")
 
 
 def calculate_average_rtt():
