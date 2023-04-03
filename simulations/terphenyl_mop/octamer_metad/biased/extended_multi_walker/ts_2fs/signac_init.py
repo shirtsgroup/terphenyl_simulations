@@ -18,7 +18,7 @@ def main():
     n_walkers = 16
     project = signac.get_project()
     heights = np.array([2.5]) # height ranging from 2.5 kT to 5 kT divided by number of walkers to ensure accumulation of biases are not too large
-    sigmas = [0.5] # A couple different sigmas
+    sigmas = [0.5, 1.0, 1.5] # A couple different sigmas
     bias_factors = [50, 100, 200, 100000]
     replica = list(range(1))
 
