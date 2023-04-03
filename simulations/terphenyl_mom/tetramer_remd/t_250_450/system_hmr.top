@@ -1,17 +1,17 @@
 ;
 ;   File system_hmr.top  was generated
-;   By user: tfobe (66213)
-;   On host: r001.ib.bridges2.psc.edu
-;   At date: Tue. January  2 13:17:57 2023
+;   By user: tfobe (1000)
+;   On host: grays-peak
+;   At date: Wed. January  3 15:36:17 2023
 ;
 ;   This is a standalone topology file
 ;
 ;   Created by:
 ;   ParmEd:       hmr_topology, VERSION 3.4.3
 ;   Executable:   hmr_topology
-;   Library dir:  /jet/home/tfobe/software/gromacs-2022.2/share/gromacs/top
+;   Library dir:  /usr/share/gromacs/top
 ;   Command line:
-;     /jet/home/tfobe/.conda/envs/terphenyl/bin/hmr_topology -t system.top --hmr_ratio 3 -o system_hmr.top
+;     /home/tfobe/anaconda3/envs/terphenyl/bin/hmr_topology -t system.top -o system_hmr.top --hmr_ratio 3
 ;
 
 [ defaults ]
@@ -220,12 +220,13 @@ H88            1   1.007947  0.00000000  A     0.26445434    0.066021356
 c1             6  12.010780  0.00000000  A     0.33996695      0.4577296
 cl1           17  35.453200  0.00000000  A     0.34709414        1.10876
 cl2           17  35.453200  0.00000000  A     0.34709414        1.10876
+h1             1   1.007947  0.00000000  A     0.21149936      0.0656888
 cl3           17  35.453200  0.00000000  A     0.34709414        1.10876
 
 
 [ moleculetype ]
 ; Name            nrexcl
-TET          3
+system1          3
 
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
@@ -2267,10 +2268,10 @@ TCM          3
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
 ; residue    1 TCM rtp TCM q 0.0
-    1         c1      1    TCM     C1      1 0.22431000  12.010780   ; qtot 0.224310
+    1         c1      1    TCM     C1      1 0.22431000   9.994886   ; qtot 0.224310
     2        cl1      1    TCM    Cl1      2 -0.11438000  35.453200   ; qtot 0.109930
     3        cl2      1    TCM    Cl2      3 -0.11438000  35.453200   ; qtot -0.004450
-    4         c1      1    TCM     H1      4 0.11883000   1.007947   ; qtot 0.114380
+    4         h1      1    TCM     H1      4 0.11883000   3.023841   ; qtot 0.114380
     5        cl3      1    TCM    Cl3      5 -0.11438000  35.453200   ; qtot 0.000000
 
 [ bonds ]
@@ -2295,5 +2296,5 @@ Terphenyl MOP tetramer in chloroform
 
 [ molecules ]
 ; Compound       #mols
-TET              1
+system1              1
 TCM                634

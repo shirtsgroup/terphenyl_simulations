@@ -52,19 +52,19 @@ def main():
     hexamer_u = mda.Universe("sim0/npt_new.tpr", "sim0/npt_new.gro")
 
     # Torsion definitions for first residue
-    hexamer_r1_torsions = {
-        "a1": ["C3", "C4", "C5", "C6"],
-        "a2": ["C5", "C6", "C12", "C13"],
-        "p1": ["C14", "C15", "C18", "N1"],
-        "p2": ["C15", "C18", "N1", "H13"],
-        "p3": ["O1", "C1", "C2", "C3"],
+    hexamer_r2_torsions = {
+        "a1": ["C29", "C28", "C27", "C35"],
+        "a2": ["C37", "C36", "C35", "C27"],
+        "p1": ["C37", "C38", "C39", "N2"],
+        "p2": ["C38", "C39", "N2", "C53"],
+        "p3": ["O4", "C31", "C30", "C29"],
     }
 
     # Torsion Analysis
-    for torsion_type in hexamer_r1_torsions.keys():
+    for torsion_type in hexamer_r2_torsions.keys():
         print("Working on", torsion_type, "torsion...")
         torsion_atom_names = hs.utils.get_torsion_ids(
-            hexamer_u, "HEX", hexamer_r1_torsions[torsion_type]
+            hexamer_u, "HEX", hexamer_r2_torsions[torsion_type], template_residue_i = 1
         )
 
         hs.plotting.plot_torsions_distributions(

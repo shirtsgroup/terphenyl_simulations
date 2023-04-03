@@ -69,7 +69,7 @@ setup(
             'top_to_itp = heteropolymer_simulations.scripts:top_to_itp',
             'plot_edr_observable = heteropolymer_simulations.scripts:plot_edr_observables',
             'hmr_topology = heteropolymer_simulations.scripts:hmr_topology',
-            'parameterize_foldamer = heteropolymer_simulations.scripts:parameterize_foldamer'
+            'parameterize_foldamer = heteropolymer_simulations.scripts:parameterize_foldamer',
             'average_rtt = heteropolymer_simulations.scripts:calculate_average_rtt',
         ]
     }
