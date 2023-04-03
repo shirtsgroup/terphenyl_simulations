@@ -183,6 +183,7 @@ def calculate_sum_hills_FE(job):
     print(fes_data)
     filtered = fes_data[fes_data["n_hbonds"] >= -0.1]
     filtered = filtered[filtered["n_hbonds"] <= 7.2]
+    filtered.values[:, 1] -= np.min(filtered.values[:, 1])
     plt.figure(figsize = [5, 2.5])
     plt.xlim([0,7])
     plt.plot(filtered.values[:,0], filtered.values[:,1])
