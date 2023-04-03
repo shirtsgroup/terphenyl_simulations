@@ -18,3 +18,8 @@ __pycache__
 *.npz
 *mdout.mdp
 *.mp4
+*HBOND_SUMS*
+*HILLS*
+*COLVAR_STD_TORSIONS*
+*COLVAR_REWEIGHT*
+*clustering_output*

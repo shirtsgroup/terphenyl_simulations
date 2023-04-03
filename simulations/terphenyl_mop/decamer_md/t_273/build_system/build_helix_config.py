@@ -92,7 +92,7 @@ def main():
     
     # Load hexamer helical cluster
     print("Loading Cluster trajectory files...")
-    cluster_traj = md.load("clustering_output/cluster_9.gro")
+    cluster_traj = md.load("cluster_9.gro")
 
 
     for torsion_type in list(decamer_torsions.keys()):
@@ -130,14 +130,14 @@ def main():
         # For p2 take the 2nd largest peak
         torsion_max_density = bin_centers[np.argmax(hist)]
 
-        if torsion_type == "a1":
-            torsion_max_density -= np.pi
-        if torsion_type == "a2":
-            torsion_max_density += - 25 * np.pi/180
-        if torsion_type == "p2":
-           torsion_max_density += -np.pi + 45 * np.pi/180
-#        if torsion_type == "p3":
-#           torsion_max_density += np.pi
+        # if torsion_type == "a1":
+        #    torsion_max_density -= np.pi
+        #if torsion_type == "a2":
+        #    torsion_max_density += - 25 * np.pi/180
+        # if torsion_type == "p2":
+        #    torsion_max_density += -np.pi + 45 * np.pi/180
+        # if torsion_type == "p3":
+        #    torsion_max_density += np.pi
 
 
         print("Setting", torsion_type, "to", torsion_max_density*180/np.pi)
@@ -155,6 +155,10 @@ def main():
             #        break
             #     else:
             #         skip += 1
+    shift = ice.torsions[ice.bat._primary_torsion_indices]
+    shift[ice.bat._unique_primary_torsion_indices] = 0
+    ice.torsions -= shift
+    ice.update_internal_coordinates()
     ice.write_structure("decamer_adjusted.gro")
 
 

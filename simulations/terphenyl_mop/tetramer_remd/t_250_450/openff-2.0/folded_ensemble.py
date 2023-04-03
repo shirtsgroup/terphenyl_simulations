@@ -3,6 +3,7 @@ from tqdm import tqdm
 import MDAnalysis as mda
 import matplotlib.pyplot as plt
 import numpy as np
+plt.rcParams.update({'font.size': 10})
 
 def main():
 
@@ -38,20 +39,21 @@ def main():
         folded = [int(item) for item in list(traj_rmsd.rmsd[500:,2] < 3)]
         folded_percentage.append(np.mean(folded))
         error.append(1.96 * np.std(folded)/np.sqrt(len(folded)))
-
+    plt.figure(figsize = [5,5])
     plt.errorbar(list(range(len(remd_trajs))), folded_percentage, yerr = error)
     plt.xlabel("Replica Index")
     plt.ylabel("Percentage Folded")
-    plt.savefig("folded_replica_percentage.png")
+    plt.savefig("folded_replica_percentage.png", dpi = 300, transparent=True)
     plt.close()
 
     common_ratio = np.power(450/250, 1/(64-1))
     t_range = [250 * (common_ratio ** i) for i in range(len(remd_trajs))]
 
+    plt.figure(figsize = [5,5])
     plt.errorbar(t_range, folded_percentage, yerr = error)
     plt.xlabel("Temperature (K)")
-    plt.ylabel("Percentage Folded")
-    plt.savefig("folded_T_percentage.png")
+    plt.ylabel("Fraction Folded")
+    plt.savefig("folded_T_percentage.png", dpi = 300, transparent=True)
     plt.close()
 
 
