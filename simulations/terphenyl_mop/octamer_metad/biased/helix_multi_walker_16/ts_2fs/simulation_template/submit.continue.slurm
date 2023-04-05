@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1 --ntasks-per-node 128
-#SBATCH -t 18:00:00
+#SBATCH -t 20:00:00
 #SBATCH -p RM
 #SBATCH -J 'terphenyl-mop-equilibration'
 #SBATCH --mail-user=theodore.fobe@colorado.edu

@@ -102,11 +102,18 @@ def continue_production_npt_simulation(job):
     os.chdir(job.path)
     slurm_id = subprocess.check_output(["sbatch", "submit.continue.slurm"])
 
+@FlowProject.pre(check_production_npt_start)
+@FlowProject.operation
+def finish_production_npt_simulation(job):
+    os.chdir(job.path)
+    slurm_id = subprocess.check_output(["sbatch", "submit.production_finish.slurm"])
+
 # Utility operation to remove all backup files
 @FlowProject.label
 def has_backup_files(job):
     backup_files = glob.glob(job.fn("WALKER*/#*#"))
     backup_files += glob.glob(job.fn("WALKER*/bck.*"))
+    backup_files += glob.glob(job.fn("bck.*"))
     if len(backup_files) == 0:
         return False
     return True
@@ -124,6 +131,7 @@ def has_failed_step_files(job):
 def remove_backup_files(job):
     backup_files = glob.glob(job.fn("WALKER*/#*#"))
     backup_files += glob.glob(job.fn("WALKER*/bck.*"))
+    backup_files += glob.glob(job.fn("bck.*"))
     for file in backup_files:
         print("Removing", os.path.abspath(file))
         os.remove(file)
@@ -179,20 +187,26 @@ def calculate_sum_hills_FE(job):
     kt = 300 * 8.314462618 * 10 ** -3
     os.chdir(job.fn(""))
     subprocess.run(["plumed", "sum_hills", "--hills", "HILLS", "--kt", str(kt)]) # Silences output from sum_hills
-    fes_data = plumed.read_as_pandas("fes.dat")
-    print(fes_data)
-    filtered = fes_data[fes_data["n_hbonds"] >= -0.1]
-    filtered = filtered[filtered["n_hbonds"] <= 7.2]
-    plt.figure(figsize = [5, 2.5])
-    plt.xlim([0,7])
-    plt.plot(filtered.values[:,0], filtered.values[:,1])
-    plt.title("SIGMA: " +  str(job.sp.sigma) +  " HEIGHT:" + str(job.sp.height) + " BF:" + str(job.sp.bf))
-    plt.xlabel("$N_{H-bonds}$")
-    plt.ylabel("Free Energy (kJ/mol)")
-    plt.grid(visible=True, which="both", axis="both")
-    plt.savefig("sum_hills_FE.png", transparent = False)
-    plt.close()
-    os.chdir(current_dir)
+    # If subprocess works make fes plot
+    if os.path.isfile("fes.dat"):
+        fes_data = plumed.read_as_pandas("fes.dat")
+        print(fes_data)
+        filtered = fes_data[fes_data["n_hbonds"] >= -0.1]
+        filtered = filtered[filtered["n_hbonds"] <= 7.2]
+        filtered.values[:, 1] -= np.min(filtered.values[:, 1])
+        plt.figure(figsize = [5, 2.5])
+        plt.xlim([0,7])
+        plt.plot(filtered.values[:,0], filtered.values[:,1])
+        plt.title("SIGMA: " +  str(job.sp.sigma) +  " HEIGHT:" + str(job.sp.height) + " BF:" + str(job.sp.bf))
+        plt.xlabel("$N_{H-bonds}$")
+        plt.ylabel("Free Energy (kJ/mol)")
+        plt.grid(visible=True, which="both", axis="both")
+        plt.savefig("sum_hills_FE.png", transparent = False)
+        plt.close()
+        os.chdir(current_dir)
+    # else move to the next job
+    else:
+        pass
 
 @FlowProject.pre(check_production_npt_finish)
 @FlowProject.post.isfile("h_bond_transition_matrix.png")
