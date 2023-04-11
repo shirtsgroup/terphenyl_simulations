@@ -17,6 +17,7 @@ import heteropolymer_simulations as hs
 import parmed as pmd
 import matplotlib.pyplot as plt
 import time
+import shutil
 import numpy as np
 import sys
 
