@@ -71,6 +71,7 @@ setup(
             'hmr_topology = heteropolymer_simulations.scripts:hmr_topology',
             'parameterize_foldamer = heteropolymer_simulations.scripts:parameterize_foldamer',
             'average_rtt = heteropolymer_simulations.scripts:calculate_average_rtt',
+            'REMD_setup = heteropolymer_simulations.scripts:REMD_setup',
         ]
     }
 
