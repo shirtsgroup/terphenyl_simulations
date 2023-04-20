@@ -21,7 +21,7 @@ import numpy as np
 import sys
 import shutil
 import signac
-from utils import replace_all_pattern
+from .utils import replace_all_pattern
 
 
 def renumber_pdb_atoms():
