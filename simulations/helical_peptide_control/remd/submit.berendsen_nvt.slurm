@@ -2,7 +2,7 @@
 #SBATCH -N 2 --ntasks-per-node 128
 #SBATCH -t 4:00:00
 #SBATCH -p RM 
-#SBATCH -J 'terphenyl-pom-equilibration'
+#SBATCH -J 'hp-equilibration'
 #SBATCH --mail-user=theodore.fobe@colorado.edu
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
@@ -14,7 +14,7 @@ source /jet/home/tfobe/software/gromacs-2022.2/bin/GMXRC
 
 
 # Run grompp on all berendsen_nvt files
-for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi grompp -f berendsen_nvt.mdp -c em_solvated_helix.gro -p system_hmr_rest.top -o berendsen_nvt -maxwarn 1 -r em_solvated_helix.gro; cd ..; done
+for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi grompp -f berendsen_nvt.mdp -c em_solvated.gro -p system_hmr.top -o berendsen_nvt -maxwarn 1; cd ..; done
 
 
 # Run all berendsen_nvt simulations in parallel

@@ -4,7 +4,8 @@ import os
 from datetime import datetime
 from rdkit import Chem
 import platform
-import numpy as np 
+import numpy as np
+import re
 import sys
 
 class TopFileObject:
@@ -228,6 +229,25 @@ def get_angle_ids(universe, resname, angle_id, template_residue_i = 0):
     return(angle_ids)
 
 
+def replace_all_pattern(pattern, replace, file):
+    """
+    Function to replace patterns present in with a particular string
+
+    Parameters
+    ----------
+    pattern : string
+        string pattern to replace in file
+    replace : string
+        string that will replace the pattern found in file
+    file : string
+        path to file
+    """
+    with open(file, "r") as f:
+        lines = f.readlines()
+    for i in range(len(lines)):
+        lines[i] = re.sub(pattern, replace, lines[i])
+    with open(file, "w") as f:
+        f.writelines(lines)
 
 def main():
     top = TopFileObject("test.top")

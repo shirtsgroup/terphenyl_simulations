@@ -2,7 +2,7 @@
 #SBATCH -N 2 --ntasks-per-node 128
 #SBATCH -t 36:00:00
 #SBATCH -p RM 
-#SBATCH -J 'terphenyl-pom-equilibration'
+#SBATCH -J 'hp-production'
 #SBATCH --mail-user=theodore.fobe@colorado.edu
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END

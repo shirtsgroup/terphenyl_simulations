@@ -2,7 +2,7 @@
 #SBATCH -N 2 --ntasks-per-node 128
 #SBATCH -t 32:00:00
 #SBATCH -p RM 
-#SBATCH -J 'octamer-pom-equilibration'
+#SBATCH -J 'hp-productionn'
 #SBATCH --mail-user=theodore.fobe@colorado.edu
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END

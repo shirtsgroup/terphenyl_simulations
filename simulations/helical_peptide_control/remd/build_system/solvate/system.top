@@ -4226,6 +4226,22 @@ peptide          3
 ;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
 ; residue    1 NTC rtp NTC q 0.0
 
+<<<<<<< HEAD
+=======
+[ moleculetype ]
+; Name            nrexcl
+K          1
+
+[ atoms ]
+1       K               1       K               K        1      1.00000
+
+[ moleculetype ]
+; Name            nrexcl
+F          1
+
+[ atoms ]
+1       F               1       F               F        1     -1.00000
+>>>>>>> 842ee3088fa7805afa3c032bdbd279b47528241b
 
 ; Include TIP3P water topology
 #include "amber99.ff/tip3p.itp"
@@ -4255,3 +4271,7 @@ peptide              1
 F                   13
 K                   13
 SOL               7198
+<<<<<<< HEAD
+=======
+
+>>>>>>> 842ee3088fa7805afa3c032bdbd279b47528241b
