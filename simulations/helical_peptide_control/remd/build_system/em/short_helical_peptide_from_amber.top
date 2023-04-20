@@ -36,14 +36,11 @@ O2             8  16.000000  0.00000000  A     0.29599219        0.87864
 C8             6  12.010000  0.00000000  A     0.33996695      0.4577296
 HP             1   1.008000  0.00000000  A     0.19599772      0.0656888
 N3             7  14.010000  0.00000000  A     0.32499985        0.71128
-OW             8  16.000000  0.00000000  A       0.315061       0.636386
-HW             1   1.008000  0.00000000  A       0.000000        0.00000
-K             19      39.10  0.0000      A     0.30379646     0.81036925
-F              9      19.00  0.0000      A     0.41034794     0.01407498
+
 
 [ moleculetype ]
 ; Name            nrexcl
-peptide          3
+system1          3
 
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
@@ -1772,36 +1769,10 @@ peptide          3
     137    141    139    140     4  180.0000771  4.6024000  2
     159    162    161    163     4  180.0000771  4.1840000  2
 
-
-;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
-; residue    1 NTC rtp NTC q 0.0
-
-
-; Include TIP3P water topology
-#include "amber99.ff/tip3p.itp"
-
-[ moleculetype ]
-; Name            nrexcl
-K          1
-
-[ atoms ]
-1       K               1       K               K        1      1.00000
-
-[ moleculetype ]
-; Name            nrexcl
-F          1
-
-[ atoms ]
-1       F               1       F               F        1     -1.00000
-
-
 [ system ]
 ; Name
-Peptide in water
+Generic title
 
 [ molecules ]
 ; Compound       #mols
-peptide              1
-F                    8
-K                    8
-SOL               2133
+system1              1
