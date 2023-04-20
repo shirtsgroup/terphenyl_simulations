@@ -40,7 +40,7 @@ N3             7  14.010000  0.00000000  A     0.32499985        0.71128
 
 [ moleculetype ]
 ; Name            nrexcl
-system1          3
+peptide          3
 
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
