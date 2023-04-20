@@ -2,7 +2,7 @@
 ;   File system_hmr.top  was generated
 ;   By user: tfobe (1000)
 ;   On host: grays-peak
-;   At date: Mon. April  1 18:22:58 2023
+;   At date: Wed. April  3 13:46:49 2023
 ;
 ;   This is a standalone topology file
 ;
@@ -38,6 +38,8 @@ O2             8  16.000000  0.00000000  A     0.29599219        0.87864
 C8             6  12.010000  0.00000000  A     0.33996695      0.4577296
 HP             1   1.008000  0.00000000  A     0.19599772      0.0656888
 N3             7  14.010000  0.00000000  A     0.32499985        0.71128
+F              9  19.000000  0.00000000  A     0.41034794     0.01407498
+K             19  39.100000  0.00000000  A     0.30379646     0.81036925
 OW             8  16.000000  0.00000000  A       0.315061       0.636386
 HW             1   1.008000  0.00000000  A              0              0
 
@@ -4225,6 +4227,26 @@ system1          3
 
 [ moleculetype ]
 ; Name            nrexcl
+F          3
+
+[ atoms ]
+;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
+; residue    1 F rtp F q -1.0
+    1          F      1      F      F      1 -1.00000000  19.000000   ; qtot -1.000000
+
+
+[ moleculetype ]
+; Name            nrexcl
+K          3
+
+[ atoms ]
+;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
+; residue    1 K rtp K q 1.0
+    1          K      1      K      K      1 1.00000000  39.100000   ; qtot 1.000000
+
+
+[ moleculetype ]
+; Name            nrexcl
 SOL          3
 
 [ atoms ]
@@ -4266,4 +4288,6 @@ Peptide in water
 [ molecules ]
 ; Compound       #mols
 system1              1
-SOL               4165
+F                   13
+K                   13
+SOL               7198
