@@ -120,7 +120,7 @@ def silhouette_score_metric(rmsd_matrix, dbscan_list_of_lists):
     print("Calculating Silhouette Scores...")
     for i in tqdm(range(len(dbscan_list_of_lists))):
         for j in range(len(dbscan_list_of_lists[i])):
-            dbscan, labels = dbscan_list_of_lists[i][j]
+            labels = dbscan_list_of_lists[i][j]
             if len(np.unique(labels)) > 2:
                 result[i, j] = metrics.silhouette_score(rmsd_matrix, labels)
             else:
@@ -132,9 +132,8 @@ def n_clusters_metric(rmsd_matrix, dbscan_list_of_lists):
     print("Getting N Clusters...")
     for i in tqdm(range(len(dbscan_list_of_lists))):
         for j in range(len(dbscan_list_of_lists[i])):
-            dbscan, labels = dbscan_list_of_lists[i][j]
+            labels = dbscan_list_of_lists[i][j]
             result[i,j] = len(np.unique(labels))
-
     return result
 
 
@@ -144,7 +143,7 @@ def combination_metric(rmsd_matrix, dbscan_list_of_lists):
     print("Calculating Combined Metrics...")
     for i in tqdm(range(len(dbscan_list_of_lists))):
         for j in range(len(dbscan_list_of_lists[i])):
-            dbscan, labels = dbscan_list_of_lists[i][j]
+            labels = dbscan_list_of_lists[i][j]
             n_clusters[i,j] = len(np.unique(labels))
             if len(np.unique(labels)) > 2:
                 ss[i,j] = metrics.silhouette_score(rmsd_matrix, labels)
@@ -158,7 +157,14 @@ def combination_metric(rmsd_matrix, dbscan_list_of_lists):
 
     result = np.power(m1, 2) + np.power(m2, 2)
 
-    return result  
+    return result
+
+def plot_RMSD_histogram(rmsd_matrix, prefix = "remd"):
+    rmsd_values = rmsd_matrix.reshape(-1)
+    plt.hist(rmsd_values[rmsd_values > 0.00001], bins = 100, density = True)
+    plt.xlabel("RMSD (nm)")
+    plt.ylabel("Density")
+    plt.savefig(prefix + "_rmsd_hist.png")
 
 def clustering_grid_search(
     file_list,
@@ -173,8 +179,7 @@ def clustering_grid_search(
     frame_start=0,
     frame_end=-1,
     frame_stride=1,
-    metric_list = [silhouette_score_metric, n_clusters_metric, combination_metric],
-    plot_filename_list = ["ss.png", "n_clusters.png", "combo.png"]
+    plot_filename = "ss.png"
 ):
     # Load trajectory
     if type(file_list) == list:
@@ -182,7 +187,7 @@ def clustering_grid_search(
         for i in range(1, len(file_list)):
             tmp_traj = md.load(file_list[i], top = top_file)
             tmp_traj = tmp_traj[frame_start:frame_end:frame_stride]
-            traj.join(traj, tmp_traj)
+            traj = traj.join(tmp_traj)
 
     else:
         traj = md.load(file_list, top=top_file)
@@ -195,6 +200,8 @@ def clustering_grid_search(
 
     # Construct RMSD matrix once
     rmsd_matrix = construct_rmsd_matrix(traj_object)
+
+    plot_RMSD_histogram(rmsd_matrix)
 
     # Grid search for DBSCAN hyperparameters
     max_rmsd = np.max(rmsd_matrix)
@@ -209,42 +216,34 @@ def clustering_grid_search(
     min_samples_values = [int(a) for a in min_sample_values]
     ss = np.zeros((len(eps_values), len(min_sample_values)))
     n_clusters = np.zeros((len(eps_values), len(min_sample_values)))
-    dbscans_list_of_lists = []
     print("Performing grid search...")
     for i, eps in enumerate(tqdm(eps_values)):
-        dbscan_list = []
         for j, ms in enumerate(min_samples_values):
             dbscan, labels = DBSCAN_RMSD_clustering(
                 rmsd_matrix, eps, ms, parallel=n_processes
             )
-            dbscan_list.append((dbscan, labels))
             n_clusters[i, j] = len(np.unique(labels))
             if len(np.unique(labels)) > 2:
                 ss[i, j] = metrics.silhouette_score(rmsd_matrix, labels)
             else:
                 ss[i, j] = np.nan
-        dbscans_list_of_lists.append(dbscan_list)
-    
-    metric_matrices = []
-    # Move plotting functions to each of these metrics functions
-    for metric, fn in zip(metric_list, plot_filename_list):
-        result_matrix = metric(rmsd_matrix, dbscans_list_of_lists)
-        metric_matrices.append(result_matrix)
 
-        plot_grid_search(
-            result_matrix,
-            min_samples_values,
-            [round(eps, 2) for eps in eps_values],
-            "Min. Samples",
-            "$\epsilon_{DBSCAN}$",
-            prefix  + "_" + fn,
-        )
+    plot_grid_search(
+        ss,
+        min_samples_values,
+        [round(eps, 2) for eps in eps_values],
+        "Min. Samples",
+        "$\epsilon_{DBSCAN}$",
+        prefix  + "_" + plot_filename,
+        "Avg. Silhouette Score"
+    )
 
     # Get max value of first metric
-    max_metric = np.nanmax(metric_matrices[0])
-    max_indices = list(zip(*np.where(metric_matrices[0] == max_metric)))
+    max_ss = np.nanmax(ss)
+    max_indices = list(zip(*np.where(ss == max_ss)))
+    print(max_indices)
 
-    print("The maximum metric value of:", metric_matrices[0][max_indices[0]])
+    print("The maximum avg. silhouette score:", max_ss)
     print(
         "N Clusters:",
         int(n_clusters[max_indices[0]]),

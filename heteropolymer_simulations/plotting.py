@@ -8,7 +8,7 @@ from tqdm import tqdm
 from .observables import get_torsions
 
 
-def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename):
+def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename, cbar_label):
     """
     Function for plotting metrics against a grid search of parameters
     """
@@ -18,15 +18,15 @@ def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename
         make_path(filename)
 
     # combination metric figure
-    fig = plt.figure(dpi=300)
+    fig = plt.figure(dpi=300, figsize = [10, 10])
     ax = fig.add_subplot(111)
     cax = ax.matshow(metric_matrix)
-    fig.colorbar(cax)
+    fig.colorbar(cax, label = cbar_label)
     xaxis = np.arange(len(x_ticks))
     yaxis = np.arange(len(y_ticks))
     ax.set_xticks(xaxis)
     ax.set_yticks(yaxis)
-    ax.set_xticklabels(x_ticks)
+    ax.set_xticklabels(x_ticks, rotation = 90)
     ax.set_yticklabels(y_ticks)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)

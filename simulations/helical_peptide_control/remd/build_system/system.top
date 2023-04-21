@@ -1773,10 +1773,6 @@ peptide          3
     159    162    161    163     4  180.0000771  4.1840000  2
 
 
-;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
-; residue    1 NTC rtp NTC q 0.0
-
-
 ; Include TIP3P water topology
 #include "amber99.ff/tip3p.itp"
 

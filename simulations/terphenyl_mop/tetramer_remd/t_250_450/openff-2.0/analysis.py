@@ -34,9 +34,10 @@ def main():
         n_eps=40,
         n_processes=32,
         prefix="grid_search",
-        min_sample_limits=[0.005, 0.10],
-        metric_list = [hs.clustering.silhouette_score_metric],
-        plot_filename_list = ["ss.png"]
+        eps_limits=[0.01, 0.5],
+        min_sample_limits=[0.005, 0.5],
+        plot_filename = "ss.png",
+        frame_stride = 10
 
     )
 

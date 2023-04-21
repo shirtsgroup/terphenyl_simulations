@@ -2,7 +2,7 @@
 ;   File system_hmr.top  was generated
 ;   By user: tfobe (1000)
 ;   On host: grays-peak
-;   At date: Thu. April  4 16:40:45 2023
+;   At date: Thu. April  4 16:58:26 2023
 ;
 ;   This is a standalone topology file
 ;
@@ -44,7 +44,7 @@ HW             1   1.008000  0.00000000  A              0              0
 
 [ moleculetype ]
 ; Name            nrexcl
-system1          3
+peptide          3
 
 [ atoms ]
 ;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
@@ -1796,26 +1796,6 @@ K          3
 
 [ moleculetype ]
 ; Name            nrexcl
-F          3
-
-[ atoms ]
-;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
-; residue    1 F rtp F q -1.0
-    1          F      1      F      F      1 -1.00000000  19.000000   ; qtot -1.000000
-
-
-[ moleculetype ]
-; Name            nrexcl
-K          3
-
-[ atoms ]
-;   nr       type  resnr residue  atom   cgnr    charge       mass  typeB    chargeB      massB
-; residue    1 K rtp K q 1.0
-    1          K      1      K      K      1 1.00000000  39.100000   ; qtot 1.000000
-
-
-[ moleculetype ]
-; Name            nrexcl
 SOL          3
 
 [ atoms ]
@@ -1856,7 +1836,7 @@ Peptide in water
 
 [ molecules ]
 ; Compound       #mols
-system1              1
+peptide              1
 F                    8
 K                    8
 SOL               2133
