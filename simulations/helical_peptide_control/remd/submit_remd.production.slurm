@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 2 --ntasks-per-node 128
-#SBATCH -t 36:00:00
+#SBATCH -t 30:00:00
 #SBATCH -p RM 
 #SBATCH -J 'hp-production'
 #SBATCH --mail-user=theodore.fobe@colorado.edu
