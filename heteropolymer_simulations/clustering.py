@@ -6,6 +6,7 @@ import os
 import shutil as sh
 from sklearn.cluster import DBSCAN
 from sklearn import metrics, preprocessing
+from .utils import backoff_directory
 from .plotting import plot_grid_search
 
 
@@ -105,16 +106,6 @@ def write_clusters_to_file(
         cluster_traj.save(cluster_filename)
 
 
-def backoff_directory(dir_name):
-    i_backoff = 1
-    old_path = "#" + dir_name + "." + str(i_backoff) + "#"
-    while os.path.isdir(old_path):
-        i_backoff += 1
-        old_path = "#" + dir_name + "." + str(i_backoff) + "#"
-    print("Backoff! Moving the old " + dir_name + " to " + old_path)
-    sh.move(dir_name, old_path)
-
-
 def silhouette_score_metric(rmsd_matrix, dbscan_list_of_lists):
     result = np.zeros((len(dbscan_list_of_lists), len(dbscan_list_of_lists[0])))
     print("Calculating Silhouette Scores...")
@@ -179,8 +170,20 @@ def clustering_grid_search(
     frame_start=0,
     frame_end=-1,
     frame_stride=1,
-    plot_filename = "ss.png"
+    plot_filename = "ss.png",
+    output_dir = "clustering_output",
+    overwrite = True
 ):
+
+    if overwrite == False:
+        if os.path.isdir(output_dir):
+            print("The output directory", output_dir, "already exists. " + 
+                  "Skipping clustering. If you want to overwrite the existsing " +
+                  "clustering ouput, set `overwrite = True`."
+            )
+            return
+
+
     # Load trajectory
     if type(file_list) == list:
         traj = md.load(file_list[0], top=top_file)
@@ -265,8 +268,8 @@ def clustering_grid_search(
 
     # Identify cluster medoids
     sil_scores = metrics.silhouette_samples(rmsd_matrix, labels)
-    write_clusters_to_file(labels, traj_object)
-    write_medoids_to_file(labels, sil_scores, traj_object)
+    write_clusters_to_file(labels, traj_object, output_dir = output_dir)
+    write_medoids_to_file(labels, sil_scores, traj_object, output_dir = output_dir)
 
 
 def main():

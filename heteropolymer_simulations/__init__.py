@@ -10,6 +10,7 @@ import heteropolymer_simulations.clustering
 import heteropolymer_simulations.plotting
 import heteropolymer_simulations.edit_conf
 import heteropolymer_simulations.remd_utils
+import heteropolymer_simulations.analysis_workflows.metad
 
 # Handle versioneer
 from ._version import get_versions

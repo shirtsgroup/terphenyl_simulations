@@ -2,11 +2,14 @@
 import getpass
 import os
 from datetime import datetime
+import rdkit
 from rdkit import Chem
 import platform
 import numpy as np
 import re
+import shutil as sh
 import sys
+
 
 class TopFileObject:
     def __init__(self, filename):
@@ -107,6 +110,27 @@ def make_path(prefix):
         return
     if not os.path.exists(prefix_wo_file):
         os.makedirs(prefix_wo_file)
+    else:
+        backoff_directory(prefix)
+        os.makedirs(prefix_wo_file)
+
+
+def backoff_directory(dir_name):
+    """
+    Utility function to backoff a directory if it exists already
+
+    Parameters
+    ----------
+    dir_name : string
+        Directory name
+    """
+    i_backoff = 1
+    old_path = "#" + dir_name + "." + str(i_backoff) + "#"
+    while os.path.isdir(old_path):
+        i_backoff += 1
+        old_path = "#" + dir_name + "." + str(i_backoff) + "#"
+    print("Backoff! Moving the old " + dir_name + " to " + old_path)
+    sh.move(dir_name, old_path)
 
 def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 1):
     """

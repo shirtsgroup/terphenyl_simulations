@@ -27,6 +27,9 @@ def main():
             "sim4/npt_new.whole.xtc",
             "sim5/npt_new.whole.xtc",
             "sim6/npt_new.whole.xtc",
+            "sim7/npt_new.whole.xtc",
+            "sim8/npt_new.whole.xtc",
+            "sim9/npt_new.whole.xtc",
         ],
         "sim0/berendsen_npt.gro",
         "resname TET or resname CAP",
@@ -38,7 +41,6 @@ def main():
         min_sample_limits=[0.005, 0.5],
         plot_filename = "ss.png",
         frame_stride = 10
-
     )
 
     # Read in cluster outputs and REMD trajs
@@ -78,7 +80,8 @@ def main():
             torsion_atom_names,
             torsion_type + "Torsion (radians)",
             torsion_type + "_remd",
-            torsion_type + " Torsion Plot"
+            torsion_type + " Torsion Plot",
+            figsize = [5,5]
         )
         
         for i, traj in enumerate(cluster_trajs):
@@ -87,7 +90,8 @@ def main():
                 torsion_atom_names,
                 torsion_type.upper() + " Torsion (radians)",
                 "torsion_plots/" + torsion_type + "_" + cluster_file_list[i].split(".")[0],
-                torsion_type + " Torsion Plot"
+                torsion_type + " Torsion Plot",
+                figsize=[5,5]
             )
 
     t2 = time.time()

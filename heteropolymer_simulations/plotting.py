@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib
 from .utils import make_path
 import mdtraj as md
 import os
@@ -21,15 +22,15 @@ def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename
     fig = plt.figure(dpi=300, figsize = [10, 10])
     ax = fig.add_subplot(111)
     cax = ax.matshow(metric_matrix)
-    fig.colorbar(cax, label = cbar_label)
+    fig.colorbar(cax).set_label( label = cbar_label, size=18)
     xaxis = np.arange(len(x_ticks))
     yaxis = np.arange(len(y_ticks))
     ax.set_xticks(xaxis)
     ax.set_yticks(yaxis)
     ax.set_xticklabels(x_ticks, rotation = 90)
     ax.set_yticklabels(y_ticks)
-    ax.set_xlabel(x_label)
-    ax.set_ylabel(y_label)
+    ax.set_xlabel(x_label, fontsize = 18)
+    ax.set_ylabel(y_label, fontsize = 18)
     plt.savefig(filename)
     plt.close()
 
@@ -109,6 +110,7 @@ def plot_torsions_distributions(
     legend=None,
     mirror_sym=False,
     offsets=None,
+    figsize=None
 ):
     """
     Function for plotting 1D torsion distributions using MDTraj objects
@@ -172,6 +174,7 @@ def plot_torsions_distributions(
         hist, bin_edges_out = np.histogram(
             np.array(torsions), bins=bin_edges, density=True
         )
+        plt.figure(figsize = figsize)
         plt.plot(bin_centers, hist)
         plt.xlabel(x_axis)
         plt.ylabel("Density")

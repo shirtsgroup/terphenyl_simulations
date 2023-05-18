@@ -6,6 +6,7 @@ A package for running terphenyl oligomery systems
 
 import sys
 import os
+import fastentrypoints
 from importlib_metadata import entry_points
 from setuptools import setup, find_packages
 import versioneer
@@ -72,6 +73,7 @@ setup(
             'parameterize_foldamer = heteropolymer_simulations.scripts:parameterize_foldamer',
             'average_rtt = heteropolymer_simulations.scripts:calculate_average_rtt',
             'REMD_setup = heteropolymer_simulations.scripts:REMD_setup',
+            'metad_analysis = heteropolymer_simulations.analysis_workflows.metad:main'
         ]
     }
 
