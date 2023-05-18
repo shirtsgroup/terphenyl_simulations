@@ -12,7 +12,7 @@ import os
 import argparse
 import panedr
 import pandas as pd
-import heteropolymer_simulations as hs
+import terphenyl_simulations as ts
 import parmed as pmd
 import matplotlib.pyplot as plt
 import time
@@ -43,7 +43,7 @@ def renumber_pdb_atoms():
         return parser.parse_args()
 
     args = parse_args()
-    hs.utils.renumber_pdb_atoms(args.file, args.output)
+    ts.utils.renumber_pdb_atoms(args.file, args.output)
 
 
 def top_to_itp():
@@ -65,8 +65,8 @@ def top_to_itp():
         return parser.parse_args()
 
     args = parse_args()
-    top = hs.utils.TopFileObject(args.top)
-    hs.utils.write_itp_file(top, args.output)
+    top = ts.utils.TopFileObject(args.top)
+    ts.utils.write_itp_file(top, args.output)
 
 
 def plot_edr_observables():
@@ -332,8 +332,8 @@ def calculate_average_rtt():
 
     t1 = time.time()
     log_file = args.log_file
-    log_file_obj = hs.remd_utils.REMDLogFile(log_file)
-    rtts = hs.remd_utils.calculate_roundtrip_times(log_file_obj)
+    log_file_obj = ts.remd_utils.REMDLogFile(log_file)
+    rtts = ts.remd_utils.calculate_roundtrip_times(log_file_obj)
 
     print(len(rtts), "out of",log_file_obj.n_states ,"simulations complete at least 1 RT.")
     print("Average RTT: ", np.mean(rtts), "ns +/-", np.std(rtts))

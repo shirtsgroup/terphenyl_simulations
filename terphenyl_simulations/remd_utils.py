@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 import sys
-import heteropolymer_simulations as hs
+import terphenyl_simulations as ts
 
 plt.rcParams.update({"font.size": 7})
 
@@ -29,7 +29,7 @@ class REMDTrajectory:
 
         # Create output directory
         if os.path.isdir(output_dir):
-            hs.clustering.backoff_directory(output_dir)
+            ts.clustering.backoff_directory(output_dir)
         os.mkdir(output_dir)
 
         # Get the states where frames were written
