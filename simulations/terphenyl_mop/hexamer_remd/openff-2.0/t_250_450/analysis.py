@@ -34,7 +34,10 @@ def main():
         n_eps=40,
         n_processes=32,
         prefix="grid_search",
-        min_sample_limits=[0.005, 0.10],
+        eps_limits=[0.01, 0.5],
+        min_sample_limits=[0.005, 0.5],
+        plot_filename = "ss.png",
+        frame_stride = 10
     )
 
     # Read in cluster outputs and REMD trajs

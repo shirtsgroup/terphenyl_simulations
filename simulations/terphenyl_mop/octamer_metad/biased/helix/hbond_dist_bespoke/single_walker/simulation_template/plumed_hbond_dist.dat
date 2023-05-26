@@ -1,0 +1,34 @@
+# Define contact matrix for each h-bond of interest
+mat1: CONTACT_MATRIX ATOMS=2,83 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20}
+mat2: CONTACT_MATRIX ATOMS=46,127 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20}
+mat3: CONTACT_MATRIX ATOMS=90,171 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20}
+mat4: CONTACT_MATRIX ATOMS=134,215 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20}
+mat5: CONTACT_MATRIX ATOMS=178,259 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20}
+mat6: CONTACT_MATRIX ATOMS=222,303 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20}
+mat7: CONTACT_MATRIX ATOMS=266,347 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20}
+
+
+# Sum 1x1 matrix for switching function
+hbond1: COLUMNSUMS MATRIX=mat1 MEAN
+hbond2: COLUMNSUMS MATRIX=mat2 MEAN
+hbond3: COLUMNSUMS MATRIX=mat3 MEAN
+hbond4: COLUMNSUMS MATRIX=mat4 MEAN
+hbond5: COLUMNSUMS MATRIX=mat5 MEAN
+hbond6: COLUMNSUMS MATRIX=mat6 MEAN
+hbond7: COLUMNSUMS MATRIX=mat7 MEAN
+
+n_hbonds: COMBINE ARG=hbond1.mean,hbond2.mean,hbond3.mean,hbond4.mean,hbond5.mean,hbond6.mean,hbond7.mean PERIODIC=NO
+
+# Run metadynamics 
+metad: METAD ARG=n_hbonds ...
+    PACE=500
+    HEIGHT=height
+    BIASFACTOR=bf
+    TEMP=300
+    SIGMA=sigma
+    FILE=HILLS
+    GRID_MIN=0
+    GRID_MAX=7
+...
+
+PRINT ARG=hbond1.mean,hbond2.mean,hbond3.mean,hbond4.mean,hbond5.mean,hbond6.mean,hbond7.mean,n_hbonds,metad.bias FILE=HBOND_SUMS STRIDE=500

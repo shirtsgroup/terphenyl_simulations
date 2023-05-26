@@ -16,27 +16,6 @@ import yaml
 # sns.color_palette("bwr", as_cmap=True)
 
 
-# Going to move this into heteropolyerm_simulations package
-def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 0):
-    """
-    Using an MDAnalysis universe file with proper residue definitions, this function
-    will extract the torsion ids of all torsions propagated along the chain. Specifically
-    torsions should try to be fully defined within a single residue.
-    """
-
-    # Get index in residue
-    atoms_in_residue = [a.name for a in universe.residues[template_residue_i].atoms]
-    residue_atom_index  = [atoms_in_residue.index(a) for a in torsion_id if a in atoms_in_residue ]    
-    dihedral_ids = []
-    for residue in universe.residues:
-        if residue.resname == resname:
-            torsion_atoms = [residue.atoms[i] for i in residue_atom_index]
-            dihedral_ids.append([ta.name for ta in torsion_atoms])
-    
-    return(dihedral_ids)
-
-
-
 def main():
     t1 = time.time()
 
@@ -64,7 +43,7 @@ def main():
 
     octamer_torsions = {}
     for torsion_type in octamer_r1_torsions.keys():
-        t_ids = hs.utils.get_torsion_ids(octamer_u, "OCT", octamer_r1_torsions[torsion_type])
+        t_ids = hs.utils.get_torsion_ids(octamer_u, "OCT", octamer_r1_torsions[torsion_type], template_residue_i=0)
         octamer_torsions[torsion_type] = t_ids
         
         # Need to adjust some of the torsion distributions
@@ -98,7 +77,8 @@ def main():
             degrees = True
         )
 
-    # Hydogen Bond analysis
+    # Hydogen Bond analysis I need to package this into a analysis function
+    print("Running hydrogen bond analysis...")
     hbond_dir = "hbonds"
     hs.utils.make_path(hbond_dir)
     hbonds = HydrogenBondAnalysis(
@@ -106,8 +86,8 @@ def main():
         donors_sel = None,
         hydrogens_sel = "name H14 H33 H52 H71 H90 H109 H128 H147",
         acceptors_sel = "element O",
-        d_a_cutoff = 3.5,
-        d_h_a_angle_cutoff = 150,
+        d_a_cutoff = 4.0,
+        d_h_a_angle_cutoff = 135,
         update_selections = False
     )
 
@@ -115,12 +95,14 @@ def main():
 
     # Number of hydrogen bonds
     plt.figure(dpi = 300)
-    plt.plot(hbonds.times, hbonds.count_by_time())
+    plt.plot(hbonds.times/1000, hbonds.count_by_time())
     plt.title("Number of hydrogen bonds over time", weight="bold")
-    plt.xlabel("Time (ps)")
+    plt.xlabel("Time (ns)")
     plt.ylabel(r"$N_{HB}$")
     plt.savefig(hbond_dir + "/n_hydrogen_bonds.png")
     plt.close()
+    
+    np.save("h_bond_counts", hbonds.count_by_time())
 
     # Distribution of hydrogen bond distances
 
@@ -161,6 +143,8 @@ def main():
     # Clustering first 100 ns
     # This will take sometime
 
+    print("Running clustering...")
+
     hs.clustering.clustering_grid_search(
         "npt_new.whole.xtc",
         "berendsen_npt.gro", 
@@ -172,7 +156,7 @@ def main():
         min_sample_limits = [0.01, 0.1],
         eps_limits = [0.01, 0.4],
         frame_start = 0,
-        frame_end = 500, # first 100 ns
+        frame_end = -1, # first 100 ns
         frame_stride = 1
     )
     
