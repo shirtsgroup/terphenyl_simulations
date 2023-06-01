@@ -13,7 +13,7 @@ import glob
 import mdtraj as md
 from natsort import natsorted
 from flow import FlowProject
-import heteropolymer_simulations as hs
+import terphenyl_simulations as ts
 
 # Scripts for running the submit_all.slurm script which submits all simulations
 # at once with dependencies linking them. If this fails individual submission
@@ -225,7 +225,7 @@ def plot_transition_matrix(job):
 def cluster_simulations(job):
     os.chdir(job.fn(""))
     n_walkers = len(glob.glob("WALKER*"))
-    hs.clustering.clustering_grid_search(
+    ts.clustering.clustering_grid_search(
         ["WALKER" + str(i) + "/npt_new.whole.xtc" for i in range(n_walkers)],
         "WALKER0/berendsen_npt.gro",
         "resname OCT or resname CAP",
@@ -335,7 +335,7 @@ def write_hb_state_trajectory(job):
 
     # Make output directory
     print("Writing trajectories...")
-    hs.utils.make_path("hbond_states")
+    ts.utils.make_path("hbond_states")
 
     # Write all hbond states to file
     for hb_state in n_hbond_trajs.keys():

@@ -17,43 +17,49 @@ def replace_all_pattern(pattern, replace, file):
 def main():
     n_walkers = 16
     project = signac.get_project()
-    heights = np.array([2.5]) # height ranging from 2.5 kT to 5 kT divided by number of walkers to ensure accumulation of biases are not too large
-    sigmas = [0.5] # A couple different sigmas
-    bias_factors = [50, 100, 200, 500]
-    replica = list(range(1))
+    # combinations
+    statepoints = [
+        {'height' : 2.5,   'sigma' : 1.0, 'bf' : 50},
+        {'height' : 2.5,   'sigma' : 1.0, 'bf' : 100},
+        {'height' : 2.5,   'sigma' : 1.0, 'bf' : 300},
+        {'height' : 2.5,   'sigma' : 1.0, 'bf' : 500},
+        {'height' : 0.005, 'sigma' : 1.0, 'bf' : 100000},
+    ]
+    replicas = 1
 
-    for combination in itertools.product(heights, sigmas, bias_factors, replica):
-        h, s, bf, r = combination
-        sp_dict = {'height':float(h), 'sigma':float(s), 'bf':int(bf), 'replica':r}
+    for statepoint in statepoints:
+        for r in range(replicas):
+            statepoint['replica'] = r
+            sp_dict = statepoint
 
-        if not len(project.find_jobs(sp_dict).to_dataframe()) == 0:
-            print("This statepoint is already defined. Skipping.", sp_dict)
-            continue
+            if not len(project.find_jobs(sp_dict).to_dataframe()) == 0:
+                print("This statepoint is already defined. Skipping.", sp_dict)
+                continue
 
-        job = project.open_job(sp_dict)
-        # setup input files for metadynamics simulation
-        shutil.copytree("simulation_template", job.path)
-        walker_dirs = " ".join(["WALKER" + str(walker_id) for walker_id in range(n_walkers)])
-        replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.berendsen_npt.slurm"))
-        replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.berendsen_nvt.slurm"))
-        replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.production.slurm"))
-        replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.production_finish.slurm"))
-        replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.continue.slurm"))
-        for walker_id in range(n_walkers):
-            walker_dir = os.path.join(job.path, "WALKER" + str(walker_id))
-            shutil.copytree(os.path.join(job.path, "WALKER"), walker_dir)
-            replace_all_pattern("height", str(h), os.path.join(walker_dir, "plumed_hbond_dist.dat"))
-            replace_all_pattern("sigma", str(s), os.path.join(walker_dir, "plumed_hbond_dist.dat"))
-            replace_all_pattern("bf", str(bf), os.path.join(walker_dir, "plumed_hbond_dist.dat"))
-            replace_all_pattern("bf", str(bf), os.path.join(walker_dir,  "plumed_reweight.dat"))
-            replace_all_pattern("sigma", str(bf), os.path.join(walker_dir, "plumed_reweight.dat"))
-            replace_all_pattern("TEMP", str(300), os.path.join(walker_dir, "berendsen_nvt.mdp"))
-            replace_all_pattern("TEMP", str(300), os.path.join(walker_dir, "berendsen_npt.mdp"))
-            replace_all_pattern("TEMP", str(300), os.path.join(walker_dir, "npt_new.mdp"))
-            replace_all_pattern("temp", str(300), os.path.join(walker_dir, "plumed_hbond_dist.dat"))
-            replace_all_pattern("temp", str(300), os.path.join(walker_dir, "plumed_reweight.dat"))
-        shutil.rmtree(os.path.join(job.path, "WALKER"))
-        job.init()
+            job = project.open_job(sp_dict)
+            # setup input files for metadynamics simulation
+            shutil.copytree("simulation_template", job.path)
+            walker_dirs = " ".join(["WALKER" + str(walker_id) for walker_id in range(n_walkers)])
+            replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.berendsen_npt.slurm"))
+            replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.berendsen_nvt.slurm"))
+            replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.production.slurm"))
+            replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.production_finish.slurm"))
+            replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn("submit.continue.slurm"))
+            for walker_id in range(n_walkers):
+                walker_dir = os.path.join(job.path, "WALKER" + str(walker_id))
+                shutil.copytree(os.path.join(job.path, "WALKER"), walker_dir)
+                replace_all_pattern("height", str(statepoint['height']), os.path.join(walker_dir, "plumed_hbond_dist.dat"))
+                replace_all_pattern("sigma", str(statepoint['sigma']), os.path.join(walker_dir, "plumed_hbond_dist.dat"))
+                replace_all_pattern("bf", str(statepoint['bf']), os.path.join(walker_dir, "plumed_hbond_dist.dat"))
+                replace_all_pattern("bf", str(statepoint['bf']), os.path.join(walker_dir,  "plumed_reweight.dat"))
+                replace_all_pattern("sigma", str(statepoint['sigma']), os.path.join(walker_dir, "plumed_reweight.dat"))
+                replace_all_pattern("TEMP", str(300), os.path.join(walker_dir, "berendsen_nvt.mdp"))
+                replace_all_pattern("TEMP", str(300), os.path.join(walker_dir, "berendsen_npt.mdp"))
+                replace_all_pattern("TEMP", str(300), os.path.join(walker_dir, "npt_new.mdp"))
+                replace_all_pattern("temp", str(300), os.path.join(walker_dir, "plumed_hbond_dist.dat"))
+                replace_all_pattern("temp", str(300), os.path.join(walker_dir, "plumed_reweight.dat"))
+            shutil.rmtree(os.path.join(job.path, "WALKER"))
+            job.init()
 
 if __name__ == "__main__":
     main()

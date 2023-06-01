@@ -14,45 +14,71 @@ import mdtraj as md
 from natsort import natsorted
 from flow import FlowProject
 import terphenyl_simulations as ts
+import shutil
 
 # Scripts for running the submit_all.slurm script which submits all simulations
 # at once with dependencies linking them. If this fails individual submission
 # flow operations can be found below.
 
-@FlowProject.label
-def check_submitted(job):
-
-    if job.isfile("status.txt"):
-        with open(job.fn("status.txt"), "r") as f:
-            lines = f.readlines()
-        
-        if "SUBMITTED" in lines:
-            return True
-    return False
 
 
-@FlowProject.post(check_submitted)
-@FlowProject.operation
-def submit_all_simulations(job):
-    os.chdir(job.path)
-    n_jobs_old = len(subprocess.check_output(["squeue", "-u", "tfobe"]).splitlines()) - 1
-    subprocess.run(["bash", "submit_all.slurm"])
-    n_jobs = len(subprocess.check_output(["squeue", "-u", "tfobe"]).splitlines()) - 1
-    jobs_submitted = n_jobs - n_jobs_old
-    if jobs_submitted == 5:
-        with open(job.fn("status.txt"), "w") as f:
-            f.write("SUBMITTED")
-    else:
-        with open(job.fn("status.txt"), "w") as f:
-            f.write("FAILED")
 
-# Labels for individual simulation components
+# Helper functions
 
 def check_walker_file(job, filename, walker_dirs = ["WALKER0", "WALKER1", "WALKER2", "WALKER3"]):
     walkers = []
     for walker_dir in walker_dirs:
         walkers.append(job.isfile(os.path.join(walker_dir, filename)))
     return all(walkers)
+
+def reweight_walker_trajectories(job, plumed_file, kt, gro_file = "npt_new.gro", xtc_file = "npt_new.xtc"):
+    # Get original directory path
+    current_dir = os.path.abspath("")
+
+    # Change directory to job
+    os.chdir(job.fn(""))
+    
+    print("Reweighting simulations...")
+    for walker_dir in tqdm(glob.glob("WALKER*")):
+        # navigate to specific WALKER dir
+        os.chdir(walker_dir)
+
+        # Run plumed driver to reweight biases of invidual simulations
+        # We also use this to get H-bond measures from each frame from npt_new.xtc
+        subprocess.run(["plumed", "driver", "--plumed", plumed_file, "--kt", str(kt), "--mf_xtc", xtc_file, "--igro", gro_file]) # Silences output from sum_hills
+        os.chdir(job.fn(""))
+    
+    # Return to original directory
+    os.chdir(current_dir)
+
+def read_plumed_data_file(filename):
+    """
+    Function for reading output from PRINT operations in plumed
+    """
+    with open(filename) as f:
+        headers = f.readline().strip()
+    headers = headers.split(" ")[1:]
+    data = pd.read_csv(filename, sep = " ", header = None, comment="#", names = headers)
+    return data
+
+def read_plumed_hills_file(hills_file):
+    """
+    Function for reading HILLS output file from plumed driver
+    """
+    with open(hills_file) as f:
+        headers = f.readline().strip()
+    headers = headers.split(" ")[2:]
+    hills_data = pd.read_csv(hills_file, skiprows = 3, delim_whitespace=True, header = None, comment="#", names = headers)
+    return hills_data
+
+def read_plumed_fes_file(fes_filename):
+    """
+    Function for reading FES output from plumed sum_hills function
+    """
+    with open(filename) as f:
+        headers = f.readline().strip()
+    headers = headers.split(" ")[2:]
+    fes_data = pd.read_csv(filename, skiprows = 5, delim_whitespace=True, header = None, comment="#", names = headers)
 
 @FlowProject.label
 def check_berendsen_nvt_start(job):
@@ -77,6 +103,13 @@ def check_production_npt_start(job):
 @FlowProject.label
 def check_production_npt_finish(job):
    return check_walker_file(job, "npt_new.gro")
+
+@FlowProject.post(check_berendsen_nvt_start)
+@FlowProject.operation
+def submit_all_simulations(job):
+    os.chdir(job.path)
+    n_jobs_old = len(subprocess.check_output(["squeue", "-u", "tfobe"]).splitlines()) - 1
+    subprocess.run(["bash", "submit_all.slurm"])
 
 @FlowProject.post(check_berendsen_nvt_finish)
 @FlowProject.operation
@@ -129,39 +162,71 @@ def plot_CV_bias(job):
     walker_dirs = glob.glob(job.fn("WALKER*"))
     walker_ids = [int(walker_dir.split("WALKER")[-1]) for walker_dir in walker_dirs]
     plt.figure(dpi=150)
-    fig, ax = plt.subplots(len(walker_dirs) + 2, 1, figsize = [20, 5 * len(walker_dirs) + 5])
+    fig, ax = plt.subplots(len(walker_dirs) + 2, 1, figsize = [20, 3 * len(walker_dirs) + 5])
     ax[0].set_title("SIGMA: " +  str(job.sp.sigma) +  " HEIGHT:" + str(job.sp.height) + " BF:" + str(job.sp.bf))
     all_CV = []
     for i, walker_dir in zip(walker_ids, walker_dirs):
         filename = walker_dir + "/HBOND_SUMS."+str(i)
-        with open(filename) as f:
-            headers = f.readline().strip()
-        headers = headers.split(" ")[1:]
-        walker_data = pd.read_csv(filename, sep = " ", header = None, comment="#", names = headers)
+        walker_data = read_plumed_data_file(file_name)
         all_CV += list(walker_data.values[:,-2][::stride])
         ax[i].plot(1/1000 * walker_data["time"][::stride], walker_data.values[:,-2][::stride])
         ax[i].set_ylabel("Replica " + str(i) + " $N_H$")
         ax[len(walker_dirs)].plot(1/1000 * walker_data["time"][::stride], walker_data.values[:,-1][::stride])
     hills_file = job.fn("HILLS")
-    with open(hills_file) as f:
-        headers = f.readline().strip()
-    headers = headers.split(" ")[2:]
-    hills_data = pd.read_csv(hills_file, skiprows = 3, delim_whitespace=True, header = None, comment="#", names = headers)
+    hills_data = read_plumed_hills_file(hills_file)
     ax[len(walker_dirs)].set_ylabel("Bias Energy (kJ/mol)")
     ax[len(walker_dirs)+1].plot(1/1000 * hills_data["time"], hills_data["height"], "o", markersize = 0.5)
     ax[len(walker_dirs)+1].set_ylabel("Gaussian Heights (kJ/mol)")
     ax[len(walker_dirs)+1].set_xlabel("Time (ns)")
-    plt.savefig(job.fn("CV_bias_plot.png"), dpi = 300)
+    plt.savefig(job.fn("CV_bias_plot.png"), dpi = 150, bbox_inches='tight')
     plt.close()
     plt.figure(figsize = [5, 2.5], dpi = 300)
     plt.hist(all_CV, bins = 100, density = True)
     plt.title("SIGMA: " +  str(job.sp.sigma) +  " HEIGHT:" + str(job.sp.height) + " BF:" + str(job.sp.bf))
     plt.xlabel("$N_H$")
     plt.ylabel("Probability")
-    plt.savefig(job.fn("CV_sampling.png"), dpi = 300, transparent = False)
+    plt.savefig(job.fn("CV_sampling.png"), dpi = 300, transparent = False, bbox_inches='tight')
     plt.close()
 
 
+@FlowProject.pre(check_production_npt_start)
+@FlowProject.post.isfile("CV_comparision.png")
+@FlowProject.operation
+def plot_CV_comparison(job):
+    walker_dirs = glob.glob(job.fn("WALKER*"))
+
+    # Reweight output trajectory using bond_angle definition of H-bonds
+    kt = 300 * 8.314462618 * 10 ** -3
+    if not all([os.path.isfile(f + "/HBONDS_RW_ANGLE") for f in walker_dirs]):
+        reweight_walker_trajectories(job, "plumed_reweight_angle.dat", kt)
+
+    # initialize plot
+    plt.figure(dpi=150)
+    fig, ax = plt.subplots(len(walker_dirs), 1, figsize = [20, 3 * len(walker_dirs)])
+
+    # get data from individual walker directories
+    for walker_dir in walker_dirs:
+        walker_id = int(walker_dir.split("WALKER")[-1])
+        dist_hbond_fn = os.path.join(walker_dir,  "HBOND_SUMS." + str(walker_id))
+        hbond_dist_data = read_plumed_data_file(dist_hbond_fn)
+        angle_hbond_fn= os.path.join(walker_dir, "HBONDS_RW_ANGLE")
+        hbond_angle_data = read_plumed_data_file(angle_hbond_fn)
+        
+        # plot data
+        ax[walker_id].plot(1/1000 * hbond_dist_data["time"][::100], hbond_dist_data.values[:,-2][::100])
+        ax[walker_id].plot(1/10 * hbond_angle_data["time"], hbond_angle_data.values[:,-2])
+        ax[walker_id].set_ylabel("Replica " + str(walker_id) + " $N_H$")
+
+    # add titles, legend 
+    ax[0].set_title("SIGMA: " +  str(job.sp.sigma) +  " HEIGHT:" + str(job.sp.height) + " BF:" + str(job.sp.bf))
+    ax[-1].set_xlabel("Time (ns)")
+
+    handles, labels = ax[0].get_legend_handles_labels()
+    fig.legend(handles, ["Distance", "Angle"], loc='upper center')
+
+
+    # write to file
+    plt.savefig(job.fn("CV_comparision.png"), dpi = 150, bbox_inches="tight")
 
 @FlowProject.pre(check_production_npt_start)
 @FlowProject.post.isfile("sum_hills_FE.png")
@@ -172,11 +237,7 @@ def calculate_sum_hills_FE(job):
     os.chdir(job.fn(""))
     subprocess.run(["plumed", "sum_hills", "--hills", "HILLS", "--kt", str(kt)]) # Silences output from sum_hills
     filename = "fes.dat"
-    with open(filename) as f:
-        headers = f.readline().strip()
-    headers = headers.split(" ")[2:]
-    fes_data = pd.read_csv(filename, skiprows = 5, delim_whitespace=True, header = None, comment="#", names = headers)
-    print(fes_data)
+    fes_data = read_plumed_fes_file(filename)
     filtered = fes_data[fes_data["n_hbonds"] >= -0.1]
     filtered = filtered[filtered["n_hbonds"] <= 7.2]
     plt.figure(figsize = [5, 2.5])
@@ -200,10 +261,7 @@ def plot_transition_matrix(job):
     for walker_dir in tqdm(walker_dirs):
         walker_id = int(walker_dir.split("WALKER")[-1])
         filename = walker_dir + "/HBOND_SUMS."+str(walker_id)
-        with open(filename) as f:
-            headers = f.readline().strip()
-        headers = headers.split(" ")[1:]
-        walker_data = pd.read_csv(filename, sep = " ", header = None, comment="#", names = headers)
+        walker_data = read_plumed_data_file(file_name)
         h_bond_states = np.rint(walker_data.values[:,-2][::stride])
         for i in range(len(h_bond_states)-1):
             transition_matrix[int(h_bond_states[i]), int(h_bond_states[i+1])] += 1
@@ -219,7 +277,7 @@ def plot_transition_matrix(job):
 
     plt.savefig(job.fn("h_bond_transition_matrix.png"), dpi = 300)
 
-@FlowProject.pre(check_production_npt_finish)
+@FlowProject.pre.isfile("WALKER0/npt_new.whole.xtc")
 @FlowProject.post.isfile("clustering_output/medoid_0.gro")
 @FlowProject.operation
 def cluster_simulations(job):
@@ -244,16 +302,23 @@ def cluster_simulations(job):
 @FlowProject.operation
 def write_pbc_whole_rep(job):
     """
-    Use Gromacs to write trajectories with whole molecules
+    Use Gromacs to write trajectories with whole molecules. This 
+    job requires having an mpi executable of Gromacs available.
     """
 
     print("Running write_pbc_whole_rep in", job.fn(""))
 
-    # Make sure correct version of gromacs is available
-    subprocess.Popen("module load gcc/10.2.0", shell=True).wait()
-    subprocess.Popen("module load openmpi/3.1.6-gcc10.2.0", shell=True).wait()
-    subprocess.Popen("source /jet/home/tfobe/software/gromacs-2021.5_plumed/bin/GMXRC", shell=True).wait()
-    
+    # Make necesary executables are available
+    if not shutil.which("mpirun"):
+        print("Unable to find mpirun executable! Pleaes make sure OpenMPI is " + \
+              "installed or accesible with `module load`"
+        )
+        return
+    if not shutil.which("gmx_mpi"):
+        print("Unable to find gmx_mpi executable! Pleaes make sure Gromacs is " + \
+              "installed or accesible with `module load`"
+        )
+        return
     os.chdir(job.fn(""))
     print("Converting trajectories...")
     for walker_dir in tqdm(glob.glob("WALKER*")):
@@ -264,23 +329,12 @@ def write_pbc_whole_rep(job):
 @FlowProject.pre(check_production_npt_finish)
 @FlowProject.post.isfile("WALKER0/HBOND_SUMS")
 @FlowProject.operation
-def reweight_simulations(job):
+def reweight_trajectories(job):
     """
     Use PLUMED to unbias the individual simulations 
     """
-    current_dir = os.path.abspath("")
     kt = 300 * 8.314462618 * 10 ** -3
-    os.chdir(job.fn(""))
-    
-    print("Reweighting simulations...")
-    for walker_dir in tqdm(glob.glob("WALKER*")):
-        # navigate to specific WALKER dir
-        os.chdir(walker_dir)
-
-        # Run plumed driver to reweight biases of invidual simulations
-        # We also use this to get H-bond measures from each frame from npt_new.xtc
-        subprocess.run(["plumed", "driver", "--plumed", "plumed_reweight.dat", "--kt", str(kt), "--mf_xtc", "npt_new.xtc", "--igro", "npt_new.gro"]) # Silences output from sum_hills
-        os.chdir(job.fn(""))
+    reweight_walker_trajectories(job, "plumed_reweight.dat", kt)
 
         
 @FlowProject.pre.isfile("WALKER0/HBOND_SUMS")
@@ -346,6 +400,7 @@ def write_hb_state_trajectory(job):
 @FlowProject.operation
 def show_statepoint_table(job):
     print("sp:", job.sp, "dir:", job.fn(""), "status:", check_production_npt_finish(job))
+
 
 def main():
     FlowProject().main()

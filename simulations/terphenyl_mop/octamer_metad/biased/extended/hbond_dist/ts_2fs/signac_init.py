@@ -27,7 +27,7 @@ def main():
         {'height' : 0.003, 'sigma' : 0.5, 'bf' : 100000},
         {'height' : 0.005, 'sigma' : 0.5, 'bf' : 100000},
     ]
-    replicas = 2
+    replicas = 1
 
     for statepoint in statepoints:
         for r in range(replicas):
