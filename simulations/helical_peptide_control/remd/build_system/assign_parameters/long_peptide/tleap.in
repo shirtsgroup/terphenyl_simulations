@@ -1,0 +1,14 @@
+source leaprc.protein.ff14SB
+source leaprc.gaff2
+source leaprc.water.tip3p
+loadAmberPrep nh3.prepin
+loadAmberPrep succ.prepin
+loadAmberParams frcmod.gaff2.nh3
+loadAmberParams frcmod.nh3
+loadAmberParams frcmod.gaff2.succ
+loadAmberParams frcmod.succ
+# loadAmberParams frcmod.gaff2.peptide
+# loadAmberParams frcmod_edited.peptide
+x = loadPDB peptide_amber_ac.pdb
+saveAmberParm x helical_peptide.parm7 helical_peptide.rst7
+quit
