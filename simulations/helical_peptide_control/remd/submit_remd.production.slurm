@@ -1,17 +1,23 @@
 #!/bin/bash
-#SBATCH -N 2 --ntasks-per-node 128
-#SBATCH -t 30:00:00
-#SBATCH -p RM 
-#SBATCH -J 'hp-production'
+#SBATCH -N 4 --ntasks-per-node 64
+#SBATCH -t 18:00:00
+#SBATCH -p amilan
+#SBATCH -J 'mop-octamer-equilibration'
+#SBATCH --account=ucb368_asc1
 #SBATCH --mail-user=theodore.fobe@colorado.edu
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
+#SBATCH --constraint=ib 
 
-export HWLOC_HIDE_ERRORS=1
+module purge
+module load anaconda
+conda activate plumed_mpi
 
-module load gcc/10.2.0
-module load openmpi/3.1.6-gcc10.2.0
-source /jet/home/tfobe/software/gromacs-2022.2/bin/GMXRC
+module load gcc/11.2.0
+module load openmpi/4.1.1
+export SLURM_EXPORT_ENV=ALL
+
+source /projects/thfo9888/software/gromacs-2022.5/bin/GMXRC
 
 
 # Run grompp on all berendsen_nvt files

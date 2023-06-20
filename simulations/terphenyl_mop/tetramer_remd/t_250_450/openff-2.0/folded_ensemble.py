@@ -43,7 +43,7 @@ def main():
     plt.errorbar(list(range(len(remd_trajs))), folded_percentage, yerr = error)
     plt.xlabel("Replica Index")
     plt.ylabel("Percentage Folded")
-    plt.savefig("folded_replica_percentage.png", dpi = 300, transparent=True)
+    plt.savefig("folded_replica_percentage.png", dpi = 300, transparent=False)
     plt.close()
 
     common_ratio = np.power(450/250, 1/(64-1))
@@ -53,7 +53,7 @@ def main():
     plt.errorbar(t_range, folded_percentage, yerr = error)
     plt.xlabel("Temperature (K)")
     plt.ylabel("Fraction Folded")
-    plt.savefig("folded_T_percentage.png", dpi = 300, transparent=True)
+    plt.savefig("folded_T_percentage.png", dpi = 300, transparent=False)
     plt.close()
 
 
