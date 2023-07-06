@@ -1,8 +1,0 @@
-CRYST1    6.566    5.618    6.000  90.00  90.00  90.00 P 1            
-HETATM    1  O   Com     1       0.006   0.404   0.000  0.00  0.00           O  
-HETATM    2  H   Com     1      -0.786  -0.190   0.000  0.00  0.00           H  
-HETATM    3  H   Com     1       0.780  -0.214   0.000  0.00  0.00           H  
-CONECT    1    2    3
-CONECT    2    1
-CONECT    3    1
-END                                                                             

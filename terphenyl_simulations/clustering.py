@@ -226,7 +226,7 @@ def clustering_grid_search(
                 rmsd_matrix, eps, ms, parallel=n_processes
             )
             n_clusters[i, j] = len(np.unique(labels))
-            if len(np.unique(labels)) > 2:
+            if len(np.unique(labels)) > 1:
                 ss[i, j] = metrics.silhouette_score(rmsd_matrix, labels)
             else:
                 ss[i, j] = np.nan

@@ -21,8 +21,6 @@ import shutil
 # flow operations can be found below.
 
 
-
-
 # Helper functions
 
 def check_walker_file(job, filename, walker_dirs = ["WALKER0", "WALKER1", "WALKER2", "WALKER3"]):
@@ -75,10 +73,11 @@ def read_plumed_fes_file(fes_filename):
     """
     Function for reading FES output from plumed sum_hills function
     """
-    with open(filename) as f:
+    with open(fes_filename) as f:
         headers = f.readline().strip()
     headers = headers.split(" ")[2:]
-    fes_data = pd.read_csv(filename, skiprows = 5, delim_whitespace=True, header = None, comment="#", names = headers)
+    fes_data = pd.read_csv(fes_filename, skiprows = 5, delim_whitespace=True, header = None, comment="#", names = headers)
+    return fes_data
 
 @FlowProject.label
 def check_berendsen_nvt_start(job):
@@ -167,7 +166,7 @@ def plot_CV_bias(job):
     all_CV = []
     for i, walker_dir in zip(walker_ids, walker_dirs):
         filename = walker_dir + "/HBOND_SUMS."+str(i)
-        walker_data = read_plumed_data_file(file_name)
+        walker_data = read_plumed_data_file(filename)
         all_CV += list(walker_data.values[:,-2][::stride])
         ax[i].plot(1/1000 * walker_data["time"][::stride], walker_data.values[:,-2][::stride])
         ax[i].set_ylabel("Replica " + str(i) + " $N_H$")
@@ -190,7 +189,7 @@ def plot_CV_bias(job):
 
 
 @FlowProject.pre(check_production_npt_start)
-@FlowProject.post.isfile("CV_comparision.png")
+@FlowProject.post.isfile("CV_comparison.png")
 @FlowProject.operation
 def plot_CV_comparison(job):
     walker_dirs = glob.glob(job.fn("WALKER*"))
@@ -220,10 +219,6 @@ def plot_CV_comparison(job):
     # add titles, legend 
     ax[0].set_title("SIGMA: " +  str(job.sp.sigma) +  " HEIGHT:" + str(job.sp.height) + " BF:" + str(job.sp.bf))
     ax[-1].set_xlabel("Time (ns)")
-
-    handles, labels = ax[0].get_legend_handles_labels()
-    fig.legend(handles, ["Distance", "Angle"], loc='upper center')
-
 
     # write to file
     plt.savefig(job.fn("CV_comparision.png"), dpi = 150, bbox_inches="tight")
@@ -261,7 +256,7 @@ def plot_transition_matrix(job):
     for walker_dir in tqdm(walker_dirs):
         walker_id = int(walker_dir.split("WALKER")[-1])
         filename = walker_dir + "/HBOND_SUMS."+str(walker_id)
-        walker_data = read_plumed_data_file(file_name)
+        walker_data = read_plumed_data_file(filename)
         h_bond_states = np.rint(walker_data.values[:,-2][::stride])
         for i in range(len(h_bond_states)-1):
             transition_matrix[int(h_bond_states[i]), int(h_bond_states[i+1])] += 1
@@ -399,7 +394,7 @@ def write_hb_state_trajectory(job):
 
 @FlowProject.operation
 def show_statepoint_table(job):
-    print("sp:", job.sp, "dir:", job.fn(""), "status:", check_production_npt_finish(job))
+    print("sp:", job.sp, "ID:", job.id, "status:", check_production_npt_finish(job))
 
 
 def main():

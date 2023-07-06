@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh -l
 #SBATCH -N 2 --ntasks-per-node 64
 #SBATCH -t 4:00:00
 #SBATCH -p amilan

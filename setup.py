@@ -73,7 +73,8 @@ setup(
             'parameterize_foldamer = terphenyl_simulations.scripts:parameterize_foldamer',
             'average_rtt = terphenyl_simulations.scripts:calculate_average_rtt',
             'REMD_setup = terphenyl_simulations.scripts:REMD_setup',
-            'metad_analysis = terphenyl_simulations.analysis_workflows.metad:main'
+            'metad_analysis = terphenyl_simulations.analysis_workflows.metad:main',
+            'bemetad_analysis = terphenyl_simulations.analysis_workflows.bemetad:main'
         ]
     }
 

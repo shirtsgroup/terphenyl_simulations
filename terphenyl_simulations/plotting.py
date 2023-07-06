@@ -1,12 +1,14 @@
 import matplotlib.pyplot as plt
 import matplotlib
-from .utils import make_path
+from .utils import make_path, GromacsLogFile
 import mdtraj as md
 import os
 import numpy as np
 import seaborn as sns
 from tqdm import tqdm
 from .observables import get_torsions
+import itertools
+import sys
 
 
 def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename, cbar_label):
@@ -229,3 +231,69 @@ def plot_torsion_timeseries(traj_obj, torsion_atom_names, filenames, titles = No
         plt.title(titles[i])
         plt.savefig(os.path.join(output_dir, filenames[i]))
         plt.close()
+
+def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, title = None, scatter_points_files = []):
+    """
+    Create a ramachandran plot for a peptide system
+    """
+
+    traj_object = md.load_xtc(traj_file, top = top_file)
+
+    
+    phi_inds, phi_angles = md.compute_phi(traj_object)
+    psi_inds, psi_angles = md.compute_psi(traj_object)
+
+    phi_angles = phi_angles.flatten()
+    psi_angles = psi_angles.flatten()
+
+    # Get temperature from mdp file
+    
+    plt.figure(figsize=[5,5])
+    plt.hist2d(phi_angles, psi_angles, bins = np.linspace(-np.pi, np.pi, bins + 1))
+    plt.xlabel("$\Phi$ Angle (Radians)")
+    plt.ylabel("$\Psi$ Angle (Radians)")
+
+    for scatter_points_file in scatter_points_files:
+        frame = md.load(scatter_points_file)
+        phi_i, phi_angle = md.compute_phi(frame)
+        psi_i, psi_angle = md.compute_psi(frame)
+        plt.scatter(phi_angle.flatten(), psi_angle.flatten(), marker="x")
+    
+    plt.legend([fn.split("/")[-1].split(".")[0] for fn in scatter_points_files])
+
+    if title is not None:
+        plt.title(title)
+
+    plt.savefig(prefix + "_ramachandran.png")
+    plt.close()
+
+def plot_bemd_state_index_plot(log_file, prefix, stride = 500):
+    log_file_obj = GromacsLogFile(log_file)
+    fig, axes = plt.subplots(
+        int(np.ceil(np.sqrt(log_file_obj.n_states))),
+        int(np.ceil(np.sqrt(log_file_obj.n_states))),
+        figsize = [10,10]
+    )
+ 
+    ax_indices = list(itertools.product(range(int(np.ceil(np.sqrt(log_file_obj.n_states)))), repeat = 2))
+
+    for i in range(log_file_obj.n_states):
+        state_traj = [state_i[0] for state_i in log_file_obj.states]
+        axes[ax_indices[i][0], ax_indices[i][1]].plot(list(range(len(state_traj)))[::stride], state_traj[::stride], linewidth = 0.5)
+        axes[ax_indices[i][0], ax_indices[i][1]].set_xlabel("Steps")
+        axes[ax_indices[i][0], ax_indices[i][1]].set_ylabel("State Index")
+        axes[ax_indices[i][0], ax_indices[i][1]].set_title("Replica " + str(i))
+    
+    plt.tight_layout()
+    plt.savefig(prefix + "_state_index.png", dpi = 150)
+
+def plot_bemd_transition_matrix(log_file, prefix):
+    log_file_obj = GromacsLogFile(log_file)
+    fig, ax = plt.subplots()
+    ax.matshow(log_file_obj.transition_matrix, cmap="YlGn")
+    for (i, j), z in np.ndenumerate(log_file_obj.transition_matrix):
+        ax.text(j, i, '{:0.3f}'.format(z), ha='center', va='center')
+    plt.savefig(prefix + "_transition_matrix.png", dpi = 150)
+
+
+

@@ -1,4 +1,4 @@
-import heteropolymer_simulations as hs
+import terphenyl_simulations as ts
 import mdtraj as md
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,7 +24,7 @@ def main():
     temperatures = [250 * (commmon_factor)**i for i in range(64)]
 
     # Clustering workflow
-    hs.clustering.clustering_grid_search(
+    ts.clustering.clustering_grid_search(
         [
             "sim0/npt_new.whole.xtc",
             "sim1/npt_new.whole.xtc",
@@ -38,12 +38,9 @@ def main():
         "resname TET or resname CAP",
         n_min_samples=40,
         n_eps=40,
-        n_processes=32,
+        n_processes=16,
         prefix="grid_search",
         min_sample_limits=[0.005, 0.10],
-        metric_list = [hs.clustering.silhouette_score_metric],
-        plot_filename_list = ["ss.png"]
-
     )
 
     # Read in cluster outputs and REMD trajs
@@ -74,11 +71,11 @@ def main():
     # Torsion Analysis
     for torsion_type in hexamer_r1_torsions.keys():
         print("Working on", torsion_type, "torsion...")
-        torsion_atom_names = hs.utils.get_torsion_ids(
+        torsion_atom_names = ts.utils.get_torsion_ids(
             hexamer_u, "TET", hexamer_r1_torsions[torsion_type], template_residue_i = 0
         )
 
-        hs.plotting.plot_torsions_distributions(
+        ts.plotting.plot_torsions_distributions(
             remd_trajs,
             torsion_atom_names,
             torsion_type + "Torsion (radians)",
@@ -87,7 +84,7 @@ def main():
         )
         
         for i, traj in enumerate(cluster_trajs):
-            hs.plotting.plot_torsions_distributions(
+            ts.plotting.plot_torsions_distributions(
                 traj,
                 torsion_atom_names,
                 torsion_type.upper() + " Torsion (radians)",
@@ -99,7 +96,7 @@ def main():
     # Hydrogen Bond analysis
 
     hbond_dir = "hbonds"
-    hs.utils.make_path(hbond_dir)
+    ts.utils.make_path(hbond_dir)
     octamer_remd_universes = [mda.Universe("sim" + str(i) +"/npt_new.tpr", "sim" + str(i) +"/npt_new.whole.xtc" ) for i in range(64)]
 
     h_bond_means = []
