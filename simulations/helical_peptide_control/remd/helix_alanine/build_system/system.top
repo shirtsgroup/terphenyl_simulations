@@ -1,0 +1,68 @@
+;
+;   File /home/tfobe/Research/heteropolymer_simulations/simulations/helical_peptide_control/remd/build_system/short_helical_peptide_from_amber.top  was generated
+;   By user: tfobe (1000)
+;   On host: grays-peak
+;   At date: Wed. April  3 17:01:28 2023
+;
+;   This is a standalone topology file
+;
+;   Created by:
+;   ParmEd:       intermol-convert, VERSION 3.4.3
+;   Executable:   intermol-convert
+;   Library dir:  /usr/share/gromacs/top
+;   Command line:
+;     /home/tfobe/anaconda3/envs/terphenyl/bin/intermol-convert --amb_in short_helical_peptide.parm7 short_helical_peptide.rst7 --gromacs
+;
+
+[ defaults ]
+; nbfunc        comb-rule       gen-pairs       fudgeLJ fudgeQQ
+1               2               yes             0.5          0.83333333  
+
+[ atomtypes ]
+; name    at.num    mass    charge ptype  sigma      epsilon
+HC             1   1.008000  0.00000000  A     0.26495328      0.0656888
+CT             6  12.010000  0.00000000  A     0.33996695      0.4577296
+C              6  12.010000  0.00000000  A     0.33996695       0.359824
+O              8  16.000000  0.00000000  A     0.29599219        0.87864
+N              7  14.010000  0.00000000  A     0.32499985        0.71128
+H              1   1.008000  0.00000000  A     0.10690785      0.0656888
+CX             6  12.010000  0.00000000  A     0.33996695      0.4577296
+H1             1   1.008000  0.00000000  A      0.2471353      0.0656888
+2C             6  12.010000  0.00000000  A     0.33996695      0.4577296
+OW             8  16.000000  0.00000000  A       0.315061       0.636386
+HW             1   1.008000  0.00000000  A       0.000000        0.00000
+K             19      39.10  0.0000      A     0.30379646     0.81036925
+F              9      19.00  0.0000      A     0.41034794     0.01407498
+
+; Include peptide topollogy
+#include "peptide_alanine.itp"
+
+[ moleculetype ]
+; Name            nrexcl
+F          1
+
+[ atoms ]
+1       F               1       F               F        1     -1.00000
+
+
+[ moleculetype ]
+; Name            nrexcl
+K          1
+
+[ atoms ]
+1       K               1       K               K        1      1.00000
+
+; Include TIP3P water topology
+#include "amber99.ff/tip3p.itp"
+
+
+[ system ]
+; Name
+Peptide in water
+
+[ molecules ]
+; Compound       #mols
+peptide              1
+F                    8
+K                    8
+SOL               2133
