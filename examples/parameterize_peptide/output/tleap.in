@@ -1,0 +1,4 @@
+source leaprc.protein.ff14SB
+x = loadPDB output/peptide_amber.pdb
+saveAmberParm x output/peptide_amber.parm7 output/peptide_amber.rst7
+quit
