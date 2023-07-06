@@ -1,0 +1,6 @@
+title = Energy Minimization
+integrator=steep
+nsteps = -1
+cutoff-scheme = verlet
+nstlist = 40
+
