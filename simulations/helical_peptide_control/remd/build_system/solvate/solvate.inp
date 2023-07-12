@@ -1,0 +1,29 @@
+# Helical peptide solvated by water
+
+tolerance 2.0
+filetype pdb
+output solvated_peptide.pdb
+
+# Place peptide at center of box
+structure em_peptide_helix.pdb
+    number 1
+    fixed 30. 30. 30. 90. 90. 90.
+    centerofmass
+end structure
+
+# add ions
+structure f.pdb
+    number 8
+    inside box 0. 0. 0. 60. 60. 60.
+end structure
+
+structure k.pdb
+    number 8
+    inside box 0. 0. 0. 60. 60. 60.
+end structure
+
+# Pack water around peptide
+structure h2o.pdb
+    number 2133
+    inside box 0. 0. 0. 60. 60. 60.
+end structure

@@ -6,6 +6,7 @@ A package for running terphenyl oligomery systems
 
 import sys
 import os
+import fastentrypoints
 from importlib_metadata import entry_points
 from setuptools import setup, find_packages
 import versioneer
@@ -27,7 +28,7 @@ except:
 
 setup(
     # Self-descriptive entries which should always be present
-    name='heteropolymer_simulations',
+    name='terphenyl_simulations',
     author='Theodore Fobe',
     author_email='theodore.fobe@colorado.edu',
     description=short_description[0],
@@ -65,12 +66,14 @@ setup(
     # Entry points
     entry_points={
         'console_scripts': [
-            'renumber_pdb_atoms = heteropolymer_simulations.scripts:renumber_pdb_atoms',
-            'top_to_itp = heteropolymer_simulations.scripts:top_to_itp',
-            'plot_edr_observable = heteropolymer_simulations.scripts:plot_edr_observables',
-            'hmr_topology = heteropolymer_simulations.scripts:hmr_topology',
-            'parameterize_foldamer = heteropolymer_simulations.scripts:parameterize_foldamer',
-            'average_rtt = heteropolymer_simulations.scripts:calculate_average_rtt',
+            'renumber_pdb_atoms = terphenyl_simulations.scripts:renumber_pdb_atoms',
+            'top_to_itp = terphenyl_simulations.scripts:top_to_itp',
+            'plot_edr_observable = terphenyl_simulations.scripts:plot_edr_observables',
+            'hmr_topology = terphenyl_simulations.scripts:hmr_topology',
+            'parameterize_foldamer = terphenyl_simulations.scripts:parameterize_foldamer',
+            'average_rtt = terphenyl_simulations.scripts:calculate_average_rtt',
+            'REMD_setup = terphenyl_simulations.scripts:REMD_setup',
+            'metad_analysis = terphenyl_simulations.analysis_workflows.metad:main'
         ]
     }
 
