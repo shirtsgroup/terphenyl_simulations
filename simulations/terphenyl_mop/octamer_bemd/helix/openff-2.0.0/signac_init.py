@@ -23,10 +23,11 @@ def main():
         {
             'height1' : 0,    'height2' : 2.5, 'height3' : 2.5, 'height4' : 2.5,
             'sigma1'  : 0,    'sigma2'  : 1.0, 'sigma3'  : 0.1, 'sigma4'  : 0.4,
-            'bf1'     : 10e9, 'bf2'     : 500, 'bf3'     : 500, 'bf4'     : 500,
+            'bf1'     : 10e9, 'bf2'     : 50, 'bf3'     : 50, 'bf4'     : 50,
+            'TEMP' : 250
          }
     ]
-    replicas = 3
+    replicas = 1
 
     for statepoint in statepoints:
         for r in range(replicas):
@@ -49,7 +50,7 @@ def main():
 
                 # Replace mdp options in WALKER files
                 for mdp_file in glob.glob(os.path.join(walker_dir, "*.mdp")):
-                    replace_all_pattern("TEMP", str(300), mdp_file)
+                    replace_all_pattern("TEMP", str(sp_dict["TEMP"]), mdp_file)
                 
                 # Replace values in *.dat files
                 for dat_file in glob.glob(os.path.join(walker_dir, "plumed*.dat")):

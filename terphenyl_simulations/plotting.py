@@ -183,7 +183,7 @@ def plot_torsions_distributions(
         plt.title(title)
     if legend is not None:
         plt.legend(legend)
-    make_path(prefix + "_torsions.png")
+    
     plt.savefig(prefix + "_torsions.png")
     plt.close()
 

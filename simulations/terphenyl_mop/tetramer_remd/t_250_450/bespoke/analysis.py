@@ -40,7 +40,9 @@ def main():
         n_eps=40,
         n_processes=16,
         prefix="grid_search",
-        min_sample_limits=[0.005, 0.10],
+        min_sample_limits=[0.01, 0.15],
+        eps_limits=[0.05, 0.4],
+        frame_stride = 2
     )
 
     # Read in cluster outputs and REMD trajs
@@ -68,8 +70,13 @@ def main():
         "p3": ["O1", "C1", "C2", "C3"],
     }
 
+    print(remd_trajs)
+
     # Torsion Analysis
+    ts.utils.make_path("torsion_plots")
     for torsion_type in hexamer_r1_torsions.keys():
+        if torsion_type == -1:
+            continue
         print("Working on", torsion_type, "torsion...")
         torsion_atom_names = ts.utils.get_torsion_ids(
             hexamer_u, "TET", hexamer_r1_torsions[torsion_type], template_residue_i = 0
@@ -79,7 +86,7 @@ def main():
             remd_trajs,
             torsion_atom_names,
             torsion_type + "Torsion (radians)",
-            torsion_type + "_remd",
+            "torsion_plots/" + torsion_type + "_remd",
             torsion_type + " Torsion Plot"
         )
         
@@ -113,11 +120,11 @@ def main():
         )
         hbonds.run(verbose=True)
         n_hbonds = hbonds.count_by_time()[500:]
-        h_bond_mean.append(np.mean(n_hbonds))
+        h_bond_means.append(np.mean(n_hbonds))
         h_bond_stds.append(np.std(n_hbonds))
     
     plt.figure(dpi=300)
-    plt.errorbars(temperatures, h_bond_means, yerr=h_bond_stds)
+    plt.errorbar(temperatures, h_bond_means, yerr=h_bond_stds)
     plt.title("Hydrogen Bonds vs Temperature")
     plt.ylabel("Number of Hydrogen Bonds")
     plt.xlabel("Temperature (K)")

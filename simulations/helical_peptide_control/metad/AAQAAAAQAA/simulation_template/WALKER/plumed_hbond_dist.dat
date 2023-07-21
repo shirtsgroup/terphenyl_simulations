@@ -4,6 +4,7 @@ mat2: CONTACT_MATRIX ATOMS=26,65 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20}  # ALA-3
 mat3: CONTACT_MATRIX ATOMS=43,75 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20} # GLN-4 ALA-8
 mat4: CONTACT_MATRIX ATOMS=53,85 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20} # ALA-5 GLN-9
 mat5: CONTACT_MATRIX ATOMS=63,102 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20} # ALA-6 ALA-10
+mat6: CONTACT_MATRIX ATOMS=110,112 SWITCH={RATIONAL R_0=0.35 NN=10 MM=20} # ALA-7 ALA-11
 
 
 # Sum 1x1 matrix for switching function
@@ -12,8 +13,9 @@ hbond2: COLUMNSUMS MATRIX=mat2 MEAN
 hbond3: COLUMNSUMS MATRIX=mat3 MEAN
 hbond4: COLUMNSUMS MATRIX=mat4 MEAN
 hbond5: COLUMNSUMS MATRIX=mat5 MEAN
+hbond6: COLUMNSUMS MATRIX=mat6 MEAN
 
-n_hbonds: COMBINE ARG=hbond1.mean,hbond2.mean,hbond3.mean,hbond4.mean,hbond5.mean PERIODIC=NO
+n_hbonds: COMBINE ARG=hbond1.mean,hbond2.mean,hbond3.mean,hbond4.mean,hbond5.mean,hbond6.mean PERIODIC=NO
 
 # Run metadynamics 
 metad: METAD ARG=n_hbonds ...
@@ -24,9 +26,9 @@ metad: METAD ARG=n_hbonds ...
     SIGMA=sigma
     FILE=HILLS
     GRID_MIN=0
-    GRID_MAX=4
+    GRID_MAX=6
     WALKERS_MPI
     WALKERS_DIR=../
 ...
 
-PRINT ARG=hbond1.mean,hbond2.mean,hbond3.mean,hbond4.mean,hbond5.mean,n_hbonds,metad.bias FILE=HBOND_SUMS STRIDE=500
+PRINT ARG=hbond1.mean,hbond2.mean,hbond3.mean,hbond4.mean,hbond5.mean,hbond6.mean,n_hbonds,metad.bias FILE=HBOND_SUMS STRIDE=500

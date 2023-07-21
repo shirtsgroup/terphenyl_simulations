@@ -74,6 +74,10 @@ def reweight_walker_trajectories(job, plumed_file, kt, gro_file = "npt_new.gro",
     # Return to original directory
     os.chdir(current_dir)
 
+def reweight_colvars(job, plumed_file, colvar_file):
+    current_dir = os.path.abspath("")
+
+
 # Signac Labels
 
 @FlowProject.label
@@ -153,7 +157,7 @@ def plot_transition_matrix(job):
 
 @FlowProject.operation
 def show_statepoint_table(job):
-    print("sp:", job.sp, "dir:", job.fn(""), "status:", check_production_npt_finish(job))
+    print("sp:", job.sp, "\n", "dir:", job.fn("").split("/")[-2], "\n", "status:", check_production_npt_finish(job), "\n")
 
 @FlowProject.pre(check_production_npt_finish)
 @FlowProject.post.isfile("CV_sampling.png")
@@ -212,7 +216,8 @@ def sum_hills_FE(job):
     n_simulations = len(walker_dirs)
     kt = 300 * 8.314462618 * 10 ** -3
     x_labels = ["$N_{H-bonds}$", "$R_{G}$", "$d_{end-to-end}$"]
-    xy_limits = [[[0,7], [0, 1000]], [[0.75, 3], [0, 500]], [[0, 6], [0, 500]]]
+    xy_limits = [[[0,7], [0, 500]], [[0.75, 3], [0, 100]], [[0, 6], [0, 150]]]
+    plumed_bins = [[0, 7], [0, 6], [0, 14]]
 
     
     # Setup subplots
@@ -240,64 +245,301 @@ def sum_hills_FE(job):
     plt.savefig(job.fn("multi_sum_hills_FE.png"), transparent = False, dpi = 300)
 
 @FlowProject.pre(check_production_npt_finish)
+@FlowProject.post.isfile("WALKER0/COLVARS_REWEIGHT")
+@FlowProject.operation
+def unbias_simulations(job):
+
+    kt = 300 * 8.314462618 * 10 ** -3
+    if "TEMP" in job.sp.keys():
+        kt = job.sp["TEMP"] * 8.314462618 * 10 ** -3
+
+    reweight_walker_trajectories(job, "plumed_multi_cv_reweight.dat", kt)
+
+
+@FlowProject.pre.isfile("WALKER0/COLVARS_REWEIGHT")
+@FlowProject.operation
+def plot_1D_FE_surface(job):
+    # Navigate to working dir
+    os.chdir(job.fn(""))
+    ts.utils.make_path("1D_FE_plots")
+    walker_dirs = natsorted(glob.glob("WALKER*"))
+
+
+    # Calculate kT for specific temperatures
+    kt = 300 * 8.314462618 * 10 ** -3
+    if "TEMP" in job.sp.keys():
+        kt = job.sp["TEMP"] * 8.314462618 * 10 ** -3
+
+    # Generate common bins for all CVs
+    n_bins = 30
+
+    cv1_bins = np.linspace(0, 7, n_bins)
+    cv1_centers = [(cv1_bins[i] + cv1_bins[i+1])/2 for i in range(len(cv1_bins)-1)]
+    cv2_bins = np.linspace(0, 4, n_bins)
+    cv2_centers = [(cv2_bins[i] + cv2_bins[i+1])/2 for i in range(len(cv2_bins)-1)]
+    cv3_bins = np.linspace(0, 13, n_bins)
+    cv3_centers = [(cv3_bins[i] + cv3_bins[i+1])/2 for i in range(len(cv3_bins)-1)]
+
+
+    cv1_hist_sum = np.zeros([n_bins - 1])
+    cv2_hist_sum = np.zeros([n_bins - 1])
+    cv3_hist_sum = np.zeros([n_bins - 1])
+
+    for i, walker_dir in enumerate(walker_dirs):
+        # Extract CVs and unbiasing weights of individual simulation
+        reweight_file = os.path.join(walker_dir, "COLVARS_REWEIGHT")
+        data = read_plumed_data_file(reweight_file)
+        
+        # Calculate biasing weights from each BEMD replica
+
+
+        # Generate histograms for each CV
+
+        if not "WALKER0" in walker_dir:
+            v_rescale = np.array([ v - np.max(data.values[:, -1]) for v in data.values[:, -1]])
+            ws = np.exp(v_rescale / kt)
+
+            # Generate histograms weighted by unbiasing weights
+            cv1_hist, bin_edges = np.histogram(data.cv1, weights=ws, bins = cv1_bins, density = True)
+            cv2_hist, bin_edges = np.histogram(data.cv2, weights=ws, bins = cv2_bins, density = True)
+            cv3_hist, bin_edges = np.histogram(data.cv3, weights=ws, bins = cv3_bins, density = True)
+        else:
+            cv1_hist, bin_edges = np.histogram(data.cv1, bins = cv1_bins, density = True)
+            cv2_hist, bin_edges = np.histogram(data.cv2, bins = cv2_bins, density = True)
+            cv3_hist, bin_edges = np.histogram(data.cv3, bins = cv3_bins, density = True)
+            
+
+
+        cv1_hist_sum = cv1_hist_sum + cv1_hist
+        cv2_hist_sum = cv2_hist_sum + cv2_hist
+        cv3_hist_sum = cv3_hist_sum + cv3_hist
+
+    cv1_hist_sum = cv1_hist_sum / 4
+    cv2_hist_sum = cv2_hist_sum / 4
+    cv3_hist_sum = cv3_hist_sum / 4
+
+    # Plot aggregate probability distributions
+    fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = [10, 10])
+
+    axes[0,0].plot(cv1_centers, cv1_hist_sum)
+    axes[0,0].set_xlabel("$N_{H-bonds}$")
+    axes[0,0].set_ylabel("Probability Density")
+    axes[0,0].grid(visible=True, which="both", axis="both")
+
+
+    axes[0,1].plot(cv2_centers, cv2_hist_sum)
+    axes[0,1].set_xlabel("$R_{g}$")
+    axes[0,1].set_ylabel("Probability Density")
+    axes[0,1].grid(visible=True, which="both", axis="both")
+
+
+    axes[1,0].plot(cv3_centers, cv3_hist_sum)
+    axes[1,0].set_xlabel("$d_{end-to-end}$")
+    axes[1,0].set_ylabel("Probability Density")
+    axes[1,0].grid(visible=True, which="both", axis="both")
+
+
+    plt.delaxes(axes[1,1])
+    fig.suptitle("CV Aggregate Probabilities")
+    plt.savefig("1D_FE_plots/CV_reweight_proabality_dist.png")
+    plt.close()
+
+    # Plot aggregate free energy surfaces    
+    fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = [10, 10])
+    
+    fe_cv1 = -kt * np.log(cv1_hist_sum)
+    axes[0,0].plot(cv1_centers, fe_cv1)
+    axes[0,0].set_xlabel("$N_{H-bonds}$")
+    axes[0,0].set_ylabel("Free Energy (kJ/mol)")
+    axes[0,0].grid(visible=True, which="both", axis="both")
+
+
+    fe_cv2 = -kt * np.log(cv2_hist_sum)
+    axes[0,1].plot(cv2_centers, fe_cv2)
+    axes[0,1].set_xlabel("$R_{g}$")
+    axes[0,1].set_ylabel("Free Energy (kJ/mol)")
+    axes[0,1].grid(visible=True, which="both", axis="both")
+
+
+    fe_cv3 = -kt * np.log(cv3_hist_sum)
+    axes[1,0].plot(cv3_centers, fe_cv3)
+    axes[1,0].set_xlabel("$d_{end-to-end}$")
+    axes[1,0].set_ylabel("Free Energy (kJ/mol)")
+    axes[1,0].grid(visible=True, which="both", axis="both")
+
+
+    plt.delaxes(axes[1,1])
+    fig.suptitle("CV Free Energy Surfaces")
+    plt.savefig("1D_FE_plots/CV_free_energy_surf.png")
+    plt.close()
+
+
+
+
+@FlowProject.pre.isfile("WALKER0/COLVARS_REWEIGHT")
 @FlowProject.operation
 def plot_2D_FE_surface(job):
     # Need to modify HILLS filename to HILL.x
+    os.chdir(job.fn(""))
+    ts.utils.make_path("2D_FE_plots")
     walker_dirs = natsorted(glob.glob(job.fn("WALKER*")))
-    for i, walker_dir in enumerate(walker_dirs):
-        plumed_file = os.path.join(walker_dir, "plumed_multi_cv_reweight.dat")
-        with open(plumed_file, "r") as fn:
-            for line in fn.readlines():
-                if "FILE=HILLS" in line and line.strip().split("=")[-1] == "HILLS":
-                    ts.utils.replace_all_pattern("HILLS", "HILLS." + str(i), os.path.join(walker_dir, "plumed_multi_cv_reweight.dat"))
-                if "ARG=@replicas" in line:
-                    cv_label = "cv" + str(i)
-                    if i == 0:
-                        cv_label = "cv" + str(i + 1)
-                    ts.utils.replace_all_pattern("@replicas:cv1,cv1,cv2,cv3", cv_label, os.path.join(walker_dir, "plumed_multi_cv_reweight.dat"))
- 
 
-    # Aggregate all reweighted samples with their bias
     kt = 300 * 8.314462618 * 10 ** -3
-    agg_data = None
-    reweight_walker_trajectories(job, "plumed_multi_cv_reweight.dat", kt)
-    for i, walker_dir in enumerate(walker_dirs):
-        reweight_file = os.path.join(walker_dir, "COLVARS_REWEIGHT")
-        if agg_data is None:
-            agg_data = read_plumed_data_file(reweight_file)
-        else:
-            agg_data = pd.concat([agg_data, read_plumed_data_file(reweight_file)])
-    
-    fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = [10, 10])
+    if "TEMP" in job.sp.keys():
+        kt = job.sp["TEMP"] * 8.314462618 * 10 ** -3
 
-    hist, xedges, yedges = np.histogram2d(agg_data.cv1, agg_data.cv2, weights=agg_data.values[:,-1], bins = [15, 30], density = True)
-    fe = -kt * np.log(hist)
-    axes[0,0].imshow(fe, extent = [xedges.min(), xedges.max(), yedges.min(), yedges.max()])
+    if not os.path.exists(job.fn("WALKER0/COLVARS_REWEIGHT")):
+        reweight_walker_trajectories(job, "plumed_multi_cv_reweight.dat", kt)
+
+    cv1_cv2_hist = None
+    cv2_cv3_hist = None
+    cv1_cv3_hist = None
+
+    n_bins = 15
+
+    cv1_bins = np.linspace(0, 7,n_bins)
+    cv1_centers = [(cv1_bins[i] + cv1_bins[i+1])/2 for i in range(len(cv1_bins)-1)]
+    cv2_bins = np.linspace(0, 4, n_bins)
+    cv2_centers = [(cv2_bins[i] + cv2_bins[i+1])/2 for i in range(len(cv2_bins)-1)]
+    cv3_bins = np.linspace(0,13,n_bins)
+    cv3_centers = [(cv3_bins[i] + cv3_bins[i+1])/2 for i in range(len(cv3_bins)-1)]
+
+    cv1_cv2_hist = np.zeros([n_bins - 1, n_bins - 1])
+    cv1_cv3_hist = np.zeros([n_bins - 1, n_bins - 1])
+    cv2_cv3_hist = np.zeros([n_bins - 1, n_bins - 1])
+
+
+    for i, walker_dir in enumerate(walker_dirs):
+        # Extract CVs of individual simulation
+        reweight_file = os.path.join(walker_dir, "COLVARS_REWEIGHT")
+        data = read_plumed_data_file(reweight_file)
+        
+        # Calculate weights of each simulation
+        print(walker_dir.split("/")[-1])
+        ln_ws = np.array([ v / np.sum(data.values[:,-1]) for v in data.values[:, -1]])
+        ws = np.exp(ln_ws)
+    
+        # Generate histogram for each combination of points
+        hist1, xedges, yedges = np.histogram2d(data.cv1, data.cv2, weights=ws, bins = [cv1_bins, cv2_bins], density = True)
+        hist2, xedges, yedges = np.histogram2d(data.cv1, data.cv3, weights=ws, bins = [cv1_bins, cv3_bins], density = True)
+        hist3, xedges, yedges = np.histogram2d(data.cv2, data.cv3, weights=ws, bins = [cv2_bins, cv3_bins], density = True)
+
+        if  "WALKER0" in walker_dir:
+            hist1, xedges, yedges = np.histogram2d(data.cv1, data.cv2, bins = [cv1_bins, cv2_bins], density = True)
+            hist2, xedges, yedges = np.histogram2d(data.cv1, data.cv3, bins = [cv1_bins, cv3_bins], density = True)
+            hist3, xedges, yedges = np.histogram2d(data.cv2, data.cv3, bins = [cv2_bins, cv3_bins], density = True)
+        
+        # Plot individual FE surfaces
+
+        fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = [10, 10])
+
+        cv1_x, cv2_y = np.meshgrid(cv1_centers, cv2_centers)
+        fe_cv1_cv2 = -kt * np.log(hist1.T)
+        axes[0,0].contourf(cv1_x, cv2_y, fe_cv1_cv2)
+        axes[0,0].set_xlabel("$N_{H-bonds}$")
+        axes[0,0].set_ylabel("$R_{G}$")
+
+        cv1_x, cv3_y = np.meshgrid(cv1_centers, cv3_centers)
+        fe_cv1_cv3 = -kt * np.log(hist2.T)
+        axes[0,1].contourf(cv1_x, cv3_y, fe_cv1_cv3)
+        axes[0,1].set_xlabel("$N_{H-bonds}$")
+        axes[0,1].set_ylabel("$d_{end-to-end}$")
+
+        cv2_x, cv3_y = np.meshgrid(cv2_centers, cv3_centers)
+        fe_cv2_cv3 = -kt * np.log(hist3.T)
+        axes[1,0].contourf(cv2_x, cv3_y, fe_cv2_cv3)
+        axes[1,0].set_xlabel("$R_{G}$")
+        axes[1,0].set_ylabel("$d_{end-to-end}$")
+
+        plt.delaxes(axes[1,1])
+        fig.suptitle(walker_dir.split("/")[-1])
+        plt.savefig(job.fn("2D_FE_plots/2D_FE_sim_" + str(i) + ".png"))
+        plt.close()
+
+        # Aggregate histograms
+        cv1_cv2_hist = cv1_cv2_hist + hist1
+        cv1_cv3_hist = cv1_cv3_hist + hist2
+        cv2_cv3_hist = cv2_cv3_hist + hist3
+
+    cv1_cv2_hist = cv1_cv2_hist / 4
+    cv1_cv3_hist = cv1_cv3_hist / 4
+    cv2_cv3_hist = cv2_cv3_hist / 4
+
+    # Plot averaged FE surface
+    fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = [10, 10])
+    
+    # Need to think about how to do this math...
+    # Maybe ask Wei-Tse
+    # FE calculation:
+    # Averaging FE surface from for all 4 simulations
+    cv1_x, cv2_y = np.meshgrid(cv1_centers, cv2_centers)
+    fe_cv1_cv2 = -kt * np.log(cv1_cv2_hist.T)
+
+    # Plot contours
+    plot = axes[0,0].contourf(cv1_x, cv2_y, cv1_cv2_hist.T)
     axes[0,0].set_xlabel("$N_{H-bonds}$")
     axes[0,0].set_ylabel("$R_{G}$")
-    divider = make_axes_locatable(axes[0,0])
-    cax = divider.append_axes('right', size='5%', pad=0.05)
-    fig.colorbar(hist[3], cax=cax, orientation='vertical')
-    sys.exit()
+    cbar = plt.colorbar(plot, ax = axes[0,0])
+    cbar.ax.set_ylabel("Free Energy (kJ/mol)")
 
-    hist = axes[1,0].hist2d(agg_data.cv1, agg_data.cv3, weights=agg_data.values[:,-1], bins = [15, 30], density = True)
-    axes[1,0].set_xlabel("$N_{H-bonds}$")
+    # CV1 CV2 FE
+    cv1_x, cv3_y = np.meshgrid(cv1_centers, cv3_centers)
+    fe_cv1_cv3 = -kt * np.log(cv1_cv3_hist.T)
+
+    # Plot contours
+    plot = axes[0,1].contourf(cv1_x, cv3_y, cv1_cv3_hist.T)
+    axes[0,1].set_xlabel("$N_{H-bonds}$")
+    axes[0,1].set_ylabel("$d_{end-to-end}$")
+    cbar = plt.colorbar(plot, ax = axes[1,0])
+    cbar.ax.set_ylabel("Free Energy (kJ/mol)")
+
+
+    # CV2 CV3 FE
+    cv2_x, cv3_y = np.meshgrid(cv2_centers, cv3_centers)
+    fe_cv2_cv3 = -kt * np.log(cv2_cv3_hist.T)
+
+    plot = axes[1,0].contourf(cv2_x, cv3_y, cv2_cv3_hist.T)
+    axes[1,0].set_xlabel("$R_{G}$")
     axes[1,0].set_ylabel("$d_{end-to-end}$")
-    divider = make_axes_locatable(axes[1,0])
-    cax = divider.append_axes('right', size='5%', pad=0.05)
-    fig.colorbar(hist[3], cax=cax, orientation='vertical')
+    cbar = plt.colorbar(plot, ax = axes[0,1])
+    cbar.ax.set_ylabel("Free Energy (kJ/mol)")
 
-
-    hist = axes[0,1].hist2d(agg_data.cv3, agg_data.cv2, weights=agg_data.values[:,-1], bins = [30, 30], density = True)
-    axes[0,1].set_ylabel("$R_{G}$")
-    axes[0,1].set_xlabel("$d_{end-to-end}$")
-    divider = make_axes_locatable(axes[0,1])
-    cax = divider.append_axes('right', size='5%', pad=0.05)
-    fig.colorbar(hist[3], cax=cax, orientation='vertical')
 
     plt.delaxes(axes[1,1])
+    fig.suptitle("2D Probability Distributions")
 
-    plt.savefig(job.fn("2D_FE_surfaces.png"))
+    plt.savefig(job.fn("2D_FE_plots/2D_CV_hist.png"))
+    plt.close()
+
+    fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = [10, 10])
+    
+    # Plot contours
+    plot = axes[0,0].contourf(cv1_x, cv2_y, fe_cv1_cv2)
+    axes[0,0].set_xlabel("$N_{H-bonds}$")
+    axes[0,0].set_ylabel("$R_{G}$")
+    cbar = plt.colorbar(plot, ax = axes[0,0])
+    cbar.ax.set_ylabel("Free Energy (kJ/mol)")
+
+    plot = axes[0,1].contourf(cv1_x, cv3_y, fe_cv1_cv3)
+    axes[0,1].set_xlabel("$N_{H-bonds}$")
+    axes[0,1].set_ylabel("$d_{end-to-end}$")
+    cbar = plt.colorbar(plot, ax = axes[1,0])
+    cbar.ax.set_ylabel("Free Energy (kJ/mol)")
+
+
+
+    plot = axes[1,0].contourf(cv2_x, cv3_y, fe_cv2_cv3)
+    axes[1,0].set_xlabel("$R_{G}$")
+    axes[1,0].set_ylabel("$d_{end-to-end}$")
+    cbar = plt.colorbar(plot, ax = axes[0,1])
+    cbar.ax.set_ylabel("Free Energy (kJ/mol)")
+
+
+    plt.delaxes(axes[1,1])
+    fig.suptitle("2D Free Energy Surfaces")
+    plt.savefig(job.fn("2D_FE_plots/2D_FE_surfaces.png"))
+
+
 
 
 

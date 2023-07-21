@@ -18,3 +18,7 @@ intra_fit resn OCT+CAP and walker_3
 hide sticks, resn TCM
 
 alignto walker_0, align
+
+translate [30, 0, 0], walker_1, 0
+translate [60, 0, 0], walker_2, 0
+translate [90, 0, 0], walker_3, 0

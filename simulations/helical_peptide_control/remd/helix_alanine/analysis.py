@@ -20,20 +20,43 @@ sns.color_palette("bwr", as_cmap=True)
 
 def main():
     t1 = time.time()
+
+    ts.clustering.torsion_clustering_grid_search(
+        [ "sim" + str(i) + "/npt_new.whole.xtc" for i in range(5)],
+        "sim0/berendsen_npt.gro",
+        n_min_samples=10,
+        n_eps=10,
+        n_processes=4,
+        eps_limits=[0.5, 1.0],
+        min_sample_limits=[0.05, 0.4],
+        prefix="grid_search",
+        frame_start=0,
+        frame_end=-1,
+        frame_stride=5,
+        plot_filename = "torsion_ss.png",
+        output_dir = "clustering_output",
+        overwrite = True,
+        write_selection = "resn ALA or resn GLN or resn ACE or resn NME"
+    )
+
+    sys.exit()
+
+
     # Clustering workflow
     ts.clustering.clustering_grid_search(
         [ "sim" + str(i) + "/npt_new.whole.xtc" for i in range(10)],
         "sim0/berendsen_npt.gro",
-        "resname ALA or resname GLN or resname ACE or resname NME",
-        n_min_samples=40,
-        n_eps=40,
-        n_processes=32,
+        "name CA",
+        n_min_samples=20,
+        n_eps=20,
+        n_processes=8,
         prefix="grid_search",
-        eps_limits=[0.1, 0.5],
-        min_sample_limits=[0.1, 0.7],
+        eps_limits=[0.2, 0.5],
+        min_sample_limits=[0.01, 0.4],
         plot_filename = "ss.png",
-        frame_stride = 2,
-        overwrite = False
+        frame_stride = 1,
+        overwrite = True,
+        write_selection = "resn ALA or resn GLN or resn ACE or resn NME"
     )
 
 
