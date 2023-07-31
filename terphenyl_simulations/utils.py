@@ -32,9 +32,9 @@ class TopFileObject:
                 # Use legends to store values a dict
                 if self.top_file[i + 1][0] == ";":
                     labels = self.top_file[i + 1]
-                    section_data[section_name]["labels"] = labels
                 else:
                     labels = None
+                section_data[section_name]["labels"] = labels
                 continue
             if section_name is not None:
                 entries = line.split()
@@ -75,6 +75,8 @@ def write_itp_file(top_object, filename, itp_sections=None):
                 if getattr(top_object, itp_s)["labels"] is not None:
                     f.write(getattr(top_object, itp_s)["labels"])
                 for line in getattr(top_object, itp_s)["data"]:
+                    if itp_s == "pairs":
+                        print(line)
                     f.write(line)
                 f.write("\n\n")
 

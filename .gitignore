@@ -23,3 +23,5 @@ __pycache__
 *COLVAR_STD_TORSIONS*
 *COLVAR_REWEIGHT*
 *clustering_output*
+*bespoke-executor*
+*env-bespoke*
