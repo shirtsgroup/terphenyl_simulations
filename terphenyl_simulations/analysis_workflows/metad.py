@@ -15,93 +15,12 @@ from natsort import natsorted
 from flow import FlowProject
 import terphenyl_simulations as ts
 import shutil
+from .utils import *
+from .labels import *
 
 # Scripts for running the submit_all.slurm script which submits all simulations
 # at once with dependencies linking them. If this fails individual submission
 # flow operations can be found below.
-
-
-# Helper functions
-
-def check_walker_file(job, filename, walker_dirs = ["WALKER0", "WALKER1", "WALKER2", "WALKER3"]):
-    walkers = []
-    for walker_dir in walker_dirs:
-        walkers.append(job.isfile(os.path.join(walker_dir, filename)))
-    return all(walkers)
-
-def reweight_walker_trajectories(job, plumed_file, kt, gro_file = "npt_new.gro", xtc_file = "npt_new.xtc"):
-    # Get original directory path
-    current_dir = os.path.abspath("")
-
-    # Change directory to job
-    os.chdir(job.fn(""))
-    
-    print("Reweighting simulations...")
-    for walker_dir in tqdm(glob.glob("WALKER*")):
-        # navigate to specific WALKER dir
-        os.chdir(walker_dir)
-
-        # Run plumed driver to reweight biases of invidual simulations
-        # We also use this to get H-bond measures from each frame from npt_new.xtc
-        subprocess.run(["plumed", "driver", "--plumed", plumed_file, "--kt", str(kt), "--mf_xtc", xtc_file, "--igro", gro_file]) # Silences output from sum_hills
-        os.chdir(job.fn(""))
-    
-    # Return to original directory
-    os.chdir(current_dir)
-
-def read_plumed_data_file(filename):
-    """
-    Function for reading output from PRINT operations in plumed
-    """
-    with open(filename) as f:
-        headers = f.readline().strip()
-    headers = headers.split(" ")[1:]
-    data = pd.read_csv(filename, sep = " ", header = None, comment="#", names = headers)
-    return data
-
-def read_plumed_hills_file(hills_file):
-    """
-    Function for reading HILLS output file from plumed driver
-    """
-    with open(hills_file) as f:
-        headers = f.readline().strip()
-    headers = headers.split(" ")[2:]
-    hills_data = pd.read_csv(hills_file, skiprows = 3, delim_whitespace=True, header = None, comment="#", names = headers)
-    return hills_data
-
-def read_plumed_fes_file(fes_filename):
-    """
-    Function for reading FES output from plumed sum_hills function
-    """
-    with open(fes_filename) as f:
-        headers = f.readline().strip()
-    headers = headers.split(" ")[2:]
-    fes_data = pd.read_csv(fes_filename, skiprows = 5, delim_whitespace=True, header = None, comment="#", names = headers)
-    return fes_data
-
-@FlowProject.label
-def check_berendsen_nvt_start(job):
-    return check_walker_file(job, "berendsen_nvt.log")
-
-@FlowProject.label
-def check_berendsen_nvt_finish(job):
-    return check_walker_file(job, "berendsen_nvt.gro")
-
-@FlowProject.label
-def check_berendsen_npt_start(job):
-    return check_walker_file(job, "berendsen_npt.log")
-
-@FlowProject.label
-def check_berendsen_npt_finish(job):
-    return check_walker_file(job, "berendsen_npt.gro")
-
-@FlowProject.label
-def check_production_npt_start(job):
-    return check_walker_file(job, "npt_new.log")
-
-@FlowProject.label
-def check_production_npt_finish(job):
-   return check_walker_file(job, "npt_new.gro")
 
 @FlowProject.post(check_berendsen_nvt_start)
 @FlowProject.operation
@@ -188,40 +107,40 @@ def plot_CV_bias(job):
     plt.close()
 
 
-@FlowProject.pre(check_production_npt_start)
-@FlowProject.post.isfile("CV_comparison.png")
-@FlowProject.operation
-def plot_CV_comparison(job):
-    walker_dirs = glob.glob(job.fn("WALKER*"))
-
-    # Reweight output trajectory using bond_angle definition of H-bonds
-    kt = 300 * 8.314462618 * 10 ** -3
-    if not all([os.path.isfile(f + "/HBONDS_RW_ANGLE") for f in walker_dirs]):
-        reweight_walker_trajectories(job, "plumed_reweight_angle.dat", kt)
-
-    # initialize plot
-    plt.figure(dpi=150)
-    fig, ax = plt.subplots(len(walker_dirs), 1, figsize = [20, 3 * len(walker_dirs)])
-
-    # get data from individual walker directories
-    for walker_dir in walker_dirs:
-        walker_id = int(walker_dir.split("WALKER")[-1])
-        dist_hbond_fn = os.path.join(walker_dir,  "HBOND_SUMS." + str(walker_id))
-        hbond_dist_data = read_plumed_data_file(dist_hbond_fn)
-        angle_hbond_fn= os.path.join(walker_dir, "HBONDS_RW_ANGLE")
-        hbond_angle_data = read_plumed_data_file(angle_hbond_fn)
-        
-        # plot data
-        ax[walker_id].plot(1/1000 * hbond_dist_data["time"][::100], hbond_dist_data.values[:,-2][::100])
-        ax[walker_id].plot(1/10 * hbond_angle_data["time"], hbond_angle_data.values[:,-2])
-        ax[walker_id].set_ylabel("Replica " + str(walker_id) + " $N_H$")
-
-    # add titles, legend 
-    ax[0].set_title("SIGMA: " +  str(job.sp.sigma) +  " HEIGHT:" + str(job.sp.height) + " BF:" + str(job.sp.bf))
-    ax[-1].set_xlabel("Time (ns)")
-
-    # write to file
-    plt.savefig(job.fn("CV_comparision.png"), dpi = 150, bbox_inches="tight")
+# @FlowProject.pre(check_production_npt_start)
+# @FlowProject.post.isfile("CV_comparison.png")
+# @FlowProject.operation
+# def plot_CV_comparison(job):
+#     walker_dirs = glob.glob(job.fn("WALKER*"))
+# 
+#     # Reweight output trajectory using bond_angle definition of H-bonds
+#     kt = 300 * 8.314462618 * 10 ** -3
+#     if not all([os.path.isfile(f + "/HBONDS_RW_ANGLE") for f in walker_dirs]):
+#         reweight_walker_trajectories(job, "plumed_reweight_angle.dat", kt)
+# 
+#     # initialize plot
+#     plt.figure(dpi=150)
+#     fig, ax = plt.subplots(len(walker_dirs), 1, figsize = [20, 3 * len(walker_dirs)])
+# 
+#     # get data from individual walker directories
+#     for walker_dir in walker_dirs:
+#         walker_id = int(walker_dir.split("WALKER")[-1])
+#         dist_hbond_fn = os.path.join(walker_dir,  "HBOND_SUMS." + str(walker_id))
+#         hbond_dist_data = read_plumed_data_file(dist_hbond_fn)
+#         angle_hbond_fn= os.path.join(walker_dir, "HBONDS_RW_ANGLE")
+#         hbond_angle_data = read_plumed_data_file(angle_hbond_fn)
+#         
+#         # plot data
+#         ax[walker_id].plot(1/1000 * hbond_dist_data["time"][::100], hbond_dist_data.values[:,-2][::100])
+#         ax[walker_id].plot(1/10 * hbond_angle_data["time"], hbond_angle_data.values[:,-2])
+#         ax[walker_id].set_ylabel("Replica " + str(walker_id) + " $N_H$")
+# 
+#     # add titles, legend 
+#     ax[0].set_title("SIGMA: " +  str(job.sp.sigma) +  " HEIGHT:" + str(job.sp.height) + " BF:" + str(job.sp.bf))
+#     ax[-1].set_xlabel("Time (ns)")
+# 
+#     # write to file
+#     plt.savefig(job.fn("CV_comparision.png"), dpi = 150, bbox_inches="tight")
 
 @FlowProject.pre(check_production_npt_start)
 @FlowProject.post.isfile("sum_hills_FE.png")
@@ -230,7 +149,7 @@ def calculate_sum_hills_FE(job):
     current_dir = os.path.abspath("")
     kt = 300 * 8.314462618 * 10 ** -3
     os.chdir(job.fn(""))
-    subprocess.run(["plumed", "sum_hills", "--hills", "HILLS", "--kt", str(kt)], "--mintozero") # Silences output from sum_hills
+    subprocess.run(["plumed", "sum_hills", "--hills", "HILLS", "--kt", str(kt), "--mintozero"]) # Silences output from sum_hills
     filename = "fes.dat"
     fes_data = read_plumed_fes_file(filename)
     filtered = fes_data[fes_data["n_hbonds"] >= -0.1]
@@ -350,7 +269,7 @@ def write_pbc_whole_rep(job):
         os.chdir(job.fn(""))
 
 @FlowProject.pre(check_production_npt_finish)
-@FlowProject.post.isfile("WALKER0/HBOND_SUMS")
+@FlowProject.post.isfile("WALKER0/COLVARS_REWEIGHT")
 @FlowProject.operation
 def reweight_trajectories(job):
     """
@@ -360,7 +279,7 @@ def reweight_trajectories(job):
     reweight_walker_trajectories(job, "plumed_reweight.dat", kt)
 
         
-@FlowProject.pre.isfile("WALKER0/HBOND_SUMS")
+@FlowProject.pre.isfile("WALKER0/COLVARS_REWEIGHT")
 @FlowProject.post(lambda job: os.path.isdir(job.fn("hbond_states")))
 @FlowProject.operation
 def write_hb_state_trajectory(job):
@@ -385,7 +304,7 @@ def write_hb_state_trajectory(job):
         os.chdir(walker_dir)
 
         # Read reweighted H-bond sums (because these comes are calucated from the output frames)
-        filename = "HBOND_SUMS"
+        filename = "COLVARS_REWEIGHT"
         with open(filename) as f:
             headers = f.readline().strip()
         headers = headers.split(" ")[1:]

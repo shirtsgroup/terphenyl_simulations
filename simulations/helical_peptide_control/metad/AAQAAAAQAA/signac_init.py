@@ -19,9 +19,9 @@ def main():
     project = signac.get_project()
     # combinations
     statepoints = [
-        {'height' : 1.5,   'sigma' : 1.0, 'bf' : 200},
-        {'height' : 2.5,   'sigma' : 1.0, 'bf' : 200},
-        {'height' : 5,     'sigma' : 1.0, 'bf' : 200},
+        {'height' : 1.5,   'sigma' : 1.0, 'bf' : 500},
+        {'height' : 2.5,   'sigma' : 1.0, 'bf' : 500},
+        {'height' : 5,     'sigma' : 1.0, 'bf' : 500},
         # {'height' : 0.005, 'sigma' : 1.0, 'bf' : 100000},
     ]
     replicas = 1

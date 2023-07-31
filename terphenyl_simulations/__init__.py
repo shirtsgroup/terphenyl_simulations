@@ -4,6 +4,7 @@ A package for running terphenyl oligomery systems
 """
 
 import terphenyl_simulations.utils
+import terphenyl_simulations.remd_utils
 import terphenyl_simulations.observables
 import terphenyl_simulations.scripts
 import terphenyl_simulations.clustering
