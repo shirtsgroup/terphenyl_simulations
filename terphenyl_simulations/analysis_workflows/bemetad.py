@@ -15,8 +15,15 @@ from natsort import natsorted
 from flow import FlowProject
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import terphenyl_simulations as ts
+import yaml
 
 # Helper Functions
+
+def read_yaml_parameter_file(yaml_file_name):
+    with open(yaml_file_name, 'r') as file:
+        yaml_data = yaml.safe_load(file)
+
+    return yaml_data
 
 def check_walker_file(job, filename, walker_dirs = ["WALKER0", "WALKER1", "WALKER2", "WALKER3"]):
     walkers = []
@@ -68,15 +75,31 @@ def reweight_walker_trajectories(job, plumed_file, kt, gro_file = "npt_new.gro",
 
         # Run plumed driver to reweight biases of invidual simulations
         # We also use this to get H-bond measures from each frame from npt_new.xtc
-        subprocess.run(["plumed", "--no-mpi", "driver", "--plumed", plumed_file, "--kt", str(kt), "--mf_xtc", xtc_file, "--igro", gro_file]) # Silences output from sum_hills
+        subprocess.run(["plumed", "--no-mpi", "driver", "--plumed", plumed_file, "--kt", str(kt), "--mf_xtc", xtc_file, "--igro", gro_file])
         os.chdir(job.fn(""))
     
     # Return to original directory
     os.chdir(current_dir)
 
-def reweight_colvars(job, plumed_file, colvar_file):
+def reweight_colvars(job, plumed_file):
+    # Get original directory path
     current_dir = os.path.abspath("")
 
+    # Change directory to job
+    os.chdir(job.fn(""))
+    
+
+    print("Reweighting simulations...")
+    for walker_dir in tqdm(glob.glob("WALKER*")):
+        # navigate to specific WALKER dir
+        os.chdir(walker_dir)
+
+        # Run plumed driver to reweight COLVARS file
+        subprocess.run(["plumed", "--no-mpi", "driver", "--plumed", plumed_file, "--noatoms"])
+        os.chdir(job.fn(""))
+
+
+    os.chdir(current_dir)
 
 # Signac Labels
 
@@ -163,40 +186,31 @@ def show_statepoint_table(job):
 @FlowProject.post.isfile("CV_sampling.png")
 @FlowProject.operation
 def plot_multi_CV_plot(job):
-    stride = 100
+    params = read_yaml_parameter_file("analysis_parameters.yml")
+    stride = params["CV_plots"]["CV_traj_stride"]
     walker_dirs = natsorted(glob.glob(job.fn("WALKER*")))
     fig, axs = plt.subplots(nrows = len(walker_dirs), ncols = len(walker_dirs)+1, figsize = [20,10])
-    overall_cv1 = []
-    overall_cv2 = []
-    overall_cv3 = []
+    
+    overall_cvs = [[] for _ in range(len(params["CV_plots"]["x_labels"]))]
+    
     for i, walker_dir in tqdm(enumerate(walker_dirs)):
         colvars_file = os.path.join(walker_dir, "COLVARS."+str(i))
         colvars = read_plumed_data_file(colvars_file)
-        overall_cv1 += list(colvars["cv1"][::stride].values)
-        overall_cv2 += list(colvars["cv2"][::stride].values)
-        overall_cv3 += list(colvars["cv3"][::stride].values)
-        axs[0,i].plot(1/1000 * colvars["time"][::stride], colvars["cv1"][::stride], markersize = 0.5)
-        axs[1,i].plot(1/1000 * colvars["time"][::stride], colvars["cv2"][::stride], markersize = 0.5)
-        axs[2,i].plot(1/1000 * colvars["time"][::stride], colvars["cv3"][::stride], markersize = 0.5)
-        axs[0,i].set_xlabel("Time (ns)")
-        axs[0,i].set_ylabel("Native Contacts")
         axs[0,i].set_title("Simulation " + str(i))
-        axs[1,i].set_xlabel("Time (ns)")
-        axs[1,i].set_ylabel("Radius of Gyration (nm)")
-        axs[2,i].set_xlabel("Time (ns)")
-        axs[2,i].set_ylabel("End-to-end distance (nm)")
-        axs[3,i].plot(1/1000 * colvars["time"][::stride], colvars.values[:,-1][::stride], markersize = 0.5, color = "red")
-        axs[3,i].set_xlabel("Time (ns)")
-        axs[3,i].set_ylabel("Bias (kJ/mol)")
-    axs[0,-1].hist(overall_cv1, bins = 50, density = True)
-    axs[0,-1].set_xlabel("Native Contacts")
-    axs[0,-1].set_ylabel("Probability Density")
-    axs[1,-1].hist(overall_cv2, bins = 50, density = True)
-    axs[1,-1].set_xlabel("Radius of Gyration (nm)")
-    axs[1,-1].set_ylabel("Probability Density")
-    axs[2,-1].hist(overall_cv3, bins = 50, density = True)
-    axs[2,-1].set_xlabel("End-to-end distance (nm)")
-    axs[2,-1].set_ylabel("Probability Density")
+        for j in range(len(params["CV_plots"]["x_labels"])):
+            cv_label = params["CV_plots"]["cv_names"][j]
+            overall_cvs[j] += list(colvars[cv_label][::stride].values)
+            axs[j,i].plot(1/1000 * colvars["time"][::stride], colvars[cv_label][::stride], markersize = 0.5)
+            axs[j,i].set_xlabel("Time (ns)")
+            axs[j,i].set_ylabel(params["CV_plots"]["x_labels"][j])
+        axs[-1, i].plot(1/1000 * colvars["time"][::stride], colvars.values[:,-1][::stride], markersize = 0.5, color = "red")
+        axs[-1, i].set_xlabel("Time (ns)")
+        axs[-1, i].set_ylabel("Bias Energy (kJ/mol)")
+
+    for j in range(len(params["CV_plots"]["x_labels"])):
+        axs[j, -1].hist(overall_cvs[j], bins = 50, density = True)
+        axs[j, -1].set_xlabel(params["CV_plots"]["x_labels"][j])
+        axs[j, -1].set_ylabel("Probability Density")
     axs[0,-1].set_title("Overall PDF")
     axs[-1, -1].remove()
     
@@ -212,40 +226,111 @@ def sum_hills_FE(job):
     current_dir = os.path.abspath("")
     
     # Parameters about simulations
+    params = read_yaml_parameter_file("analysis_parameters.yml")
     walker_dirs = natsorted(glob.glob(job.fn("WALKER*")))
     n_simulations = len(walker_dirs)
     kt = 300 * 8.314462618 * 10 ** -3
-    x_labels = ["$N_{H-bonds}$", "$R_{G}$", "$d_{end-to-end}$"]
-    xy_limits = [[[0,7], [0, 500]], [[0.75, 3], [0, 100]], [[0, 6], [0, 150]]]
-    plumed_bins = [[0, 7], [0, 6], [0, 14]]
+    T = 300
+    if "TEMP" in job.sp.keys():
+        kt = job.sp["TEMP"] * 8.314462618 * 10 ** -3
+        T = job.sp["TEMP"]
+    x_labels = params["sum_hills_plots"]["x_labels"]
+    xy_limits = params["sum_hills_plots"]["fe_xy_limits"]
+    plumed_bins = params["sum_hills_plots"]["plumed_bins"]
+    cv_bfs = params["sum_hills_plots"]["cv_bf_labels"]
 
-    
     # Setup subplots
-    n_row_columns = int(np.ceil(np.sqrt(n_simulations)))
+    n_row_columns = int(np.ceil(np.sqrt(n_simulations - 1)))
     fig, axes = plt.subplots(nrows = n_row_columns, ncols = n_row_columns, figsize = [10, 10])
-    axes = np.roll(axes.flatten(), 1, axis=0).tolist()
+    axes = axes.flatten().tolist()
 
-    for i, (walker_dir, ax) in enumerate(zip(walker_dirs, axes)):
-        if "WALKER0" in walker_dir:
-            fig.delaxes(ax)
-            continue
+    for i, (walker_dir, ax) in enumerate(zip(walker_dirs[1:], axes)):
+
+        # Read HILLS file
         os.chdir(walker_dir)
         walker_id = int(walker_dir.split("WALKER")[-1])
-        subprocess.run(["plumed", "--no-mpi", "sum_hills", "--hills", "HILLS." + str(walker_id), "--kt", str(kt), "--mintozero"]) # Silences output from sum_hills
+        subprocess.run(["plumed", "--no-mpi", "sum_hills", "--hills", "HILLS." + str(walker_id), "--kt", str(kt), "--mintozero", "--bin", str(plumed_bins[i][2]), "--min", str(plumed_bins[i][0]), "--max", str(plumed_bins[i][1])]) # Silences output from sum_hills
         filename = "fes.dat"
         fes_data = read_plumed_fes_file(filename)
-        ax.plot(fes_data.values[:,0], fes_data.values[:,1])
-        ax.set_xlabel(x_labels[i - 1])
+
+        # Calculating correction scaling for FE surface
+        delta_T = job.sp[cv_bfs[i]] * T - T
+        prefactor = (T + delta_T) / delta_T
+
+        print("T + dT / dT =", prefactor)
+
+        # Plot FES
+        ax.plot(prefactor * fes_data.values[:,0], fes_data.values[:,1])
+        ax.set_xlabel(x_labels[i])
         ax.set_ylabel("Free Energy (kJ/mol)")
-        ax.set_xlim(xy_limits[i-1][0])
-        ax.set_ylim(xy_limits[i-1][1])
+        ax.set_xlim(xy_limits[i][0])
+        # ax.set_ylim(xy_limits[i-1][1])
         ax.set_title("Simulation " + str(walker_id))
         ax.grid(visible=True, which="both", axis="both")
     os.chdir(current_dir)
+    fig.suptitle(job.sp, wrap=True)
     plt.savefig(job.fn("multi_sum_hills_FE.png"), transparent = False, dpi = 300)
 
 @FlowProject.pre(check_production_npt_finish)
-@FlowProject.post.isfile("WALKER0/COLVARS_REWEIGHT")
+@FlowProject.post.isfile("multi_sum_hills_FE_stride.png")
+@FlowProject.operation
+def sum_hills_FE_stride(job):
+    params = read_yaml_parameter_file("analysis_parameters.yml")
+
+    # Get original directory
+    current_dir = os.path.abspath("")
+    
+    # Read in analysis parameters
+    walker_dirs = natsorted(glob.glob(job.fn("WALKER*")))
+    n_simulations = len(walker_dirs)
+    kt = 300 * 8.314462618 * 10 ** -3
+    T = 300
+    if "TEMP" in job.sp.keys():
+        kt = job.sp["TEMP"] * 8.314462618 * 10 ** -3
+        T = job.sp["TEMP"]
+    x_labels = params["sum_hills_plots"]["x_labels"]
+    xy_limits = params["sum_hills_plots"]["fe_xy_limits"]
+    plumed_bins = params["sum_hills_plots"]["plumed_bins"]
+    cv_bfs = params["sum_hills_plots"]["cv_bf_labels"]
+
+    # Setup subplots
+    n_row_columns = int(np.ceil(np.sqrt(n_simulations - 1)))
+    fig, axes = plt.subplots(nrows = n_row_columns, ncols = n_row_columns, figsize = [10, 10])
+    axes = axes.flatten().tolist()
+
+    for i, (walker_dir, ax) in enumerate(zip(walker_dirs[1:], axes)):
+        stride = 4000
+
+        # Read HILLS file
+        os.chdir(walker_dir)
+        walker_id = int(walker_dir.split("WALKER")[-1])
+        subprocess.run(["plumed", "--no-mpi", "sum_hills", "--hills", "HILLS." + str(walker_id), "--kt", str(kt), "--bin", str(plumed_bins[i][2]), "--min", str(plumed_bins[i][0]), "--max", str(plumed_bins[i][1]), "--stride", str(stride)]) # Silences output from sum_hills
+        fes_files = natsorted(glob.glob("fes*"))
+        cmap = plt.get_cmap("viridis")
+        colors = [cmap(i) for i in np.linspace(0, 1, len(fes_files))]
+        for j, fes_file in enumerate(fes_files):
+            fes_data = read_plumed_fes_file(fes_file)
+
+            # Calculating correction scaling for FE surface
+            delta_T = job.sp[cv_bfs[i]] * T - T
+            prefactor = (T + delta_T) / delta_T
+
+            # Plot FES
+            ax.plot(prefactor * fes_data.values[:,0], fes_data.values[:,1], lw = 1, color = colors[j])
+        ax.set_xlabel(x_labels[i])
+        ax.set_ylabel("Free Energy (kJ/mol)")
+        ax.set_xlim(xy_limits[i][0])
+        # ax.set_ylim(xy_limits[i][1])
+        ax.set_title("Simulation " + str(walker_id))
+        ax.grid(visible=True, which="both", axis="both")
+    os.chdir(current_dir)
+    fig.suptitle(job.sp, wrap = True)
+    plt.tight_layout()
+    plt.savefig(job.fn("multi_sum_hills_FE_stride.png"), transparent = False, dpi = 300)
+
+
+@FlowProject.pre(check_production_npt_finish)
+@FlowProject.post.isfile("WALKER3/COLVARS_REWEIGHT")
 @FlowProject.operation
 def unbias_simulations(job):
 
@@ -253,12 +338,18 @@ def unbias_simulations(job):
     if "TEMP" in job.sp.keys():
         kt = job.sp["TEMP"] * 8.314462618 * 10 ** -3
 
-    reweight_walker_trajectories(job, "plumed_multi_cv_reweight.dat", kt)
+    reweight_colvars(job, "plumed_multi_cv_reweight.dat")
 
 
 @FlowProject.pre.isfile("WALKER0/COLVARS_REWEIGHT")
+# @FlowProject.post.isfile("1D_FE_plots/CV_free_energy_surf.png")
 @FlowProject.operation
 def plot_1D_FE_surface(job):
+    # Read parameter file
+    params = read_yaml_parameter_file("analysis_parameters.yml")
+    current_dir = os.path.abspath("")
+
+
     # Navigate to working dir
     os.chdir(job.fn(""))
     ts.utils.make_path("1D_FE_plots")
@@ -271,19 +362,16 @@ def plot_1D_FE_surface(job):
         kt = job.sp["TEMP"] * 8.314462618 * 10 ** -3
 
     # Generate common bins for all CVs
-    n_bins = 30
 
-    cv1_bins = np.linspace(0, 7, n_bins)
-    cv1_centers = [(cv1_bins[i] + cv1_bins[i+1])/2 for i in range(len(cv1_bins)-1)]
-    cv2_bins = np.linspace(0, 4, n_bins)
-    cv2_centers = [(cv2_bins[i] + cv2_bins[i+1])/2 for i in range(len(cv2_bins)-1)]
-    cv3_bins = np.linspace(0, 13, n_bins)
-    cv3_centers = [(cv3_bins[i] + cv3_bins[i+1])/2 for i in range(len(cv3_bins)-1)]
+    cv_bins = []
+    cv_centers = []
 
+    for n_bins, cv_range in zip(params["1D_FE_plots"]["n_bins"], params["1D_FE_plots"]["cv_ranges"]):
+        bins = np.linspace(cv_range[0], cv_range[1], n_bins)
+        cv_bins.append(bins)
+        cv_centers.append([(bins[i] + bins[i+1])/2 for i in range(len(bins)-1)])
 
-    cv1_hist_sum = np.zeros([n_bins - 1])
-    cv2_hist_sum = np.zeros([n_bins - 1])
-    cv3_hist_sum = np.zeros([n_bins - 1])
+    cv_hist_sums = [np.zeros(len(cv_centers[i])) for i in range(len(cv_centers))]
 
     for i, walker_dir in enumerate(walker_dirs):
         # Extract CVs and unbiasing weights of individual simulation
@@ -291,92 +379,63 @@ def plot_1D_FE_surface(job):
         data = read_plumed_data_file(reweight_file)
         
         # Calculate biasing weights from each BEMD replica
-
-
         # Generate histograms for each CV
-
+        ws = None
         if not "WALKER0" in walker_dir:
             v_rescale = np.array([ v - np.max(data.values[:, -1]) for v in data.values[:, -1]])
             ws = np.exp(v_rescale / kt)
 
-            # Generate histograms weighted by unbiasing weights
-            cv1_hist, bin_edges = np.histogram(data.cv1, weights=ws, bins = cv1_bins, density = True)
-            cv2_hist, bin_edges = np.histogram(data.cv2, weights=ws, bins = cv2_bins, density = True)
-            cv3_hist, bin_edges = np.histogram(data.cv3, weights=ws, bins = cv3_bins, density = True)
-        else:
-            cv1_hist, bin_edges = np.histogram(data.cv1, bins = cv1_bins, density = True)
-            cv2_hist, bin_edges = np.histogram(data.cv2, bins = cv2_bins, density = True)
-            cv3_hist, bin_edges = np.histogram(data.cv3, bins = cv3_bins, density = True)
-            
+        # Generate histograms weighted by unbiasing weights
+        for j in range(len(cv_bins)):
+            cv_hist, bin_edges = np.histogram(getattr(data, "cv" +str(j + 1)), weights=ws, bins =cv_bins[j], density = True)
+            cv_hist_sums[j] += cv_hist
 
-
-        cv1_hist_sum = cv1_hist_sum + cv1_hist
-        cv2_hist_sum = cv2_hist_sum + cv2_hist
-        cv3_hist_sum = cv3_hist_sum + cv3_hist
-
-    cv1_hist_sum = cv1_hist_sum / 4
-    cv2_hist_sum = cv2_hist_sum / 4
-    cv3_hist_sum = cv3_hist_sum / 4
+    cv_hist_sums = [hist / len(walker_dirs) for hist in cv_hist_sums]
 
     # Plot aggregate probability distributions
-    fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = [10, 10])
+    fig, axes = plt.subplots(nrows = int(np.ceil(np.sqrt(len(cv_bins)))), ncols = int(np.ceil(np.sqrt(len(cv_bins)))), figsize = [10, 10])
+    axes = axes.flatten()
 
-    axes[0,0].plot(cv1_centers, cv1_hist_sum)
-    axes[0,0].set_xlabel("$N_{H-bonds}$")
-    axes[0,0].set_ylabel("Probability Density")
-    axes[0,0].grid(visible=True, which="both", axis="both")
+    # Plot 1D distributions
+    for i in range(len(cv_bins)):
+        axes[i].plot(cv_centers[i], cv_hist_sums[i])
+        axes[i].set_xlabel(params["1D_FE_plots"]["x_labels"][i])
+        axes[i].set_ylabel("Probability Density")
+        axes[i].grid(visible=True, which="both", axis="both")
+    
+    # Remove unused plots
+    for i in range(len(cv_bins), len(axes)):
+        plt.delaxes(axes[i])
 
-
-    axes[0,1].plot(cv2_centers, cv2_hist_sum)
-    axes[0,1].set_xlabel("$R_{g}$")
-    axes[0,1].set_ylabel("Probability Density")
-    axes[0,1].grid(visible=True, which="both", axis="both")
-
-
-    axes[1,0].plot(cv3_centers, cv3_hist_sum)
-    axes[1,0].set_xlabel("$d_{end-to-end}$")
-    axes[1,0].set_ylabel("Probability Density")
-    axes[1,0].grid(visible=True, which="both", axis="both")
-
-
-    plt.delaxes(axes[1,1])
-    fig.suptitle("CV Aggregate Probabilities")
     plt.savefig("1D_FE_plots/CV_reweight_proabality_dist.png")
     plt.close()
 
-    # Plot aggregate free energy surfaces    
-    fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = [10, 10])
+    # Plot aggregate free energy surfaces   
+    fig, axes = plt.subplots(nrows = int(np.ceil(np.sqrt(len(cv_bins)))), ncols = int(np.ceil(np.sqrt(len(cv_bins)))), figsize = [10, 10])
+    axes = axes.flatten()
+
+    # Plot 1D FE surfaces
+    for i in range(len(cv_bins)):
+        axes[i].plot(cv_centers[i], -kt * np.log(cv_hist_sums[i]))
+        axes[i].set_xlabel(params["1D_FE_plots"]["x_labels"][i])
+        axes[i].set_ylabel("Free Energy (kJ/mol)")
+        axes[i].grid(visible=True, which="both", axis="both")
     
-    fe_cv1 = -kt * np.log(cv1_hist_sum)
-    axes[0,0].plot(cv1_centers, fe_cv1)
-    axes[0,0].set_xlabel("$N_{H-bonds}$")
-    axes[0,0].set_ylabel("Free Energy (kJ/mol)")
-    axes[0,0].grid(visible=True, which="both", axis="both")
+    # Remove unused plots
+    for i in range(len(cv_bins), len(axes)):
+        plt.delaxes(axes[i])
 
-
-    fe_cv2 = -kt * np.log(cv2_hist_sum)
-    axes[0,1].plot(cv2_centers, fe_cv2)
-    axes[0,1].set_xlabel("$R_{g}$")
-    axes[0,1].set_ylabel("Free Energy (kJ/mol)")
-    axes[0,1].grid(visible=True, which="both", axis="both")
-
-
-    fe_cv3 = -kt * np.log(cv3_hist_sum)
-    axes[1,0].plot(cv3_centers, fe_cv3)
-    axes[1,0].set_xlabel("$d_{end-to-end}$")
-    axes[1,0].set_ylabel("Free Energy (kJ/mol)")
-    axes[1,0].grid(visible=True, which="both", axis="both")
-
-
-    plt.delaxes(axes[1,1])
-    fig.suptitle("CV Free Energy Surfaces")
     plt.savefig("1D_FE_plots/CV_free_energy_surf.png")
     plt.close()
+
+    os.chdir(current_dir)
+
 
 
 
 
 @FlowProject.pre.isfile("WALKER0/COLVARS_REWEIGHT")
+@FlowProject.post.isfile("2D_FE_plots/2D_FE_surfaces.png")
 @FlowProject.operation
 def plot_2D_FE_surface(job):
     # Need to modify HILLS filename to HILL.x
@@ -395,7 +454,7 @@ def plot_2D_FE_surface(job):
     cv2_cv3_hist = None
     cv1_cv3_hist = None
 
-    n_bins = 15
+    n_bins = 20
 
     cv1_bins = np.linspace(0, 7,n_bins)
     cv1_centers = [(cv1_bins[i] + cv1_bins[i+1])/2 for i in range(len(cv1_bins)-1)]
@@ -408,6 +467,8 @@ def plot_2D_FE_surface(job):
     cv1_cv3_hist = np.zeros([n_bins - 1, n_bins - 1])
     cv2_cv3_hist = np.zeros([n_bins - 1, n_bins - 1])
 
+    # Free energy levels to plot
+    levels = np.linspace(-10, 20, 40)
 
     for i, walker_dir in enumerate(walker_dirs):
         # Extract CVs of individual simulation
@@ -416,15 +477,19 @@ def plot_2D_FE_surface(job):
         
         # Calculate weights of each simulation
         print(walker_dir.split("/")[-1])
-        ln_ws = np.array([ v / np.sum(data.values[:,-1]) for v in data.values[:, -1]])
-        ws = np.exp(ln_ws)
+        v_rescale = np.array([ v - np.max(data.values[:, -1]) for v in data.values[:, -1]])
+        ws = np.exp(v_rescale / kt)
     
         # Generate histogram for each combination of points
         hist1, xedges, yedges = np.histogram2d(data.cv1, data.cv2, weights=ws, bins = [cv1_bins, cv2_bins], density = True)
         hist2, xedges, yedges = np.histogram2d(data.cv1, data.cv3, weights=ws, bins = [cv1_bins, cv3_bins], density = True)
         hist3, xedges, yedges = np.histogram2d(data.cv2, data.cv3, weights=ws, bins = [cv2_bins, cv3_bins], density = True)
 
-        if  "WALKER0" in walker_dir:
+        if  not "WALKER0" in walker_dir:
+            hist1, xedges, yedges = np.histogram2d(data.cv1, data.cv2, weights=ws, bins = [cv1_bins, cv2_bins], density = True)
+            hist2, xedges, yedges = np.histogram2d(data.cv1, data.cv3, weights=ws, bins = [cv1_bins, cv3_bins], density = True)
+            hist3, xedges, yedges = np.histogram2d(data.cv2, data.cv3, weights=ws, bins = [cv2_bins, cv3_bins], density = True)   
+        else:
             hist1, xedges, yedges = np.histogram2d(data.cv1, data.cv2, bins = [cv1_bins, cv2_bins], density = True)
             hist2, xedges, yedges = np.histogram2d(data.cv1, data.cv3, bins = [cv1_bins, cv3_bins], density = True)
             hist3, xedges, yedges = np.histogram2d(data.cv2, data.cv3, bins = [cv2_bins, cv3_bins], density = True)
@@ -475,7 +540,7 @@ def plot_2D_FE_surface(job):
     cv1_x, cv2_y = np.meshgrid(cv1_centers, cv2_centers)
     fe_cv1_cv2 = -kt * np.log(cv1_cv2_hist.T)
 
-    # Plot contours
+    # Plot probability distributions
     plot = axes[0,0].contourf(cv1_x, cv2_y, cv1_cv2_hist.T)
     axes[0,0].set_xlabel("$N_{H-bonds}$")
     axes[0,0].set_ylabel("$R_{G}$")
@@ -486,7 +551,6 @@ def plot_2D_FE_surface(job):
     cv1_x, cv3_y = np.meshgrid(cv1_centers, cv3_centers)
     fe_cv1_cv3 = -kt * np.log(cv1_cv3_hist.T)
 
-    # Plot contours
     plot = axes[0,1].contourf(cv1_x, cv3_y, cv1_cv3_hist.T)
     axes[0,1].set_xlabel("$N_{H-bonds}$")
     axes[0,1].set_ylabel("$d_{end-to-end}$")
@@ -506,21 +570,22 @@ def plot_2D_FE_surface(job):
 
 
     plt.delaxes(axes[1,1])
-    fig.suptitle("2D Probability Distributions")
+    plt.tight_layout()
+    fig.suptitle(job.sp, wrap=True)
 
     plt.savefig(job.fn("2D_FE_plots/2D_CV_hist.png"))
     plt.close()
 
     fig, axes = plt.subplots(nrows = 2, ncols = 2, figsize = [10, 10])
     
-    # Plot contours
-    plot = axes[0,0].contourf(cv1_x, cv2_y, fe_cv1_cv2)
+    # Plot free energy surfaces
+    plot = axes[0,0].contourf(cv1_x, cv2_y, fe_cv1_cv2, levels = levels)
     axes[0,0].set_xlabel("$N_{H-bonds}$")
     axes[0,0].set_ylabel("$R_{G}$")
     cbar = plt.colorbar(plot, ax = axes[0,0])
     cbar.ax.set_ylabel("Free Energy (kJ/mol)")
 
-    plot = axes[0,1].contourf(cv1_x, cv3_y, fe_cv1_cv3)
+    plot = axes[0,1].contourf(cv1_x, cv3_y, fe_cv1_cv3, levels = levels)
     axes[0,1].set_xlabel("$N_{H-bonds}$")
     axes[0,1].set_ylabel("$d_{end-to-end}$")
     cbar = plt.colorbar(plot, ax = axes[1,0])
@@ -528,7 +593,7 @@ def plot_2D_FE_surface(job):
 
 
 
-    plot = axes[1,0].contourf(cv2_x, cv3_y, fe_cv2_cv3)
+    plot = axes[1,0].contourf(cv2_x, cv3_y, fe_cv2_cv3, levels = levels)
     axes[1,0].set_xlabel("$R_{G}$")
     axes[1,0].set_ylabel("$d_{end-to-end}$")
     cbar = plt.colorbar(plot, ax = axes[0,1])
@@ -536,7 +601,7 @@ def plot_2D_FE_surface(job):
 
 
     plt.delaxes(axes[1,1])
-    fig.suptitle("2D Free Energy Surfaces")
+    fig.suptitle(job.sp, wrap=True)
     plt.savefig(job.fn("2D_FE_plots/2D_FE_surfaces.png"))
 
 

@@ -40,7 +40,7 @@ def main():
         n_eps=40,
         n_processes=16,
         prefix="grid_search",
-        min_sample_limits=[0.01, 0.15],
+        min_sample_limits=[0.01, 0.05],
         eps_limits=[0.05, 0.4],
         frame_stride = 2
     )

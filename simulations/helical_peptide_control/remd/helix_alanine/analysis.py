@@ -35,11 +35,9 @@ def main():
         frame_stride=5,
         plot_filename = "torsion_ss.png",
         output_dir = "clustering_output",
-        overwrite = True,
+        overwrite = False,
         write_selection = "resn ALA or resn GLN or resn ACE or resn NME"
     )
-
-    sys.exit()
 
 
     # Clustering workflow
@@ -55,7 +53,7 @@ def main():
         min_sample_limits=[0.01, 0.4],
         plot_filename = "ss.png",
         frame_stride = 1,
-        overwrite = True,
+        overwrite = False,
         write_selection = "resn ALA or resn GLN or resn ACE or resn NME"
     )
 
@@ -63,7 +61,7 @@ def main():
     # Plot unbiased Native H-bonds for each simulation
     # Should turn this in to an an analysis workflow script
     cur_dir = os.path.abspath("")
-    for sim_dir in tqdm(glob.glob("_sim*")):
+    for sim_dir in tqdm(glob.glob("sim*")):
         os.chdir(sim_dir)
         print(os.path.abspath(""))
         subprocess.Popen("plumed driver --plumed ../plumed_hbond_dist.dat --mf_xtc npt_new.xtc --igro berendsen_npt.gro", shell=True).wait()

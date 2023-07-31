@@ -107,7 +107,7 @@ def check_production_npt_finish(job):
 @FlowProject.operation
 def submit_all_simulations(job):
     os.chdir(job.path)
-    n_jobs_old = len(subprocess.check_output(["squeue", "-u", "tfobe"]).splitlines()) - 1
+    n_jobs_old = len(subprocess.check_output(["squeue", "-u", "thfo9888"]).splitlines()) - 1
     subprocess.run(["bash", "submit_all.slurm"])
 
 @FlowProject.post(check_berendsen_nvt_finish)
@@ -230,7 +230,7 @@ def calculate_sum_hills_FE(job):
     current_dir = os.path.abspath("")
     kt = 300 * 8.314462618 * 10 ** -3
     os.chdir(job.fn(""))
-    subprocess.run(["plumed", "sum_hills", "--hills", "HILLS", "--kt", str(kt)]) # Silences output from sum_hills
+    subprocess.run(["plumed", "sum_hills", "--hills", "HILLS", "--kt", str(kt)], "--mintozero") # Silences output from sum_hills
     filename = "fes.dat"
     fes_data = read_plumed_fes_file(filename)
     filtered = fes_data[fes_data["n_hbonds"] >= -0.1]
@@ -243,6 +243,34 @@ def calculate_sum_hills_FE(job):
     plt.ylabel("Free Energy (kJ/mol)")
     plt.grid(visible=True, which="both", axis="both")
     plt.savefig("sum_hills_FE.png", transparent = False, dpi = 300)
+    plt.close()
+    os.chdir(current_dir)
+
+@FlowProject.pre(check_production_npt_start)
+@FlowProject.post.isfile("sum_hills_FE_stride.png")
+@FlowProject.operation
+def calculate_sum_hills_FE_stride(job):
+    current_dir = os.path.abspath("")
+    kt = 300 * 8.314462618 * 10 ** -3
+    stride = 40000
+    os.chdir(job.fn(""))
+    subprocess.run(["plumed", "sum_hills", "--hills", "HILLS", "--kt", str(kt), "--mintozero", "--stride", str(stride)]) # Silences output from sum_hills
+    fes_files = natsorted(glob.glob("fes*"))
+    cmap = plt.get_cmap("viridis")
+    colors = [cmap(i) for i in np.linspace(0, 1, len(fes_files))]
+
+    plt.figure(figsize = [5, 2.5])
+    for i, fes_file in enumerate(fes_files):
+        fes_data = read_plumed_fes_file(fes_file)
+        filtered = fes_data[fes_data["n_hbonds"] >= -0.1]
+        filtered = filtered[filtered["n_hbonds"] <= 7.2]
+        plt.plot(filtered.values[:,0], filtered.values[:,1],  color = colors[i], lw = 1)
+    plt.xlim([0,7])
+    plt.title("SIGMA: " +  str(job.sp.sigma) +  " HEIGHT:" + str(job.sp.height) + " BF:" + str(job.sp.bf))
+    plt.xlabel("$N_{H-bonds}$")
+    plt.ylabel("Free Energy (kJ/mol)")
+    plt.grid(visible=True, which="both", axis="both")
+    plt.savefig("sum_hills_FE_stride.png", transparent = False, dpi = 300)
     plt.close()
     os.chdir(current_dir)
 
