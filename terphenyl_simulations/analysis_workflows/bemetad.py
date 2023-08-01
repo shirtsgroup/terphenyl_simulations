@@ -156,7 +156,7 @@ def sum_hills_FE(job):
         ax.set_xlabel(x_labels[i])
         ax.set_ylabel("Free Energy (kJ/mol)")
         ax.set_xlim(xy_limits[i][0])
-        # ax.set_ylim(xy_limits[i-1][1])
+        ax.set_ylim(xy_limits[i][1])
         ax.set_title("Simulation " + str(walker_id))
         ax.grid(visible=True, which="both", axis="both")
     os.chdir(current_dir)

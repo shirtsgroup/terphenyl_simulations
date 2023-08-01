@@ -232,7 +232,7 @@ def plot_torsion_timeseries(traj_obj, torsion_atom_names, filenames, titles = No
         plt.savefig(os.path.join(output_dir, filenames[i]))
         plt.close()
 
-def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, title = None, scatter_points_files = []):
+def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, title = None, scatter_points_files = [], legend = None):
     """
     Create a ramachandran plot for a peptide system
     """
@@ -258,8 +258,10 @@ def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, titl
         phi_i, phi_angle = md.compute_phi(frame)
         psi_i, psi_angle = md.compute_psi(frame)
         plt.scatter(phi_angle.flatten(), psi_angle.flatten(), marker="x")
-    
-    plt.legend([fn.split("/")[-1].split(".")[0] for fn in scatter_points_files])
+    if legend is None:
+        plt.legend([fn.split("/")[-1].split(".")[0] for fn in scatter_points_files])
+    else:
+        plt.legend(legend)
 
     if title is not None:
         plt.title(title)
