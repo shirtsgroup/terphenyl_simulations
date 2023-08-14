@@ -46,7 +46,6 @@ class TopFileObject:
 
 
 def write_itp_file(top_object, filename, itp_sections=None):
-
     if itp_sections is None:
         itp_sections = [
             "moleculetype",
@@ -75,8 +74,6 @@ def write_itp_file(top_object, filename, itp_sections=None):
                 if getattr(top_object, itp_s)["labels"] is not None:
                     f.write(getattr(top_object, itp_s)["labels"])
                 for line in getattr(top_object, itp_s)["data"]:
-                    if itp_s == "pairs":
-                        print(line)
                     f.write(line)
                 f.write("\n\n")
 
@@ -165,6 +162,7 @@ def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 1):
     if all([atom_id in atoms_in_residue for atom_id in torsion_id]):
         residue_atom_index  = [atoms_in_residue.index(a) for a in torsion_id if a in atoms_in_residue ]    
         dihedral_ids = []
+
         for residue in universe.residues:
             if residue.resname == resname:
                 torsion_atoms = [residue.atoms[i] for i in residue_atom_index]
@@ -361,24 +359,25 @@ class GromacsLogFile:
             observables["constr_rmsd"].append(float(obs_block[8].split()[2]))
 
         self.observables = observables
-        if self._find_expression("Repl ex"):
+        if self._find_expression("Order After Exchange:"):
             # Extract replica exchange state trajectory
             print("Extracting state trajectories...")
-            sp_lines = self._find_expression("Repl ex")
-            sp_lines = [sl.replace("Repl ex", "") for sl in sp_lines]
+            sp_lines = self._find_expression("Order After Exchange:")
+            sp_lines = [sl.replace("Order After Exchange:", "") for sl in sp_lines]
             states = [sl.replace("x","").split() for sl in sp_lines]
             states = [[int(s_i) for s_i in state] for state in states]
             self.states = states
             self.n_states = max(states[0]) + 1
 
             # Collect Empirical Exchange Transition Matrix
-            ex_matrix = self._find_text_block("Empirical Transition Matrix", self.n_states+1)[0]
-            ex_probs = []
-            for i in range(self.n_states):
-                ex_prob_str = ex_matrix[i+2].split()[1:self.n_states+1]
-                ex_probs.append([float(p) for p in ex_prob_str])
-            
-            self.transition_matrix = np.array(ex_probs)
+            ex_matrix = self._find_text_block("Empirical Transition Matrix", self.n_states+1)
+            if len(ex_matrix) > 0:
+                ex_probs = []
+                for i in range(self.n_states):
+                    ex_prob_str = ex_matrix[0][i+2].split()[1:self.n_states+1]
+                    ex_probs.append([float(p) for p in ex_prob_str])
+                
+                self.transition_matrix = np.array(ex_probs)
 
 
 def main():

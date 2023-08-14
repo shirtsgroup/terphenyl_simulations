@@ -187,6 +187,7 @@ def torsion_clustering_grid_search(
             return
     
     # Load trajectory
+    print("Reading trajectories...")
     if type(file_list) == list:
         traj = md.load(file_list[0], top=top_file)
         for i in range(1, len(file_list)):
@@ -197,10 +198,6 @@ def torsion_clustering_grid_search(
     else:
         traj = md.load(file_list, top=top_file)
         traj = traj[frame_start:frame_end:frame_stride]
-
-    write_selection = traj
-    if write_selection is not None:
-        write_traj_object = traj.atom_slice(write_selection)
 
     # Extract phi and psi angles + components
     phi_inds, phi_angles = md.compute_phi(traj)
@@ -313,6 +310,7 @@ def clustering_grid_search(
 
 
     # Load trajectory
+    print("Reading trajectories...")
     if type(file_list) == list:
         traj = md.load(file_list[0], top=top_file)
         for i in range(1, len(file_list)):
@@ -338,6 +336,7 @@ def clustering_grid_search(
     plot_RMSD_histogram(rmsd_matrix)
 
     # Grid search for DBSCAN hyperparameters
+    print("Scanning DBSCAN hyperparameters...")
     max_rmsd = np.max(rmsd_matrix)
     eps_values = np.linspace(eps_limits[0] * max_rmsd, eps_limits[1] * max_rmsd, n_eps)
     total_frames = traj_object.n_frames

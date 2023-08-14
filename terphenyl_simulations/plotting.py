@@ -112,7 +112,8 @@ def plot_torsions_distributions(
     legend=None,
     mirror_sym=False,
     offsets=None,
-    figsize=None
+    figsize=None,
+    cbar_params = None
 ):
     """
     Function for plotting 1D torsion distributions using MDTraj objects
@@ -159,6 +160,8 @@ def plot_torsions_distributions(
     )
 
     # Get torsions, bin and plot
+    plt.figure(figsize = figsize)
+
     for i, traj_obj in enumerate(traj_obj_list):
         if type(torsion_atom_names[0]) is str:
             torsions = get_torsions(traj_obj, [torsion_atom_names], mirror_sym=mirror_sym)
@@ -176,15 +179,22 @@ def plot_torsions_distributions(
         hist, bin_edges_out = np.histogram(
             np.array(torsions), bins=bin_edges, density=True
         )
-        plt.figure(figsize = figsize)
         plt.plot(bin_centers, hist)
-        plt.xlabel(x_axis)
-        plt.ylabel("Density")
-        plt.title(title)
     if legend is not None:
         plt.legend(legend)
-    
-    plt.savefig(prefix + "_torsions.png")
+
+    if cbar_params is not None:
+        colormap = plt.cm.get_cmap('plasma')
+        sm = plt.cm.ScalarMappable(cmap = colormap)
+        sm.set_clim(vmin = cbar_params[0], vmax = cbar_params[1])
+        cbar = plt.colorbar(sm)
+        cbar.ax.get_yaxis().labelpad = 15
+        cbar.ax.set_yaxis(cbar_params[2])
+    plt.xlabel(x_axis)
+    plt.ylabel("Density")
+    plt.title(title)
+    plt.margins(x=0)
+    plt.savefig(prefix + "_torsions.png", dpi = 300)
     plt.close()
 
 
@@ -257,7 +267,7 @@ def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, titl
         frame = md.load(scatter_points_file)
         phi_i, phi_angle = md.compute_phi(frame)
         psi_i, psi_angle = md.compute_psi(frame)
-        plt.scatter(phi_angle.flatten(), psi_angle.flatten(), marker="x")
+        plt.scatter(phi_angle.flatten(), psi_angle.flatten(), marker="x", c = 'r')
     if legend is None:
         plt.legend([fn.split("/")[-1].split(".")[0] for fn in scatter_points_files])
     else:
