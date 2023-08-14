@@ -464,3 +464,44 @@ def METAD_add_files():
                     replace_all_pattern(replace, str(job.sp[replace]), job.fn(os.path.join(walker_dir, filename)))
 
             
+
+def RMSD_demux():
+        def parse_args():
+        parser = argparse.ArgumentParser(
+            description = "A script to add files to signac projects",
+        )
+
+        parser.add_argument(
+            "--trajs",
+            type = str,
+            nargs = "+",
+            help = "List of files to run demuxing on"
+        )
+
+        parser.add_argument(
+            "--topology",
+            type = str,
+            help = "File name of a MDTraj compatible topology"
+        )
+
+        parser.add_argument(
+            "-O", "--output_dir",
+            default = "demux"
+            type = str,
+            help = "Directory to write resulting trajectories"
+        )
+
+        parser.add_argument(
+            "--selection",
+            type = str,
+            help = "Selection string for specifying which atoms to run demuxing"
+        )
+
+        parser.add_argument(
+            "--gmx_tpr",
+            type = str,
+            help = "GROMACS tpr file, used to make whole molecules"
+        )
+
+
+        return parser.parse_args()

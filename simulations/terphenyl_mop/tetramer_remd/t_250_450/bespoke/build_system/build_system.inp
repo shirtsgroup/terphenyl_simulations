@@ -15,7 +15,7 @@ filetype pdb
 
 # The name of the output file
 
-output solvated_tetramer_helix.pdb
+output solvated_tetramer.pdb
 
 # The protein will be fixed with its center of mass at center of the
 # box, and no rotation (the first three zeros correspond to the position
@@ -23,7 +23,7 @@ output solvated_tetramer_helix.pdb
 # angles of rotation, in radian, relative to the position in the input
 # file). 
 
-structure em_tetramer_helix.pdb
+structure mop_tetramer.pdb
   number 1
   chain A
   fixed 27.7 27.7 27.7 45. 45. 45.

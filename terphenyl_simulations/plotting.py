@@ -1,12 +1,14 @@
 import matplotlib.pyplot as plt
 import matplotlib
-from .utils import make_path
+from .utils import make_path, GromacsLogFile
 import mdtraj as md
 import os
 import numpy as np
 import seaborn as sns
 from tqdm import tqdm
 from .observables import get_torsions
+import itertools
+import sys
 
 
 def plot_grid_search(metric_matrix, x_ticks, y_ticks, x_label, y_label, filename, cbar_label):
@@ -110,7 +112,8 @@ def plot_torsions_distributions(
     legend=None,
     mirror_sym=False,
     offsets=None,
-    figsize=None
+    figsize=None,
+    cbar_limits = None
 ):
     """
     Function for plotting 1D torsion distributions using MDTraj objects
@@ -157,6 +160,8 @@ def plot_torsions_distributions(
     )
 
     # Get torsions, bin and plot
+    plt.figure(figsize = figsize)
+
     for i, traj_obj in enumerate(traj_obj_list):
         if type(torsion_atom_names[0]) is str:
             torsions = get_torsions(traj_obj, [torsion_atom_names], mirror_sym=mirror_sym)
@@ -174,14 +179,20 @@ def plot_torsions_distributions(
         hist, bin_edges_out = np.histogram(
             np.array(torsions), bins=bin_edges, density=True
         )
-        plt.figure(figsize = figsize)
         plt.plot(bin_centers, hist)
-        plt.xlabel(x_axis)
-        plt.ylabel("Density")
-        plt.title(title)
     if legend is not None:
         plt.legend(legend)
-    plt.savefig(prefix + "_torsions.png")
+
+    if cbar_limits is not None:
+        colormap = plt.cm.get_cmap('plasma')
+        sm = plt.cm.ScalarMappable(cmap = colormap)
+        sm.set_clim(vmin = cbar_limits[0], vmax = cbar_limits[1])
+        plt.colorbar(sm)
+    plt.xlabel(x_axis)
+    plt.ylabel("Density")
+    plt.title(title)
+    plt.margins(x=0)
+    plt.savefig(prefix + "_torsions.png", dpi = 300)
     plt.close()
 
 
@@ -228,3 +239,71 @@ def plot_torsion_timeseries(traj_obj, torsion_atom_names, filenames, titles = No
         plt.title(titles[i])
         plt.savefig(os.path.join(output_dir, filenames[i]))
         plt.close()
+
+def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, title = None, scatter_points_files = [], legend = None):
+    """
+    Create a ramachandran plot for a peptide system
+    """
+
+    traj_object = md.load_xtc(traj_file, top = top_file)
+
+    
+    phi_inds, phi_angles = md.compute_phi(traj_object)
+    psi_inds, psi_angles = md.compute_psi(traj_object)
+
+    phi_angles = phi_angles.flatten()
+    psi_angles = psi_angles.flatten()
+
+    # Get temperature from mdp file
+    
+    plt.figure(figsize=[5,5])
+    plt.hist2d(phi_angles, psi_angles, bins = np.linspace(-np.pi, np.pi, bins + 1))
+    plt.xlabel("$\Phi$ Angle (Radians)")
+    plt.ylabel("$\Psi$ Angle (Radians)")
+
+    for scatter_points_file in scatter_points_files:
+        frame = md.load(scatter_points_file)
+        phi_i, phi_angle = md.compute_phi(frame)
+        psi_i, psi_angle = md.compute_psi(frame)
+        plt.scatter(phi_angle.flatten(), psi_angle.flatten(), marker="x", c = 'r')
+    if legend is None:
+        plt.legend([fn.split("/")[-1].split(".")[0] for fn in scatter_points_files])
+    else:
+        plt.legend(legend)
+
+    if title is not None:
+        plt.title(title)
+
+    plt.savefig(prefix + "_ramachandran.png")
+    plt.close()
+
+def plot_bemd_state_index_plot(log_file, prefix, stride = 500):
+    log_file_obj = GromacsLogFile(log_file)
+    fig, axes = plt.subplots(
+        int(np.ceil(np.sqrt(log_file_obj.n_states))),
+        int(np.ceil(np.sqrt(log_file_obj.n_states))),
+        figsize = [10,10]
+    )
+ 
+    ax_indices = list(itertools.product(range(int(np.ceil(np.sqrt(log_file_obj.n_states)))), repeat = 2))
+
+    for i in range(log_file_obj.n_states):
+        state_traj = [state_i[0] for state_i in log_file_obj.states]
+        axes[ax_indices[i][0], ax_indices[i][1]].plot(list(range(len(state_traj)))[::stride], state_traj[::stride], linewidth = 0.5)
+        axes[ax_indices[i][0], ax_indices[i][1]].set_xlabel("Steps")
+        axes[ax_indices[i][0], ax_indices[i][1]].set_ylabel("State Index")
+        axes[ax_indices[i][0], ax_indices[i][1]].set_title("Replica " + str(i))
+    
+    plt.tight_layout()
+    plt.savefig(prefix + "_state_index.png", dpi = 150)
+
+def plot_bemd_transition_matrix(log_file, prefix):
+    log_file_obj = GromacsLogFile(log_file)
+    fig, ax = plt.subplots()
+    ax.matshow(log_file_obj.transition_matrix, cmap="YlGn")
+    for (i, j), z in np.ndenumerate(log_file_obj.transition_matrix):
+        ax.text(j, i, '{:0.3f}'.format(z), ha='center', va='center')
+    plt.savefig(prefix + "_transition_matrix.png", dpi = 150)
+
+
+

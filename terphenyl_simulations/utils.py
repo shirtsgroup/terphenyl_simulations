@@ -75,8 +75,6 @@ def write_itp_file(top_object, filename, itp_sections=None):
                 if getattr(top_object, itp_s)["labels"] is not None:
                     f.write(getattr(top_object, itp_s)["labels"])
                 for line in getattr(top_object, itp_s)["data"]:
-                    if itp_s == "pairs":
-                        print(line)
                     f.write(line)
                 f.write("\n\n")
 
@@ -275,9 +273,116 @@ def replace_all_pattern(pattern, replace, file):
     with open(file, "w") as f:
         f.writelines(lines)
 
+
+class GromacsLogFile:
+    def __init__(self, filename):
+        with open(filename, "r") as fn:
+            self.log_file_lines = fn.readlines()
+        self._extract_info()
+
+    def _find_expression(self, expression):
+        lines = list(filter(lambda x: expression in x, self.log_file_lines))
+        lines = [line.strip() for line in lines]
+        return lines
+    
+    def _find_text_block(self, expression, lines_after):
+        line_idx= [i for i in range(len(self.log_file_lines)) if expression in self.log_file_lines[i]]
+        block = []
+        for i in line_idx:
+            lines = [line.strip() for line in self.log_file_lines[i:i+lines_after+1]]
+            block.append(lines)
+        return block
+    
+    def _extract_info(self):
+        # Basic information about simulation
+        print("Extracting simulation information...")
+        self.gmx_version = self._find_expression("GROMACS version:")[0].split()[-1]
+        self.cmd_line_call = self._find_text_block("Command line:", lines_after = 1)[0][-1].strip()
+        self.hostname = self._find_expression("Hardware detected on host")[0].split()[4]
+        self.working_dir = self._find_expression("Working dir:")[0].split()[-1]
+        self.input_mdp = self._find_text_block("Input Parameters:", 174)[0]
+        
+
+        print("Extracting Observables Output...")
+        # Time block
+        time_blocks = self._find_text_block("Step           Time", 1)
+        obs_blocks = self._find_text_block("Energies (kJ/mol)", 8)
+        observables = {
+            "step" : [],
+            "time" : [],
+            "bond" : [],
+            "angle" : [],
+            "proper_dih" : [],
+            "per_imp_dih" : [],
+            "lj_14" : [],
+            "coulomb_14" : [],
+            "LJ_sr" : [],
+            "disper_corr" : [],
+            "coulomb_sr" : [],
+            "coulomb_recip" : [],
+            "potential" : [],
+            "kinetic" : [],
+            "total" : [],
+            "conserved" : [],
+            "temperature" : [],
+            "pres_dc" : [],
+            "pressure" : [],
+            "constr_rmsd" : []
+        }
+
+        for time_block in time_blocks:
+            observables["step"].append(int(time_block[1].split()[0]))
+            observables["time"].append(float(time_block[1].split()[1]))
+
+        self.n_steps = max(observables["step"])
+
+        # Exclude the last observable block because this it is the averages over
+        # The entire simulation
+        for obs_block in obs_blocks[:-1]:
+            observables["bond"].append(float(obs_block[2].split()[0]))
+            observables["angle"].append(float(obs_block[2].split()[1]))
+            observables["proper_dih"].append(float(obs_block[2].split()[2]))
+            observables["per_imp_dih"].append(float(obs_block[2].split()[3]))
+            observables["lj_14"].append(float(obs_block[2].split()[4]))
+            observables["coulomb_14"].append(float(obs_block[4].split()[0]))
+            observables["LJ_sr"].append(float(obs_block[4].split()[1]))
+            observables["disper_corr"].append(float(obs_block[4].split()[2]))
+            observables["coulomb_sr"].append(float(obs_block[4].split()[3]))
+            observables["coulomb_recip"].append(float(obs_block[4].split()[4]))
+            observables["potential"].append(float(obs_block[6].split()[0]))
+            observables["kinetic"].append(float(obs_block[6].split()[1]))
+            observables["total"].append(float(obs_block[6].split()[2]))
+            observables["conserved"].append(float(obs_block[6].split()[3]))
+            observables["temperature"].append(float(obs_block[6].split()[4]))
+            observables["pres_dc"].append(float(obs_block[8].split()[0]))
+            observables["pressure"].append(float(obs_block[8].split()[1]))
+            observables["constr_rmsd"].append(float(obs_block[8].split()[2]))
+
+        self.observables = observables
+        if self._find_expression("Order After Exchange:"):
+            # Extract replica exchange state trajectory
+            print("Extracting state trajectories...")
+            sp_lines = self._find_expression("Order After Exchange:")
+            sp_lines = [sl.replace("Order After Exchange:", "") for sl in sp_lines]
+            states = [sl.replace("x","").split() for sl in sp_lines]
+            states = [[int(s_i) for s_i in state] for state in states]
+            self.states = states
+            self.n_states = max(states[0]) + 1
+
+            # Collect Empirical Exchange Transition Matrix
+            ex_matrix = self._find_text_block("Empirical Transition Matrix", self.n_states+1)
+
+            if len(ex_matrix) != 0:
+                ex_probs = []
+                for i in range(self.n_states):
+                    ex_prob_str = ex_matrix[i+2].split()[1:self.n_states+1]
+                    ex_probs.append([float(p) for p in ex_prob_str])
+                
+                self.transition_matrix = np.array(ex_probs)
+
+
 def main():
-    top = TopFileObject("test.top")
-    write_itp_file(top, "test")
+    pass
 
 
 if __name__ == "__main__":

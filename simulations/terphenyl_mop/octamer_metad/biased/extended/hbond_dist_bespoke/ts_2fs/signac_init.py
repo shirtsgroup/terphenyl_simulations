@@ -15,17 +15,16 @@ def replace_all_pattern(pattern, replace, file):
 
 
 def main():
-    n_walkers = 16
+    n_walkers = 8
     project = signac.get_project()
     # combinations
     statepoints = [
-        {'height' : 2.5,   'sigma' : 0.5, 'bf' : 50},
-        {'height' : 2.5,   'sigma' : 0.5, 'bf' : 100},
-        {'height' : 2.5,   'sigma' : 0.5, 'bf' : 300},
         {'height' : 2.5,   'sigma' : 0.5, 'bf' : 500},
-        {'height' : 0.001, 'sigma' : 0.5, 'bf' : 100000},
-        {'height' : 0.003, 'sigma' : 0.5, 'bf' : 100000},
         {'height' : 0.005, 'sigma' : 0.5, 'bf' : 100000},
+        {'height' : 2.5,   'sigma' : 0.75, 'bf' : 500},
+        {'height' : 0.005, 'sigma' : 0.75, 'bf' : 100000},
+        {'height' : 2.5,   'sigma' : 1.0, 'bf' : 500},
+        {'height' : 0.005, 'sigma' : 1.0, 'bf' : 100000},
     ]
     replicas = 1
 

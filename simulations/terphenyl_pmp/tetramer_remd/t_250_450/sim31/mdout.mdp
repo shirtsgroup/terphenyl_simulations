@@ -1,17 +1,17 @@
 ;
 ;	File 'mdout.mdp' was generated
-;	By user: unknown (66213)
-;	On host: r241.ib.bridges2.psc.edu
-;	At date: Fri Jul 29 08:35:14 2022
+;	By user: unknown (564249)
+;	On host: c3cpu-a5-u9-3.rc.int.colorado.edu
+;	At date: Thu Aug 10 22:24:44 2023
 ;
 ;	Created by:
-;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
+;	              :-) GROMACS - gmx grompp, 2022.5-plumed_2.8.2 (-:
 ;	
-;	Executable:   /jet/home/tfobe/software/gromacs-2022.2/bin/gmx_mpi
-;	Data prefix:  /jet/home/tfobe/software/gromacs-2022.2
-;	Working dir:  /ocean/projects/cts160011p/tfobe/heteropolymer_simulations/simulations/terphenyl_pmp/tetramer_remd/t_250_450/sim31
+;	Executable:   /projects/thfo9888/software/gromacs-2022.5/bin/gmx_mpi
+;	Data prefix:  /projects/thfo9888/software/gromacs-2022.5
+;	Working dir:  /gpfs/alpine1/scratch/thfo9888/terphenyl_simulations/simulations/terphenyl_pmp/tetramer_remd/t_250_450/sim31
 ;	Command line:
-;	  gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system.top -o npt_new
+;	  gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system_off2_hmr.top -o npt_new
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -24,8 +24,8 @@ define                   =
 integrator               = md
 ; Start time and timestep in ps
 tinit                    = 0
-dt                       = 0.002
-nsteps                   = 50000000
+dt                       = 0.004
+nsteps                   = 25000000
 ; For exact run continuation or redoing part of a run
 init-step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -169,7 +169,7 @@ annealing-temp           =
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen-vel                  = no
 gen-temp                 = 333.8491608618884
-gen-seed                 = -293603347
+gen-seed                 = -138936835
 
 ; OPTIONS FOR BONDS    
 constraints              = h-bonds

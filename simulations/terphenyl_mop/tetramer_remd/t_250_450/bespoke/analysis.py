@@ -1,4 +1,4 @@
-import heteropolymer_simulations as hs
+import terphenyl_simulations as ts
 import mdtraj as md
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,7 +24,7 @@ def main():
     temperatures = [250 * (commmon_factor)**i for i in range(64)]
 
     # Clustering workflow
-    hs.clustering.clustering_grid_search(
+    ts.clustering.clustering_grid_search(
         [
             "sim0/npt_new.whole.xtc",
             "sim1/npt_new.whole.xtc",
@@ -38,12 +38,12 @@ def main():
         "resname TET or resname CAP",
         n_min_samples=40,
         n_eps=40,
-        n_processes=32,
+        n_processes=16,
         prefix="grid_search",
-        min_sample_limits=[0.005, 0.10],
-        metric_list = [hs.clustering.silhouette_score_metric],
-        plot_filename_list = ["ss.png"]
-
+        min_sample_limits=[0.01, 0.05],
+        eps_limits=[0.05, 0.2],
+        frame_stride = 2,
+        overwrite = False
     )
 
     # Read in cluster outputs and REMD trajs
@@ -71,35 +71,42 @@ def main():
         "p3": ["O1", "C1", "C2", "C3"],
     }
 
+    print(remd_trajs)
+
     # Torsion Analysis
+    ts.utils.make_path("torsion_plots")
     for torsion_type in hexamer_r1_torsions.keys():
+        if torsion_type == -1:
+            continue
         print("Working on", torsion_type, "torsion...")
-        torsion_atom_names = hs.utils.get_torsion_ids(
+        torsion_atom_names = ts.utils.get_torsion_ids(
             hexamer_u, "TET", hexamer_r1_torsions[torsion_type], template_residue_i = 0
         )
 
-        hs.plotting.plot_torsions_distributions(
+        ts.plotting.plot_torsions_distributions(
             remd_trajs,
             torsion_atom_names,
-            torsion_type + "Torsion (radians)",
-            torsion_type + "_remd",
-            torsion_type + " Torsion Plot"
+            torsion_type + " Torsion (radians)",
+            "torsion_plots/" + torsion_type + "_remd",
+            torsion_type + " Torsion Plot",
+            cbar_limits = [250, 450]
         )
         
         for i, traj in enumerate(cluster_trajs):
-            hs.plotting.plot_torsions_distributions(
+            ts.plotting.plot_torsions_distributions(
                 traj,
                 torsion_atom_names,
                 torsion_type.upper() + " Torsion (radians)",
                 "torsion_plots/" + torsion_type + "_" + cluster_file_list[i].split(".")[0],
-                torsion_type + " Torsion Plot"
+                torsion_type + " Torsion Plot",
+                figsize = [5,5]
             )
 
 
     # Hydrogen Bond analysis
 
     hbond_dir = "hbonds"
-    hs.utils.make_path(hbond_dir)
+    ts.utils.make_path(hbond_dir)
     octamer_remd_universes = [mda.Universe("sim" + str(i) +"/npt_new.tpr", "sim" + str(i) +"/npt_new.whole.xtc" ) for i in range(64)]
 
     h_bond_means = []
@@ -116,11 +123,11 @@ def main():
         )
         hbonds.run(verbose=True)
         n_hbonds = hbonds.count_by_time()[500:]
-        h_bond_mean.append(np.mean(n_hbonds))
+        h_bond_means.append(np.mean(n_hbonds))
         h_bond_stds.append(np.std(n_hbonds))
     
     plt.figure(dpi=300)
-    plt.errorbars(temperatures, h_bond_means, yerr=h_bond_stds)
+    plt.errorbar(temperatures, h_bond_means, yerr=h_bond_stds)
     plt.title("Hydrogen Bonds vs Temperature")
     plt.ylabel("Number of Hydrogen Bonds")
     plt.xlabel("Temperature (K)")

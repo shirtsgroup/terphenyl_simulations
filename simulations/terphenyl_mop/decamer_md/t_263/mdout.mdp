@@ -1,15 +1,15 @@
 ;
 ;	File 'mdout.mdp' was generated
-;	By user: unknown (66213)
-;	On host: r024.ib.bridges2.psc.edu
-;	At date: Fri Dec  2 20:17:56 2022
+;	By user: unknown (564249)
+;	On host: c3cpu-c11-u5-3.rc.int.colorado.edu
+;	At date: Fri Aug  4 22:33:05 2023
 ;
 ;	Created by:
-;	                     :-) GROMACS - gmx grompp, 2022.2 (-:
+;	              :-) GROMACS - gmx grompp, 2022.5-plumed_2.8.2 (-:
 ;	
-;	Executable:   /jet/home/tfobe/software/gromacs-2022.2/bin/gmx_mpi
-;	Data prefix:  /jet/home/tfobe/software/gromacs-2022.2
-;	Working dir:  /ocean/projects/cts160011p/tfobe/heteropolymer_simulations/simulations/terphenyl_mop/decamer_md/t_263
+;	Executable:   /projects/thfo9888/software/gromacs-2022.5/bin/gmx_mpi
+;	Data prefix:  /projects/thfo9888/software/gromacs-2022.5
+;	Working dir:  /gpfs/alpine1/scratch/thfo9888/terphenyl_simulations/simulations/terphenyl_mop/decamer_md/t_263
 ;	Command line:
 ;	  gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system_hmr.top -o npt_new
 
@@ -169,7 +169,7 @@ annealing-temp           =
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen-vel                  = no
 gen-temp                 = 263.15
-gen-seed                 = -199753737
+gen-seed                 = -10389
 
 ; OPTIONS FOR BONDS    
 constraints              = h-bonds

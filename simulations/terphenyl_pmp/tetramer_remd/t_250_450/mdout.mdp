@@ -2,16 +2,16 @@
 ;	File 'mdout.mdp' was generated
 ;	By user: tfobe (1000)
 ;	On host: grayspeak
-;	At date: Wed Jun 22 17:16:09 2022
+;	At date: Fri Jul  1 17:44:01 2022
 ;
 ;	Created by:
 ;	             :-) GROMACS - gmx grompp, 2020.1-Ubuntu-2020.1-1 (-:
 ;	
 ;	Executable:   /usr/bin/gmx
 ;	Data prefix:  /usr
-;	Working dir:  /mnt/bridges/heteropolymer_simulations/simulations/terphenyl_pom/tetramer
+;	Working dir:  /mnt/bridges/heteropolymer_simulations/simulations/terphenyl_mom/tetramer_remd
 ;	Command line:
-;	  gmx grompp -f berendsen_nvt_md.mdp -p system.top -c em.gro -o berendsen_nvt_md
+;	  gmx grompp -f em.mdp -c solvated_tetramer_box.gro -p system.top -o em -maxwarn 1
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -21,11 +21,11 @@ include                  =
 define                   = 
 
 ; RUN CONTROL PARAMETERS
-integrator               = md
+integrator               = steep
 ; Start time and timestep in ps
 tinit                    = 0
-dt                       = 0.002
-nsteps                   = 2500000
+dt                       = 0.001
+nsteps                   = -1
 ; For exact run continuation or redoing part of a run
 init-step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -59,15 +59,15 @@ rtpi                     = 0.05
 
 ; OUTPUT CONTROL OPTIONS
 ; Output frequency for coords (x), velocities (v) and forces (f)
-nstxout                  = 50000
-nstvout                  = 50000
-nstfout                  = 50000
+nstxout                  = 0
+nstvout                  = 0
+nstfout                  = 0
 ; Output frequency for energies to log file and energy file
 nstlog                   = 1000
 nstcalcenergy            = 100
-nstenergy                = 50000
+nstenergy                = 1000
 ; Output frequency and precision for .xtc file
-nstxout-compressed       = 50000
+nstxout-compressed       = 0
 compressed-x-precision   = 1000
 ; This selects the subset of atoms for the compressed
 ; trajectory file. You can select multiple groups. By
@@ -78,7 +78,7 @@ energygrps               =
 
 ; NEIGHBORSEARCHING PARAMETERS
 ; cut-off scheme (Verlet: particle based cut-offs)
-cutoff-scheme            = Verlet
+cutoff-scheme            = verlet
 ; nblist update frequency
 nstlist                  = 40
 ; Periodic boundary conditions: xyz, no, xy
@@ -93,7 +93,7 @@ rlist                    = 1
 
 ; OPTIONS FOR ELECTROSTATICS AND VDW
 ; Method for doing electrostatics
-coulombtype              = PME
+coulombtype              = Cut-off
 coulomb-modifier         = Potential-shift-Verlet
 rcoulomb-switch          = 0
 rcoulomb                 = 1
@@ -101,13 +101,13 @@ rcoulomb                 = 1
 epsilon-r                = 1
 epsilon-rf               = 0
 ; Method for doing Van der Waals
-vdwtype                  = PME
+vdw-type                 = Cut-off
 vdw-modifier             = Potential-shift-Verlet
 ; cut-off lengths       
 rvdw-switch              = 0
 rvdw                     = 1
 ; Apply long range dispersion corrections for Energy and Pressure
-DispCorr                 = EnerPres
+DispCorr                 = No
 ; Extension of the potential lookup tables beyond the cut-off
 table-extension          = 1
 ; Separate tables between energy group pairs
@@ -129,22 +129,22 @@ implicit-solvent         = no
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling  
-Tcoupl                   = berendsen
+tcoupl                   = No
 nsttcouple               = -1
 nh-chain-length          = 10
 print-nose-hoover-chain-variables = no
 ; Groups to couple separately
-tc-grps                  = system
+tc-grps                  = 
 ; Time constant (ps) and reference temperature (K)
-tau-t                    = 2
-ref-t                    = 250
+tau-t                    = 
+ref-t                    = 
 ; pressure coupling     
-Pcoupl                   = no
+pcoupl                   = No
 pcoupltype               = Isotropic
 nstpcouple               = -1
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
 tau-p                    = 1
-compressibility          = 4.5e-5
+compressibility          = 
 ref-p                    = 
 ; Scaling of reference coordinates, No, All or COM
 refcoord-scaling         = No
@@ -185,14 +185,14 @@ annealing-time           =
 annealing-temp           = 
 
 ; GENERATE VELOCITIES FOR STARTUP RUN
-gen-vel                  = yes
-gen-temp                 = 250
+gen-vel                  = no
+gen-temp                 = 300
 gen-seed                 = -1
 
 ; OPTIONS FOR BONDS    
-constraints              = h-bonds
+constraints              = none
 ; Type of constraint algorithm
-constraint-algorithm     = lincs
+constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
 continuation             = no
 ; Use successive overrelaxation to reduce the number of shake iterations
@@ -200,11 +200,11 @@ Shake-SOR                = no
 ; Relative tolerance of shake
 shake-tol                = 0.0001
 ; Highest order in the expansion of the constraint coupling matrix
-lincs_order              = 4
+lincs-order              = 4
 ; Number of iterations in the final step of LINCS. 1 is fine for
 ; normal simulations, but use 2 to conserve energy in NVE runs.
 ; For energy minimization with constraints it should be 4 to 8.
-lincs_iter               = 1
+lincs-iter               = 1
 ; Lincs will write a warning to the stderr if in one step a bond
 ; rotates over more degrees than
 lincs-warnangle          = 30
