@@ -23,7 +23,7 @@ output solvated_tetramer.pdb
 # angles of rotation, in radian, relative to the position in the input
 # file). 
 
-structure em_terphenyl_pmp_tetramer.pdb
+structure pmp_tetramer_mbuild_renum.pdb
   number 1
   chain A
   fixed 34.6 34.6 34.6 0. 0. 0.
@@ -36,7 +36,7 @@ end structure
 
 
 structure TCM.pdb
-  number 1238 
-  inside box 0. 0. 0. 69.3 69.3 69.3
+  number 634 
+  inside box 0. 0. 0. 55.5 55.4 55.4 55.4
 end structure
 

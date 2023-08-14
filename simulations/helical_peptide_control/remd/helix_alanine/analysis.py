@@ -22,42 +22,42 @@ def main():
     t1 = time.time()
 
     # ts.clustering.torsion_clustering_grid_search(
-    #     [ "sim" + str(i) + "/npt_new.whole.xtc" for i in range(5)],
-    #     "sim0/berendsen_npt.gro",
+    #     [ "sim" + str(i) + "/npt_new.protein.xtc" for i in range(5)],
+    #     "sim0/npt_new.protein.gro",
     #     n_min_samples=10,
     #     n_eps=10,
-    #     n_processes=8,
-    #     eps_limits=[0.01, 1.0],
+    #     n_processes=16,
+    #     eps_limits=[0.01, 0.3],
     #     min_sample_limits=[0.05, 0.5],
     #     prefix="grid_search",
     #     frame_start=0,
     #     frame_end=-1,
-    #     frame_stride=5,
+    #     frame_stride=10,
     #     plot_filename = "torsion_ss.png",
     #     output_dir = "torsion_clustering",
-    #     overwrite = False,
-    #     write_selection = "resn ALA or resn GLN or resn ACE or resn NME"
-    # )
-# 
-# 
-    # # Clustering workflow
-    # ts.clustering.clustering_grid_search(
-    #     [ "sim" + str(i) + "/npt_new.whole.xtc" for i in range(10)],
-    #     "sim0/berendsen_npt.gro",
-    #     "resn ALA or resn GLN or resn ACE or resn NME",
-    #     n_min_samples=20,
-    #     n_eps=20,
-    #     n_processes=8,
-    #     prefix="grid_search",
-    #     eps_limits=[0.01, 0.7],
-    #     min_sample_limits=[0.01, 0.7],
-    #     plot_filename = "ss.png",
-    #     output_dir = "clustering",
-    #     frame_stride = 5,
-    #     overwrite = False,
+    #     overwrite = True,
     #     write_selection = "resn ALA or resn GLN or resn ACE or resn NME"
     # )
 
+
+
+    # # Clustering workflow
+    ts.clustering.clustering_grid_search(
+        [ "sim" + str(i) + "/npt_new.protein.xtc" for i in range(10)],
+        "sim0/npt_new.protein.gro",
+        "resn ALA or resn GLN or resn ACE or resn NME",
+        n_min_samples=20,
+        n_eps=20,
+        n_processes=4,
+        prefix="grid_search",
+        eps_limits=[0.001, 0.3],
+        min_sample_limits=[0.01, 0.2],
+        plot_filename = "ss.png",
+        output_dir = "clustering",
+        frame_stride = 1,
+        overwrite = False,
+        write_selection = "resn ALA or resn GLN or resn ACE or resn NME"
+    )
 
     # Plot unbiased Native H-bonds for each simulation
     # Should turn this in to an an analysis workflow script
@@ -82,7 +82,7 @@ def main():
     #     plt.close()
     #     os.chdir(cur_dir)
     
-    ts.utils.make_path("ramachandran_plots")
+    ts.utils.make_path("ramachandran_temperature")
     for sim_dir in tqdm(glob.glob("sim*")):        
         # Pull temperature from mdp file
         with open(os.path.join(sim_dir, "npt_new.mdp")) as f:
@@ -100,8 +100,27 @@ def main():
             bins = 100,
             title = title,
             scatter_points_files = config_points,
-            legend = ["Initial"]
+            legend = ["Initial Coordinates"],
+            scatter_params = {"marker" : "x", "color" : "red"}
         )
+
+    ts.utils.make_path("ramachandran_clusters")
+    for cluster_file in glob.glob("clustering/cluster*.xtc"):
+        cluster_name = cluster_file.split("/")[-1].split(".")[0]
+
+        cluster_id = cluster_name.split("_")[-1]
+        medoid_file = "clustering/medoid_" + cluster_id + ".gro"
+
+        ts.plotting.plot_ramachandran_plot(
+            cluster_file,
+            medoid_file,
+            prefix = "ramachandran_clusters/"+ cluster_name, 
+            bins = 100,
+            scatter_points_files = [medoid_file],
+            legend = ["Medoid Structure"],
+            scatter_params = {"marker" : "x", "color" : "red"}
+        )
+    
 
     t2 = time.time()
     print("Analysis took:", round(t2 - t1, 2), "seconds.")
