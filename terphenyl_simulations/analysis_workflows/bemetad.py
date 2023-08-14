@@ -51,8 +51,11 @@ def submit_production_npt_simulations(job):
 @FlowProject.pre(check_production_npt_finish)
 @FlowProject.operation
 def continue_production_npt_simulation(job):
+    current_dir = os.path.abspath("")
     os.chdir(job.path)
     slurm_id = subprocess.check_output(["sbatch", "submit.continue.slurm"])
+    os.chdir(current_dir)
+
 
 # Analysis operations
 
@@ -60,15 +63,20 @@ def continue_production_npt_simulation(job):
 @FlowProject.post.isfile("bemd_state_index.png")
 @FlowProject.operation
 def plot_state_index_plot(job):
+    current_dir = os.path.abspath("")
     os.chdir(job.path)
     ts.plotting.plot_bemd_state_index_plot("WALKER0/npt_new.log", "bemd")
+    os.chdir(current_dir)
+
 
 @FlowProject.pre(check_production_npt_finish)
 @FlowProject.post.isfile("bemd_transition_matrix.png")
 @FlowProject.operation
 def plot_transition_matrix(job):
+    current_dir = os.path.abspath("")
     os.chdir(job.path)
     ts.plotting.plot_bemd_transition_matrix("WALKER0/npt_new.log", "bemd")
+    os.chdir(current_dir)
 
 @FlowProject.operation
 def show_statepoint_table(job):
@@ -156,7 +164,7 @@ def sum_hills_FE(job):
         ax.set_xlabel(x_labels[i])
         ax.set_ylabel("Free Energy (kJ/mol)")
         ax.set_xlim(xy_limits[i][0])
-        ax.set_ylim(xy_limits[i][1])
+        ax.set_ylim(np.max(fes_data.values[:, 1]) * np.array(xy_limits[i][1]))
         ax.set_title("Simulation " + str(walker_id))
         ax.grid(visible=True, which="both", axis="both")
     os.chdir(current_dir)
@@ -230,7 +238,7 @@ def unbias_simulations(job):
     if "TEMP" in job.sp.keys():
         kt = job.sp["TEMP"] * 8.314462618 * 10 ** -3
 
-    reweight_colvars(job, "plumed_multi_cv_reweight.dat")
+    reweight_walker_colvars(job, "plumed_multi_cv_reweight.dat", kt)
 
 
 @FlowProject.pre.isfile("WALKER0/COLVARS_REWEIGHT")
@@ -331,6 +339,8 @@ def plot_1D_FE_surface(job):
 @FlowProject.operation
 def plot_2D_FE_surface(job):
     # Need to modify HILLS filename to HILL.x
+    current_dir = os.path.abspath("")
+
     os.chdir(job.fn(""))
     ts.utils.make_path("2D_FE_plots")
     walker_dirs = natsorted(glob.glob(job.fn("WALKER*")))
@@ -496,6 +506,7 @@ def plot_2D_FE_surface(job):
     fig.suptitle(job.sp, wrap=True)
     plt.savefig(job.fn("2D_FE_plots/2D_FE_surfaces.png"))
 
+    os.chdir(current_dir)
 
 
 

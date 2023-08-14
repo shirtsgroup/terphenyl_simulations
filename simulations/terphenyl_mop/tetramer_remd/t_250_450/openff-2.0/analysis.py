@@ -1,4 +1,4 @@
-import heteropolymer_simulations as hs
+import terphenyl_simulations as hs
 import mdtraj as md
 import numpy as np
 import matplotlib.pyplot as plt
@@ -40,7 +40,8 @@ def main():
         eps_limits=[0.01, 0.5],
         min_sample_limits=[0.005, 0.5],
         plot_filename = "ss.png",
-        frame_stride = 10
+        frame_stride = 10,
+        overwrite = False
     )
 
     # Read in cluster outputs and REMD trajs
@@ -78,10 +79,11 @@ def main():
         hs.plotting.plot_torsions_distributions(
             remd_trajs,
             torsion_atom_names,
-            torsion_type + "Torsion (radians)",
+            torsion_type + " Torsion (radians)",
             torsion_type + "_remd",
             torsion_type + " Torsion Plot",
-            figsize = [5,5]
+            figsize = [5,5],
+            cbar_limits = [250, 450]
         )
         
         for i, traj in enumerate(cluster_trajs):

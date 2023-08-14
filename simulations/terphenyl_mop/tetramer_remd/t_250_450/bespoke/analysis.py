@@ -41,8 +41,9 @@ def main():
         n_processes=16,
         prefix="grid_search",
         min_sample_limits=[0.01, 0.05],
-        eps_limits=[0.05, 0.4],
-        frame_stride = 2
+        eps_limits=[0.05, 0.2],
+        frame_stride = 2,
+        overwrite = False
     )
 
     # Read in cluster outputs and REMD trajs
@@ -85,9 +86,10 @@ def main():
         ts.plotting.plot_torsions_distributions(
             remd_trajs,
             torsion_atom_names,
-            torsion_type + "Torsion (radians)",
+            torsion_type + " Torsion (radians)",
             "torsion_plots/" + torsion_type + "_remd",
-            torsion_type + " Torsion Plot"
+            torsion_type + " Torsion Plot",
+            cbar_limits = [250, 450]
         )
         
         for i, traj in enumerate(cluster_trajs):
@@ -96,7 +98,8 @@ def main():
                 torsion_atom_names,
                 torsion_type.upper() + " Torsion (radians)",
                 "torsion_plots/" + torsion_type + "_" + cluster_file_list[i].split(".")[0],
-                torsion_type + " Torsion Plot"
+                torsion_type + " Torsion Plot",
+                figsize = [5,5]
             )
 
 

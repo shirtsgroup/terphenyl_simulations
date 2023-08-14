@@ -1,7 +1,7 @@
 title = NPT simulation of solvated.gro at 327.67733277671425 K
 integrator = md
-dt = 0.002 
-nsteps = 50000000 
+dt = 0.004
+nsteps = 25000000 
 nstxout-compressed = 50000
 nstxout = 50000
 nstvout = 50000
