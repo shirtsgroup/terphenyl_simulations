@@ -22,6 +22,7 @@ import sys
 import shutil
 import signac
 from .utils import replace_all_pattern
+from .remd_utils import RMSD_demux_trajectories
 
 
 def renumber_pdb_atoms():
@@ -466,7 +467,7 @@ def METAD_add_files():
             
 
 def RMSD_demux():
-        def parse_args():
+    def parse_args():
         parser = argparse.ArgumentParser(
             description = "A script to add files to signac projects",
         )
@@ -486,7 +487,7 @@ def RMSD_demux():
 
         parser.add_argument(
             "-O", "--output_dir",
-            default = "demux"
+            default = "demux",
             type = str,
             help = "Directory to write resulting trajectories"
         )
@@ -505,3 +506,6 @@ def RMSD_demux():
 
 
         return parser.parse_args()
+    
+    args = parse_args()
+    RMSD_demux_trajectories(args.trajs, args.topology, output_dir = args.output_dir, selection = args.selection, gmx_tpr = args.gmx_tpr)
