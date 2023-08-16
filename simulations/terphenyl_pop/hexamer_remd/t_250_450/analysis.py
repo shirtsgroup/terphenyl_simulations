@@ -53,8 +53,8 @@ def main():
         n_eps=40,
         n_processes=32,
         prefix="grid_search",
-        eps_limits=[0.01, 0.3],
-        min_sample_limits=[0.005, 0.3],
+        eps_limits=[0.01, 0.4],
+        min_sample_limits=[0.01, 0.3],
         plot_filename = "ss.png",
         frame_stride = 3
     )
