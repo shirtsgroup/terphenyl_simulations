@@ -1,0 +1,31 @@
+sum_hills_plots:
+  fe_xy_limits:
+    - [[0, 6], [0, 250]]
+    - [[0.75, 3], [0, 200]]
+    - [[0, 5], [0, 200]] 
+    - [[0, 2.5], [0, 200]] 
+  plumed_bins:
+  - [0, 7, 60]
+  - [0, 6, 120]
+  - [0, 14, 120]
+  - [0, 3, 60]
+  cv_bf_labels: ["bf1", "bf1", "bf2", "bf3", "bf4"]
+  x_labels:  ["$N_{H-bonds}$", "$R_{G}$", "$d_{end-to-end}$", "$d_{RMSD}$"]
+
+CV_plots:
+  CV_traj_stride: 100
+  x_labels:  ["$N_{H-bonds}$", "$R_{G}$", "$d_{end-to-end}$", "$d_{RMSD}$"]
+  cv_names: ["cv1", "cv2", "cv3", "cv4"]
+  cv_bins: [50, 50, 50, 50]
+
+
+1D_FE_plots:
+  n_bins: [30, 50, 50, 30]
+  cv_ranges: 
+  - [0, 7]
+  - [0, 4]
+  - [0, 5]
+  - [0, 3]
+  x_labels:  ["$N_{H-bonds}$", "$R_{G}$", "$d_{end-to-end}$", "$d_{RMSD}$"]
+
+
