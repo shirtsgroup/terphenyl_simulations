@@ -28,3 +28,4 @@ __pycache__
 *env-bespoke*
 terphenyl_simulations.egg-info/
 *bck.*
+build/

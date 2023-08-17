@@ -1,0 +1,52 @@
+RANDOM_EXCHANGES
+
+# CV 1 - Native Contact H-bonds
+# Needs adjmat module
+
+# Define contact matrix for each h-bond of interest
+mat1: CONTACT_MATRIX ATOMS=21,99 SWITCH={RATIONAL R_0=0.5 NN=10 MM=20}
+mat2: CONTACT_MATRIX ATOMS=65,143 SWITCH={RATIONAL R_0=0.5 NN=10 MM=20}
+mat3: CONTACT_MATRIX ATOMS=109,187 SWITCH={RATIONAL R_0=0.5 NN=10 MM=20}
+mat4: CONTACT_MATRIX ATOMS=153,231 SWITCH={RATIONAL R_0=0.5 NN=10 MM=20}
+mat5: CONTACT_MATRIX ATOMS=197,275 SWITCH={RATIONAL R_0=0.5 NN=10 MM=20}
+mat6: CONTACT_MATRIX ATOMS=241,319 SWITCH={RATIONAL R_0=0.5 NN=10 MM=20}
+mat7: CONTACT_MATRIX ATOMS=285,364 SWITCH={RATIONAL R_0=0.5 NN=10 MM=20}
+
+
+# Sum 1x1 matrix for switching function
+hbond1: COLUMNSUMS MATRIX=mat1 MEAN
+hbond2: COLUMNSUMS MATRIX=mat2 MEAN
+hbond3: COLUMNSUMS MATRIX=mat3 MEAN
+hbond4: COLUMNSUMS MATRIX=mat4 MEAN
+hbond5: COLUMNSUMS MATRIX=mat5 MEAN
+hbond6: COLUMNSUMS MATRIX=mat6 MEAN
+hbond7: COLUMNSUMS MATRIX=mat7 MEAN
+
+cv1: COMBINE ARG=hbond1.mean,hbond2.mean,hbond3.mean,hbond4.mean,hbond5.mean,hbond6.mean,hbond7.mean PERIODIC=NO
+
+# CV 2 - Radius of gyration
+# Needs colvar module
+
+# Calculates RoG for selected atoms
+cv2: GYRATION TYPE=RADIUS ATOMS=1-373
+
+# CV 3 - End-to-end distance
+cv3: DISTANCE ATOMS=359,353
+
+# CV 4 - RMSD to folded structure
+cv4: RMSD REFERENCE=em_octamer_helix.pdb TYPE=OPTIMAL
+
+# metadynamics block
+
+metad: METAD ...
+    ARG=@replicas:cv1,cv1,cv2,cv3,cv4
+    SIGMA=@replicas:sigma1,sigma2,sigma3,sigma4,sigma5
+    HEIGHT=@replicas:height1,height2,height3,height4,height5
+    BIASFACTOR=@replicas:bf1,bf2,bf3,bf4,bf5
+    PACE=@replicas:500,500,500,500,500
+    GRID_MIN=@replicas:0,0,0,0,0
+    GRID_MAX=@replicas:7,7,6,14,7
+    FILE=HILLS
+...
+
+PRINT ARG=cv1,cv2,cv3,cv4,metad.bias FILE=COLVARS STRIDE=500
