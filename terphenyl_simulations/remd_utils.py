@@ -6,6 +6,10 @@ import time
 import sys
 import terphenyl_simulations as ts
 from tqdm import tqdm
+import shutil
+import copy
+import csv
+from subprocess import Popen, PIPE
 
 plt.rcParams.update({"font.size": 7})
 
@@ -127,7 +131,7 @@ def calculate_roundtrip_times(remd_logfile):
 
 
 
-def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux", selection = None, gmx_tpr = None):
+def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux", selection = None, gmx_tpr = None, stride = 1):
     """
     Use RMSDs from output frames to reconstruct continuous trajectories
     form replica exchange simulations. This operation is very resource
@@ -149,12 +153,15 @@ def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux",
 
     gmx_tpr : string
         file location of a gromacs tpr file. Used to make whole trajectories
+
+    stride : int
+        number of frames to skip when reading in replica trajectories
     """
 
     ts.utils.make_path(output_dir)
 
     print("Reading trajectories...")
-    remd_trajs = [md.load(traj_file, top = topology) for traj_file in replex_trajectories]
+    remd_trajs = [md.load(traj_file, top = topology, stride = 2) for traj_file in tqdm(replex_trajectories)]
 
     n_replicas = len(remd_trajs)
     n_frames = len(remd_trajs[0])
@@ -162,10 +169,10 @@ def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux",
     # Otherwise use all atoms
     if selection is not None:
         sel_indices = remd_trajs[0].topology.select(selection)
-        remd_traj = [traj.atom_slice(sel_indices) for traj in remd_traj]
+        remd_traj = [traj.atom_slice(sel_indices) for traj in remd_trajs]
 
     # Make a list of n_frames trajectories
-    frame_trajs = [md.load(topology, topology = topology)[1:] for _ in range(n_frames)]
+    frame_trajs = [copy.deepcopy(remd_trajs[0][-1][1:]) for _ in tqdm(range(n_frames))]
 
     print("Building per-frame trajectories...")
     for i in tqdm(range(n_frames)):
@@ -183,19 +190,19 @@ def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux",
     for i in tqdm(range(1, n_frames)):
         # generate RMSD matrix from frame i and frame i - 1
         for j in range(n_replicas):
-            rmsds = list(md.rmsd(frame_trajs[i], demux_traj[j], precentered = True))
+            rmsds = list(md.rmsd(frame_trajs[i], demux_trajs[j][-1], precentered = True))
             min_rmsd_index = rmsds.index(min(rmsds))
             demux_trajs[j] = md.join([demux_trajs[j], frame_trajs[i][min_rmsd_index]])
             rmsd_demux[i].append(min_rmsd_index)
 
-    for i, traj in enumerate(demux_traj):
+    for i, traj in enumerate(demux_trajs):
         filename = output_dir + "/replica_" + str(i) +  ".xtc"
         traj.save_xtc(filename)
         if shutil.which("gmx") and gmx_tpr is not None:
-            p = Popen(["gmx", "trjconv", "-f", filename, "-s", gmx_tpr, "-pbc", "whole", "-o", output_dir + "/replica_" + str(rep_i) + ".whole.xtc"], stdin = PIPE, stdout = PIPE)
+            p = Popen(["gmx", "trjconv", "-f", filename, "-s", gmx_tpr, "-pbc", "whole", "-o", output_dir + "/replica_" + str(i) + ".whole.xtc"], stdin = PIPE, stdout = PIPE)
             p.communicate(input = b'0\n')
 
-    with open(output_dir + "/rmsd_demux.csv", "wb") as f:
+    with open(output_dir + "/rmsd_demux.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerows(rmsd_demux)
 

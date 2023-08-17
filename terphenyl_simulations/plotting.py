@@ -189,7 +189,7 @@ def plot_torsions_distributions(
         sm.set_clim(vmin = cbar_params[0], vmax = cbar_params[1])
         cbar = plt.colorbar(sm)
         cbar.ax.get_yaxis().labelpad = 15
-        cbar.ax.set_yaxis(cbar_params[2])
+        cbar.ax.set_ylabel(cbar_params[2])
     plt.xlabel(x_axis)
     plt.ylabel("Density")
     plt.title(title)
