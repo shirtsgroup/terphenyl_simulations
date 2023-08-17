@@ -1,0 +1,9 @@
+; itp topology file
+; Generated using heteropolymer_simulations.util.write_itp_file()
+; Original file: mom_tetramer_mbuild_off-2.0.0-bespoke.top
+; Author: tfobe
+; Date: Wednesday, 28. June 2023
+; Time: 04:41PM
+; System: Linux-5.15.0-75-generic-x86_64-with-glibc2.31
+
+[ moleculetype ]
