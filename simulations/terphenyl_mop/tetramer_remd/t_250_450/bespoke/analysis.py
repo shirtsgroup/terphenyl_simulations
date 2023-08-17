@@ -40,9 +40,9 @@ def main():
         n_eps=40,
         n_processes=16,
         prefix="grid_search",
-        min_sample_limits=[0.01, 0.05],
-        eps_limits=[0.05, 0.2],
-        frame_stride = 2,
+        min_sample_limits=[0.01, 0.15],
+        eps_limits=[0.05, 0.3],
+        frame_stride = 1,
         overwrite = False
     )
 
@@ -64,11 +64,11 @@ def main():
 
     # Torsion definitions for first residue
     hexamer_r1_torsions = {
-        "a1": ["C4", "C5", "C6", "C7"],
-        "a2": ["C6", "C7", "C13", "C18"],
-        "p1": ["C18", "C17", "C19", "N1"],
-        "p2": ["C17", "C19", "N1", "H14"],
-        "p3": ["O1", "C1", "C2", "C3"],
+        "a1": ["C5", "C6", "C7", "C8"],
+        "a2": ["C7", "C8", "C15", "C20"],
+        "p1": ["C20", "C19", "C21", "N22"],
+        "p2": ["C19", "C21", "N22", "H39"],
+        "p3": ["O2", "C1", "C3", "C4"],
     }
 
     print(remd_trajs)
@@ -102,36 +102,6 @@ def main():
                 figsize = [5,5]
             )
 
-
-    # Hydrogen Bond analysis
-
-    hbond_dir = "hbonds"
-    ts.utils.make_path(hbond_dir)
-    octamer_remd_universes = [mda.Universe("sim" + str(i) +"/npt_new.tpr", "sim" + str(i) +"/npt_new.whole.xtc" ) for i in range(64)]
-
-    h_bond_means = []
-    h_bond_stds = []
-    for t_u in octamer_remd_universes:
-        hbonds = HydrogenBondAnalysis(
-            t_u,
-            donors_sel = None,
-            hydrogens_sel = "name H14 H33 H52 H71",
-            acceptors_sel = "element O",
-            d_a_cutoff = 3.5,
-            d_h_a_angle_cutoff = 150,
-            update_selections = False
-        )
-        hbonds.run(verbose=True)
-        n_hbonds = hbonds.count_by_time()[500:]
-        h_bond_means.append(np.mean(n_hbonds))
-        h_bond_stds.append(np.std(n_hbonds))
-    
-    plt.figure(dpi=300)
-    plt.errorbar(temperatures, h_bond_means, yerr=h_bond_stds)
-    plt.title("Hydrogen Bonds vs Temperature")
-    plt.ylabel("Number of Hydrogen Bonds")
-    plt.xlabel("Temperature (K)")
-    plt.savefig(hbond_dir + "/h_bonds_temperature.png")
         
 
     t2 = time.time()
