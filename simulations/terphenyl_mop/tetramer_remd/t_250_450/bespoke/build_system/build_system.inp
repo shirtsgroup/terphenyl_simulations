@@ -23,7 +23,7 @@ output solvated_tetramer.pdb
 # angles of rotation, in radian, relative to the position in the input
 # file). 
 
-structure mop_tetramer.pdb
+structure em_tetramer.pdb
   number 1
   chain A
   fixed 27.7 27.7 27.7 45. 45. 45.

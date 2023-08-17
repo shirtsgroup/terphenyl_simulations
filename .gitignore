@@ -20,8 +20,11 @@ __pycache__
 *.mp4
 *HBOND_SUMS*
 *HILLS*
+*COLVARS*
 *COLVAR_STD_TORSIONS*
 *COLVAR_REWEIGHT*
 *clustering_output*
 *bespoke-executor*
 *env-bespoke*
+terphenyl_simulations.egg-info/
+*bck.*
