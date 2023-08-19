@@ -113,7 +113,7 @@ def plot_torsions_distributions(
     mirror_sym=False,
     offsets=None,
     figsize=None,
-    cbar_params = None
+    cbar_limits = None,
 ):
     """
     Function for plotting 1D torsion distributions using MDTraj objects
@@ -142,6 +142,8 @@ def plot_torsions_distributions(
     offsets : list
         If any distributions need to be shifted by a number of degrees, providing a
         list of offset values will apply the offset a given dataset based on index.
+    cbar_params : list
+        A list of parameters for plotting the color bar
     """
 
     if type(traj_obj_list) == md.Trajectory:

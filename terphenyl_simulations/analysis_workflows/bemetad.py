@@ -80,7 +80,34 @@ def plot_transition_matrix(job):
 
 @FlowProject.operation
 def show_statepoint_table(job):
-    print("sp:", job.sp, "\n", "dir:", job.fn("").split("/")[-2], "\n", "status:", check_production_npt_finish(job), "\n")
+    print("sp:", job.sp, "\n", "dir:", job.fn("").split("/")[-2], "\n", "status:", check_production_npt_finish(job))
+    if os.path.exists(job.fn("WALKER0/berendsen_nvt.log")):
+        tail = subprocess.check_output(["tail", job.fn("WALKER0/berendsen_nvt.log"), "-n", "150"]).decode("utf-8").split("\n")
+        for i in range(len(tail)):
+            i_rev = len(tail) - 1 - i
+            if "Step" in tail[i_rev] and len(tail[i_rev + 1].split()) > 0:
+                nsteps, time = tail[i_rev+1].split()
+                print("Berendsen NVT:", str(float(time) / 1000), "ns")
+                break
+                
+    if os.path.exists(job.fn("WALKER0/berendsen_npt.log")):
+        tail = subprocess.check_output(["tail", job.fn("WALKER0/berendsen_npt.log"), "-n", "150"]).decode("utf-8").split("\n")
+        for i in range(len(tail)):
+            i_rev = len(tail) - 1 - i
+            if "Step" in tail[i_rev] and len(tail[i_rev + 1].split()) > 0:
+                nsteps, time = tail[i_rev+1].split()
+                print("Berendsen NPT:", str(float(time) / 1000), "ns")
+                break
+
+    if os.path.exists(job.fn("WALKER0/npt_new.log")):
+        tail = subprocess.check_output(["tail", job.fn("WALKER0/npt_new.log"), "-n", "200"]).decode("utf-8").split("\n")
+        for i in range(len(tail)):
+            i_rev = len(tail) - 1 - i
+            if "Step" in tail[i_rev] and len(tail[i_rev + 1].split()) > 0:
+                nsteps, time = tail[i_rev+1].split()
+                print("Production NPT:", str(float(time) / 1000), "ns")
+                break
+
 
 @FlowProject.pre(check_production_npt_finish)
 @FlowProject.post.isfile("CV_sampling.png")
@@ -331,9 +358,6 @@ def plot_1D_FE_surface(job):
     os.chdir(current_dir)
 
 
-
-
-
 @FlowProject.pre.isfile("WALKER0/COLVARS_REWEIGHT")
 @FlowProject.post.isfile("2D_FE_plots/2D_FE_surfaces.png")
 @FlowProject.operation
@@ -508,6 +532,10 @@ def plot_2D_FE_surface(job):
 
     os.chdir(current_dir)
 
+@FlowProject.pre.isfile("WALKER0/npt_new.gro")
+@FlowProject.operation
+def demux_trajectories(job):
+    pass
 
 
 
