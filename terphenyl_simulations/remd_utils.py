@@ -131,7 +131,7 @@ def calculate_roundtrip_times(remd_logfile):
 
 
 
-def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux", selection = None, gmx_tpr = None, stride = 1):
+def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux", selection = None, gmx_tpr = None, stride = 20):
     """
     Use RMSDs from output frames to reconstruct continuous trajectories
     form replica exchange simulations. This operation is very resource
@@ -161,21 +161,24 @@ def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux",
     ts.utils.make_path(output_dir)
 
     print("Reading trajectories...")
-    remd_trajs = [md.load(traj_file, top = topology, stride = 2) for traj_file in tqdm(replex_trajectories)]
+    remd_trajs = [md.load(traj_file, top = topology, stride = stride) for traj_file in tqdm(replex_trajectories)]
 
     n_replicas = len(remd_trajs)
     n_frames = len(remd_trajs[0])
+
+    print("N Replicas:", n_replicas)
+    print("N frames:", n_frames)
     # Apply selection if provided
     # Otherwise use all atoms
     if selection is not None:
         sel_indices = remd_trajs[0].topology.select(selection)
-        remd_traj = [traj.atom_slice(sel_indices) for traj in remd_trajs]
+        remd_trajs = [traj.atom_slice(sel_indices) for traj in remd_trajs]
 
     # Make a list of n_frames trajectories
-    frame_trajs = [copy.deepcopy(remd_trajs[0][-1][1:]) for _ in tqdm(range(n_frames))]
-
     print("Building per-frame trajectories...")
+    frame_trajs = []
     for i in tqdm(range(n_frames)):
+        frame_trajs.append(copy.deepcopy(remd_trajs[0][-1][1:]))
         for traj in remd_trajs:
             frame_trajs[i] = md.join([frame_trajs[i], traj[i]])
     
@@ -189,9 +192,27 @@ def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux",
     rmsd_demux = [ [] for _ in range(n_frames)]
     for i in tqdm(range(1, n_frames)):
         # generate RMSD matrix from frame i and frame i - 1
+        visited = []
         for j in range(n_replicas):
+            print(visited)
             rmsds = list(md.rmsd(frame_trajs[i], demux_trajs[j][-1], precentered = True))
-            min_rmsd_index = rmsds.index(min(rmsds))
+
+            print(rmsds)
+            # Look at the next smallest RMSD that
+            # hasn't been writen already
+
+            rmsd_array = np.array(rmsds)
+            ordered = list(np.sort(rmsd_array))
+            k = 0
+            while rmsds.index(ordered[k]) in visited:
+                k += 1
+            
+            min_rmsd_index = rmsds.index(ordered[k])
+
+            # Once the nth smallest rmsd is found
+            # Append that index to visted so that 
+            # index can't be used again for this step
+            visited.append(min_rmsd_index)
             demux_trajs[j] = md.join([demux_trajs[j], frame_trajs[i][min_rmsd_index]])
             rmsd_demux[i].append(min_rmsd_index)
 

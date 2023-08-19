@@ -504,8 +504,15 @@ def RMSD_demux():
             help = "GROMACS tpr file, used to make whole molecules"
         )
 
+        parser.add_argument(
+            "--stride",
+            default = 1,
+            help = "Stride used to when reading trajectory files. If the stride is too \
+                    large, RMSD demuxing might not work." 
+        )
+
 
         return parser.parse_args()
     
     args = parse_args()
-    RMSD_demux_trajectories(args.trajs, args.topology, output_dir = args.output_dir, selection = args.selection, gmx_tpr = args.gmx_tpr)
+    RMSD_demux_trajectories(args.trajs, args.topology, output_dir = args.output_dir, selection = args.selection, gmx_tpr = args.gmx_tpr, stride = args.stride)
