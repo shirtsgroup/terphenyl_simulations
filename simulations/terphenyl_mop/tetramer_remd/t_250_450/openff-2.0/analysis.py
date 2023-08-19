@@ -85,15 +85,18 @@ def main():
             figsize = [5,5],
             cbar_limits = [250, 450]
         )
-        
+
         for i, traj in enumerate(cluster_trajs):
+
+            entropy = hs.observables.calculate_torsion_entropy(traj, torsion_atom_names)
+
             hs.plotting.plot_torsions_distributions(
                 traj,
                 torsion_atom_names,
                 torsion_type.upper() + " Torsion (radians)",
                 "torsion_plots/" + torsion_type + "_" + cluster_file_list[i].split(".")[0],
-                torsion_type + " Torsion Plot",
-                figsize=[5,5]
+                torsion_type + " Torsion Plot " + "Entropy: " + str(entropy),
+                figsize=[5,5],
             )
 
     t2 = time.time()

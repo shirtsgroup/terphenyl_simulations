@@ -182,9 +182,23 @@ def RMSD_demux_trajectories(replex_trajectories, topology, output_dir = "demux",
     rmsd_demux = [ [] for _ in range(n_frames)]
     for i in tqdm(range(1, n_frames)):
         # generate RMSD matrix from frame i and frame i - 1
+        visited = []
         for j in range(n_replicas):
-            rmsds = list(md.rmsd(frame_trajs[i], demux_traj[j], precentered = True))
+            rmsds = list(md.rmsd(frame_trajs[i], demux_traj[j][-1], precentered = True))
             min_rmsd_index = rmsds.index(min(rmsds))
+
+            # Look at the next smallest RMSD that
+            # hasn't been writen already
+            rmsd_array = np.array(rmsds)
+            ordered = list(np.sort(rmsd_array))
+            i = 0
+            while rmsds.index(ordered[i]) in visited:
+                i += 1
+            
+            # Once the nth smallest rmsd is found
+            # Append that index to visted so that 
+            # index can't be used again for this step
+            visited.append(rmsds.index(ordered[i]))
             demux_trajs[j] = md.join([demux_trajs[j], frame_trajs[i][min_rmsd_index]])
             rmsd_demux[i].append(min_rmsd_index)
 
