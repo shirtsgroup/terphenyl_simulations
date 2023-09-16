@@ -46,7 +46,6 @@ class TopFileObject:
 
 
 def write_itp_file(top_object, filename, itp_sections=None):
-
     if itp_sections is None:
         itp_sections = [
             "moleculetype",
@@ -163,6 +162,7 @@ def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 1):
     if all([atom_id in atoms_in_residue for atom_id in torsion_id]):
         residue_atom_index  = [atoms_in_residue.index(a) for a in torsion_id if a in atoms_in_residue ]    
         dihedral_ids = []
+
         for residue in universe.residues:
             if residue.resname == resname:
                 torsion_atoms = [residue.atoms[i] for i in residue_atom_index]
@@ -371,11 +371,10 @@ class GromacsLogFile:
 
             # Collect Empirical Exchange Transition Matrix
             ex_matrix = self._find_text_block("Empirical Transition Matrix", self.n_states+1)
-
-            if len(ex_matrix) != 0:
+            if len(ex_matrix) > 0:
                 ex_probs = []
                 for i in range(self.n_states):
-                    ex_prob_str = ex_matrix[i+2].split()[1:self.n_states+1]
+                    ex_prob_str = ex_matrix[0][i+2].split()[1:self.n_states+1]
                     ex_probs.append([float(p) for p in ex_prob_str])
                 
                 self.transition_matrix = np.array(ex_probs)

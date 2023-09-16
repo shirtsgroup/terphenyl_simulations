@@ -113,7 +113,7 @@ def plot_torsions_distributions(
     mirror_sym=False,
     offsets=None,
     figsize=None,
-    cbar_limits = None
+    cbar_params = None
 ):
     """
     Function for plotting 1D torsion distributions using MDTraj objects
@@ -183,11 +183,13 @@ def plot_torsions_distributions(
     if legend is not None:
         plt.legend(legend)
 
-    if cbar_limits is not None:
+    if cbar_params is not None:
         colormap = plt.cm.get_cmap('plasma')
         sm = plt.cm.ScalarMappable(cmap = colormap)
-        sm.set_clim(vmin = cbar_limits[0], vmax = cbar_limits[1])
-        plt.colorbar(sm)
+        sm.set_clim(vmin = cbar_params[0], vmax = cbar_params[1])
+        cbar = plt.colorbar(sm)
+        cbar.ax.get_yaxis().labelpad = 15
+        cbar.ax.set_ylabel(cbar_params[2])
     plt.xlabel(x_axis)
     plt.ylabel("Density")
     plt.title(title)
