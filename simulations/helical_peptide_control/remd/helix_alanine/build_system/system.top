@@ -34,7 +34,7 @@ HW             1   1.008000  0.00000000  A       0.000000        0.00000
 K             19      39.10  0.0000      A     0.30379646     0.81036925
 F              9      19.00  0.0000      A     0.41034794     0.01407498
 
-; Include peptide topollogy
+; Include peptide topology
 #include "peptide_alanine.itp"
 
 [ moleculetype ]
