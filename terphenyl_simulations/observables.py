@@ -79,3 +79,20 @@ def get_torsions(traj_obj, torsion_atom_names, mirror_sym=False):
     return torsions
 
 
+def calculate_torsion_entropy(traj, torsion_atom_names, n_bins = 50):
+
+    # Bins and centers for distributuion
+    bin_edges = np.linspace(-np.pi, np.pi, n_bins + 1)
+    bin_centers = np.array(
+        [(bin_edges[i] + bin_edges[i + 1]) * 0.5 for i in range(len(bin_edges) - 1)]
+    )
+
+    torsions = get_torsions(traj, torsion_atom_names)
+
+    hist, bin_edges_out = np.histogram(
+        np.array(torsions), bins=bin_edges, density=True
+    )
+
+    entropy = np.sum([np.nan_to_num(- hist[i] * np.log(hist[i])) for i in range(len(hist))])
+
+    return entropy

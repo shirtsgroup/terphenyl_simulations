@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh -l
 
 # NVT Equilibration
 SLURM_OUT=$(sbatch submit.berendsen_nvt.slurm)

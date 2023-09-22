@@ -1,4 +1,4 @@
-import terphenyl_simulations as ts
+import terphenyl_simulations as hs
 import mdtraj as md
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,10 +8,10 @@ from sklearn import preprocessing
 import time
 import sys
 import os
+import csv
+import glob
 from tqdm import tqdm
 import MDAnalysis as mda
-from MDAnalysis.analysis.hydrogenbonds import HydrogenBondAnalysis
-
 
 # sns.set_style('whitegrid')
 sns.color_palette("bwr", as_cmap=True)
@@ -19,12 +19,8 @@ sns.color_palette("bwr", as_cmap=True)
 
 def main():
     t1 = time.time()
-
-    commmon_factor = (450/250)**(1/63)
-    temperatures = [250 * (commmon_factor)**i for i in range(64)]
-
     # Clustering workflow
-    ts.clustering.clustering_grid_search(
+    hs.clustering.clustering_grid_search(
         [
             "sim0/npt_new.whole.xtc",
             "sim1/npt_new.whole.xtc",
@@ -36,21 +32,22 @@ def main():
         ],
         "sim0/berendsen_npt.gro",
         "resname TET or resname CAP",
-        n_min_samples=40,
-        n_eps=40,
-        n_processes=16,
+        n_min_samples=20,
+        n_eps=20,
+        n_processes=32,
         prefix="grid_search",
-        min_sample_limits=[0.01, 0.15],
-        eps_limits=[0.05, 0.3],
-        frame_stride = 1,
-        overwrite = False
+        eps_limits=[0.01, 0.5],
+        min_sample_limits=[0.005, 0.6],
+        plot_filename = "ss.png",
+        frame_stride = 3,
+        overwrite = True
     )
 
     # Read in cluster outputs and REMD trajs
-    cluster_file_list = os.listdir("clustering_output")
+    cluster_file_list = glob.glob("clustering_output/cluster*")
     print("Loading Cluster trajectory files...")
     cluster_trajs = [
-        md.load("clustering_output/" + gro_file) for gro_file in tqdm(cluster_file_list)
+        md.load(gro_file) for gro_file in tqdm(cluster_file_list)
     ]
 
     remd_file_list = ["sim" + str(i) + "/npt_new.whole.xtc" for i in range(64)]
@@ -71,37 +68,46 @@ def main():
         "p3": ["O2", "C1", "C3", "C4"],
     }
 
-    print(remd_trajs)
-
     # Torsion Analysis
-    ts.utils.make_path("torsion_plots")
+    cluster_entropy = np.zeros(len(cluster_trajs))
+
     for torsion_type in hexamer_r1_torsions.keys():
-        if torsion_type == -1:
-            continue
         print("Working on", torsion_type, "torsion...")
-        torsion_atom_names = ts.utils.get_torsion_ids(
+        torsion_atom_names = hs.utils.get_torsion_ids(
             hexamer_u, "TET", hexamer_r1_torsions[torsion_type], template_residue_i = 0
         )
 
-        ts.plotting.plot_torsions_distributions(
+        hs.plotting.plot_torsions_distributions(
             remd_trajs,
             torsion_atom_names,
-            torsion_type + " Torsion (radians)",
-            "torsion_plots/" + torsion_type + "_remd",
+            torsion_type + " Torsion (Degrees)",
+            torsion_type + "_remd",
             torsion_type + " Torsion Plot",
-            cbar_limits = [250, 450]
+            figsize = [5,5],
+            cbar_params = [250, 450, "Temperature (K)"]
         )
-        
         for i, traj in enumerate(cluster_trajs):
-            ts.plotting.plot_torsions_distributions(
+
+            entropy = hs.observables.calculate_torsion_entropy(traj, torsion_atom_names)
+            cluster_entropy[i] += entropy
+
+            hs.plotting.plot_torsions_distributions(
                 traj,
                 torsion_atom_names,
-                torsion_type.upper() + " Torsion (radians)",
-                "torsion_plots/" + torsion_type + "_" + cluster_file_list[i].split(".")[0],
-                torsion_type + " Torsion Plot",
-                figsize = [5,5]
+                torsion_type.upper() + " Torsion (Degrees)",
+                "torsion_plots/" + torsion_type + "_" + cluster_file_list[i].split("/")[-1].split(".")[0],
+                torsion_type + " Torsion Plot " + "Entropy: " + str(entropy),
+                figsize=[5,5],
             )
 
+    # Write entropy to file
+
+    csv_header = [name.split("/")[-1].split(".")[0] for name in cluster_file_list]
+ 
+    with open("cluster_torsion_entropy.csv", "w", newline='') as csv_file:
+        csv_writer = csv.writer(csv_file)
+        csv_writer.writerow(csv_header)
+        csv_writer.writerow(cluster_entropy)
         
 
     t2 = time.time()
