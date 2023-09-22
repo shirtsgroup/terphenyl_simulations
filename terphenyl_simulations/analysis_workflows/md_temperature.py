@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib
 from pymbar import timeseries
 import natsort
 import glob
@@ -9,6 +10,8 @@ import subprocess
 import os
 import argparse
 import terphenyl_simulations as ts
+
+matplotlib.rc("axes", labelsize=15)
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -57,7 +60,7 @@ def read_plumed_data_file(filename):
 def main():
     # Read cmd-line arguments
     args = parse_args()
-    plt.rcParams.update({'font.size': 18})
+    plt.rcParams.update({'font.size': 15})
 
 
     # Get temperatures and directory names
@@ -73,7 +76,7 @@ def main():
     for i in range(len(dir_names)):
         os.chdir(dir_names[i])
         kt = 8.314 * 10 ** -3 * temperatures[i]
-        subprocess.run(["plumed", "--no-mpi", "driver", "--plumed", args.plumed, "--kt", str(kt), "--mf_xtc", "npt_new.xtc", "--igro", "npt_new.gro"], stdout=subprocess.DEVNULL)
+        subprocess.run(["plumed", "--no-mpi", "driver", "--plumed", args.plumed, "--kt", str(kt), "--mf_xtc", "npt_new.xtc", "--igro", "npt_new.gro"]) #, stdout=subprocess.DEVNULL)
         os.chdir("..")
         plumed_data = read_plumed_data_file(os.path.join(dir_names[i], "COLVARS"))
         for header in plumed_data.columns[2:]:
@@ -88,7 +91,7 @@ def main():
             observables[header]["mean"].append(np.mean(cv_data[1000:]))
             observables[header]["std"].append(np.std(cv_data[1000:]))
             observables[header]["data"].append(cv_data[1000:])
-            print("Using", len(cv_data[1000:]), "samples out of", len(cv_data), "H-bond counts.")
+            print("Using", len(data_equil_ss), "samples out of", len(cv_data), "H-bond counts.")
 
             # Plot timeseries
             plt.figure(figsize=[15,5])
@@ -117,6 +120,8 @@ def main():
         plt.errorbar(temperatures, observables[observable]["mean"], yerr = observables[observable]["std"])
         plt.ylabel(cv_names[observable])
         plt.xlabel("Temperature (K)")
+        plt.tight_layout()
+
         plt.savefig(observable + "_temperature.png", dpi = 300)
         plt.close()
 
@@ -130,6 +135,7 @@ def main():
         plt.xticks(ticks = [y + 1 for y in range(len(temperatures))], labels = [ str(int(t)) for t in  temperatures])
         plt.ylabel(cv_names[observable])
         plt.xlabel("Temperature (K)")
+        plt.tight_layout()
         plt.savefig(observable + "_violin.png", dpi = 300)
         plt.close()
         

@@ -52,10 +52,10 @@ def plot_neighbor_dependent_2D_histogram(
         make_path(prefix)
 
     # Get 2D distriubtion from pairs
-    torsions = [
+    torsions = 180 / np.pi * np.array([
         get_torsions(traj_obj, torsions_atom_names_pair[i])
         for i in range(len(torsions_atom_names_pair))
-    ]
+    ])
 
     # Bins and centers for distributuion
     bin_edges = np.linspace(-np.pi, np.pi, n_bins + 1)
@@ -113,7 +113,7 @@ def plot_torsions_distributions(
     mirror_sym=False,
     offsets=None,
     figsize=None,
-    cbar_limits = None,
+    cbar_params = None,
     entropy = False
 ):
     """
@@ -155,9 +155,9 @@ def plot_torsions_distributions(
     sns.set_palette("plasma", n_colors=len(traj_obj_list))
 
     # Bins and centers for distributuion
-    bin_edges = np.linspace(-np.pi, np.pi, n_bins + 1)
+    bin_edges = np.linspace(-180, 180, n_bins + 1)
     if mirror_sym:
-        bin_edges = np.linspace(0, np.pi, n_bins + 1)
+        bin_edges = np.linspace(0, 180, n_bins + 1)
     bin_centers = np.array(
         [(bin_edges[i] + bin_edges[i + 1]) * 0.5 for i in range(len(bin_edges) - 1)]
     )
@@ -180,17 +180,18 @@ def plot_torsions_distributions(
         if offsets is not None:
             torsions += offsets[i]
         hist, bin_edges_out = np.histogram(
-            np.array(torsions), bins=bin_edges, density=True
+            180 /np.pi * np.array(torsions), bins=bin_edges, density=True
         )
         plt.plot(bin_centers, hist)
     if legend is not None:
         plt.legend(legend)
 
-    if cbar_limits is not None:
+    if cbar_params is not None:
         colormap = plt.cm.get_cmap('plasma')
         sm = plt.cm.ScalarMappable(cmap = colormap)
-        sm.set_clim(vmin = cbar_limits[0], vmax = cbar_limits[1])
-        plt.colorbar(sm)
+        sm.set_clim(vmin = cbar_params[0], vmax = cbar_params[1])
+        cbar = plt.colorbar(sm)
+        cbar.set_label(cbar_params[2])
     plt.xlabel(x_axis)
     plt.ylabel("Density")
     plt.title(title)
@@ -238,12 +239,12 @@ def plot_torsion_timeseries(traj_obj, torsion_atom_names, filenames, titles = No
             plt.ylim([-180, 180])
         else:
             plt.ylabel("Torsion (Radians)")
-            plt.ylim([-np.pi, np.pi])
+            plt.ylim([-180, 180])
         plt.title(titles[i])
         plt.savefig(os.path.join(output_dir, filenames[i]))
         plt.close()
 
-def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, title = None, scatter_points_files = [], legend = None):
+def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, title = None, scatter_points_files = [], legend = None, scatter_params = None):
     """
     Create a ramachandran plot for a peptide system
     """
@@ -254,21 +255,21 @@ def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, titl
     phi_inds, phi_angles = md.compute_phi(traj_object)
     psi_inds, psi_angles = md.compute_psi(traj_object)
 
-    phi_angles = phi_angles.flatten()
-    psi_angles = psi_angles.flatten()
+    phi_angles = 180 / np.pi * phi_angles.flatten()
+    psi_angles = 180 / np.pi * psi_angles.flatten()
 
     # Get temperature from mdp file
     
     plt.figure(figsize=[5,5])
-    plt.hist2d(phi_angles, psi_angles, bins = np.linspace(-np.pi, np.pi, bins + 1))
-    plt.xlabel("$\Phi$ Angle (Radians)")
-    plt.ylabel("$\Psi$ Angle (Radians)")
+    plt.hist2d(phi_angles, psi_angles, bins = np.linspace(-180, 180, bins + 1))
+    plt.xlabel("$\Phi$ Angle (Degrees)")
+    plt.ylabel("$\Psi$ Angle (Degrees)")
 
     for scatter_points_file in scatter_points_files:
         frame = md.load(scatter_points_file)
         phi_i, phi_angle = md.compute_phi(frame)
         psi_i, psi_angle = md.compute_psi(frame)
-        plt.scatter(phi_angle.flatten(), psi_angle.flatten(), marker="x", c = 'r')
+        plt.scatter(180 / np.pi * phi_angle.flatten(), 180 / np.pi * psi_angle.flatten(), **scatter_params)
     if legend is None:
         plt.legend([fn.split("/")[-1].split(".")[0] for fn in scatter_points_files])
     else:

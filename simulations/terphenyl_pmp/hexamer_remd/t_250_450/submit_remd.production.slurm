@@ -19,7 +19,7 @@ SLURM_EXPORT_ENV=ALL
 source /projects/thfo9888/software/gromacs-2022.5/bin/GMXRC
 
 # Run grompp on all berendsen_nvt files
-for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system_off2_hmr.top -o npt_new; cd ..; done
+for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system_off_hmr.top -o npt_new; cd ..; done
 
 # Run all berendsen_nvt simulations in parallel
 mpirun -np 128 gmx_mpi mdrun -v -multidir sim{0..63} -deffnm npt_new -ntomp 1 -nex 262144 -replex 100

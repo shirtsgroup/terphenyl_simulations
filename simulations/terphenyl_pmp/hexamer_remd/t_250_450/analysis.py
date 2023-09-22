@@ -29,18 +29,18 @@ def main():
             "sim6/npt_new.whole.xtc",
             "sim7/npt_new.whole.xtc",
             "sim8/npt_new.whole.xtc",
-            "sim9/npt_new.whole.xtc",
         ],
         "sim0/berendsen_npt.gro",
         "resname HEX or resname CAP",
         n_min_samples=40,
         n_eps=40,
-        n_processes=32,
+        n_processes=4,
         prefix="grid_search",
-        eps_limits=[0.01, 0.3],
+        eps_limits=[0.01, 0.2],
         min_sample_limits=[0.005, 0.2],
         plot_filename = "ss.png",
-        frame_stride = 2
+        frame_stride = 5,
+        overwrite = True
     )
 
     # Read in cluster outputs and REMD trajs
@@ -83,7 +83,7 @@ def main():
             torsion_type + "_remd",
             torsion_type + " Torsion Plot",
             figsize = [5,5],
-            cbar_limits = [250, 450]
+            cbar_params = [250, 450, "Temperature(K)"]
         )
         
         for i, traj in enumerate(cluster_trajs):
