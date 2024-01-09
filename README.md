@@ -1,6 +1,8 @@
-# terphenyl_simulations
+# Terphenyl Simulations
 
-Repository for storing simulation input files and keeping track of changes to simulation inputs/parameters over time. This repo will primarily be used for running and analyzing Gromacs simulations on CU Boulder's Summit supercomputer. If additional submission scripts are needed, be sure to specify which super computer the submission script is written for (i.e. submit\_remd\_sim.bridges.slurm)
+This repository stores simulation setup and analysis for various terphenyl foldamers. Using simulations we can identify potential foldamer chemistries to help guide experimental synthesis of new foldamers. In this repository there are input files for standard MD, temperature replica exchange MD, metadynamics MD, multiple walker metadynamics MD and bias-exchange metadynamics MD simulations. We currently have simulation parameters for POP, MOP, POM, MOM and PMP terphenyl foldamers.
+
+*This repository is still in development and is subject to rapid changes*
 
 # Installation
 
@@ -20,3 +22,85 @@ $ pip install -e .
 ```
 
 This installs a develop mode version of `terphenyl_simulations`, where changes to the package are reflected in the installed version. To install this package normally, please omit the `-e` flag.
+
+All terphenyl simulations are run using GROMACS patched PLUMED for certain enhanced sampling simulations. So ensure your machine has access to a copy of [GROMACS]{https://manual.gromacs.org/current/install-guide/index.html} and [PLUMED]{https://www.plumed.org/doc-v2.8/user-doc/html/_installation.html}. Currently this repository is setup to run simulations with GROMACS 2022.5 patched with POLUMED 2.8.2.
+
+# Usage
+
+## Simulations
+
+All simulation files are in the `simulations` directory, which is organized by what chemistry is being simulated. Simulation type, foldamer length and other simulation details are specified in the directory tree (e.g. `simulations/terphenyl_mom/octamer_remd/extended/t_250_450`). 
+
+### Standard MD Simulations
+
+Standard MD simulations are specified by directories with the `md` tag, for example `simulations/terphenyl_mop/tetramer_md`. In these directories there are all the files needed to run a standard MD simulation of the system specified by the directory path. The GROMACS simulations can be started with:
+
+```
+gmx grompp -f berendsen_npt.mdp -p system.top -o berendsen_npt -s em.gro
+gmx mdrun -deffnm berendsen_npt -v
+gmx grompp -f berendsen_nvt.mdp -p system.top -o berendsen_nvt -s berendsen_nvt.gro
+gmx mdrun -deffnm berendsen_nvt -v
+gmx grompp -f npt_production.mdp -p system.top -o npt_production -s berendsen_npt.gro
+gmx mdrun -deffnm npt_production -v
+```
+
+This block of code sets up and runs a 5 ns NVT and a 5 ns NPT simulations to equilibrate the minimized structure (`em.gro`) in solution. The production simulation is set by default to run for 100 ns, however if you wish to extend this call:
+
+```
+gmx convert-tpr -s npt_production.tpr -extend 100000 -o npt_new.tpr
+gmx mdrun -deffnm npt_production -v
+```
+
+The call to `gmx convert-tpr` adds 100 ns the GROMACS topology run file, so when we call `gmx mdrun` again it will continue the simulation from the last frame of the production simulation.
+
+Depending on what system you're working on you may need to submit the simulation to a cluster queue system. Files are provided to do this, however for individual cluster submission scripts, you will likely need to change some header information and package locations so that your computer can find instances of GROMACS and PLUMED. This repository contains `submit_all.slurm` files, which submits the simulation code above to CU Boulder's Summit Cluster.
+
+This bash file can be run using:
+```
+bash submit_all.slurm
+```
+
+
+`submit_all.slurm`
+```
+#!/bin/bash
+
+# NVT Equilibration
+SLURM_OUT=$(sbatch submit.berendsen_nvt.slurm)
+JOB_ID=$(echo "$SLURM_OUT" | awk '{print $NF}')
+
+# NPT Equilibration
+SLURM_OUT=$(sbatch --dependency=afterok:$JOB_ID submit.berendsen_npt.slurm)
+JOB_ID=$(echo "$SLURM_OUT" | awk '{print $NF}')
+
+# Production Run
+SLURM_OUT=$(sbatch --dependency=afterok:$JOB_ID submit.production.slurm)
+JOB_ID=$(echo "$SLURM_OUT" | awk '{print $NF}')
+SLURM_OUT=$(sbatch --dependency=afterok:$JOB_ID submit.continue.slurm)
+JOB_ID=$(echo "$SLURM_OUT" | awk '{print $NF}')
+SLURM_OUT=$(sbatch --dependency=afterok:$JOB_ID submit.continue.slurm)
+```
+
+### Temperature Replica Exchange Simulations
+
+Temperature Replica Exchange Simulations are denoted with a `remd` in the directory path. These simulations run multiple copies of a simulation at different temperatures and periodically exchange configurations to improve sampling of the configuration space of low-temperature replicas. To setup T-REMD simulations we need to provide a few parameters to `REMD_setup`, the script responsible for setting up the replica directories. For instance here we setup an T-REMD simulation with 64 replicas with simulations ranging from 250 K to 450 K:
+
+```
+REMD_setup -N 64 --t_range 250 450 --mdps berendsen_nvt.mdp berendsen_npt.mdp npt_production.npt --extra_files system_hmr.top en_solvated.gro
+```
+
+We also specify which MDP files and other extra files are included in each simulation directory. Here we include MDP files for the two equilibration simulations and the production simulation, as well as the system topology file and an initial structure.
+
+Once the directories are setup for the T-REMD simulation running the following will submit equilibration simulations and the production simulation:
+```
+sbatch submit_all.slurm
+```
+
+### Metadynamics Simulations
+
+#### Multiple Walkers
+
+#### Bias Exchange Metadynamics
+
+## Examples
+
