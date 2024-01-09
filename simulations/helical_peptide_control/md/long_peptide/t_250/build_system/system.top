@@ -1,0 +1,49 @@
+[ defaults ]
+; nbfunc        comb-rule       gen-pairs       fudgeLJ fudgeQQ
+     1 2      yes    0.500000 0.833333
+
+[ atomtypes ]
+;type, bondingtype, atomic_number, mass, charge, ptype, sigma, epsilon
+2C          2C         6        12.01000000         0.00000000 A        3.39966950e-01     4.57729600e-01
+C           C          6        12.01000000         0.00000000 A        3.39966950e-01     3.59824000e-01
+CT          CT         6        12.01000000         0.00000000 A        3.39966950e-01     4.57729600e-01
+CX          CX         6        12.01000000         0.00000000 A        3.39966950e-01     4.57729600e-01
+H           H          1         1.00800000         0.00000000 A        1.06907850e-01     6.56888000e-02
+H1          H1         1         1.00800000         0.00000000 A        2.47135300e-01     6.56888000e-02
+HC          HC         1         1.00800000         0.00000000 A        2.64953280e-01     6.56888000e-02
+N           N          7        14.01000000         0.00000000 A        3.24999850e-01     7.11280000e-01
+O           O          8        16.00000000         0.00000000 A        2.95992190e-01     8.78640000e-01
+OW             8  16.000000  0.00000000  A       0.315061       0.636386
+HW             1   1.008000  0.00000000  A       0.000000        0.00000
+K             19      39.10  0.0000      A     0.30379646     0.81036925
+F              9      19.00  0.0000      A     0.41034794     0.01407498
+
+; Include additional topologies
+
+#include "long_peptide.itp"
+#include "amber99.ff/tip3p.itp"
+
+[ moleculetype ]
+; Name            nrexcl
+F          1
+
+[ atoms ]
+1       F               1       F               F        1     -1.00000
+
+
+[ moleculetype ]
+; Name            nrexcl
+K          1
+
+[ atoms ]
+1       K               1       K               K        1      1.00000
+
+[ system ]
+Solvated (AAQAA)3 peptide
+
+[ molecules ]
+; Compound        nmols
+peptide              1
+F                    8
+K                    8
+SOL               2133
