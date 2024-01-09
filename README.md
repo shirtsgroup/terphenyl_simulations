@@ -1,6 +1,5 @@
 # Terphenyl Simulations
 
-[//]: # (Badges)
 [![Python package](https://github.com/shirtsgroup/terphenyl_simulations/actions/workflows/python-package.yml/badge.svg)](https://github.com/shirtsgroup/terphenyl_simulations/actions/workflows/python-package.yml)
 
 This repository stores simulation setup and analysis for various terphenyl foldamers. Using simulations we can identify potential foldamer chemistries to help guide experimental synthesis of new foldamers. In this repository there are input files for standard MD, temperature replica exchange MD, metadynamics MD, multiple walker metadynamics MD and bias-exchange metadynamics MD simulations. We currently have simulation parameters for POP, MOP, POM, MOM and PMP terphenyl foldamers.
