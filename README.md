@@ -1,5 +1,8 @@
 # Terphenyl Simulations
 
+[//]: # (Badges)
+[![Python package](https://github.com/shirtsgroup/terphenyl_simulations/actions/workflows/python-package.yml/badge.svg)](https://github.com/shirtsgroup/terphenyl_simulations/actions/workflows/python-package.yml)
+
 This repository stores simulation setup and analysis for various terphenyl foldamers. Using simulations we can identify potential foldamer chemistries to help guide experimental synthesis of new foldamers. In this repository there are input files for standard MD, temperature replica exchange MD, metadynamics MD, multiple walker metadynamics MD and bias-exchange metadynamics MD simulations. We currently have simulation parameters for POP, MOP, POM, MOM and PMP terphenyl foldamers.
 
 *This repository is still in development and is subject to rapid changes*
@@ -60,27 +63,6 @@ This bash file can be run using:
 bash submit_all.slurm
 ```
 
-
-`submit_all.slurm`
-```
-#!/bin/bash
-
-# NVT Equilibration
-SLURM_OUT=$(sbatch submit.berendsen_nvt.slurm)
-JOB_ID=$(echo "$SLURM_OUT" | awk '{print $NF}')
-
-# NPT Equilibration
-SLURM_OUT=$(sbatch --dependency=afterok:$JOB_ID submit.berendsen_npt.slurm)
-JOB_ID=$(echo "$SLURM_OUT" | awk '{print $NF}')
-
-# Production Run
-SLURM_OUT=$(sbatch --dependency=afterok:$JOB_ID submit.production.slurm)
-JOB_ID=$(echo "$SLURM_OUT" | awk '{print $NF}')
-SLURM_OUT=$(sbatch --dependency=afterok:$JOB_ID submit.continue.slurm)
-JOB_ID=$(echo "$SLURM_OUT" | awk '{print $NF}')
-SLURM_OUT=$(sbatch --dependency=afterok:$JOB_ID submit.continue.slurm)
-```
-
 ### Temperature Replica Exchange Simulations
 
 Temperature Replica Exchange Simulations are denoted with a `remd` in the directory path. These simulations run multiple copies of a simulation at different temperatures and periodically exchange configurations to improve sampling of the configuration space of low-temperature replicas. To setup T-REMD simulations we need to provide a few parameters to `REMD_setup`, the script responsible for setting up the replica directories. For instance here we setup an T-REMD simulation with 64 replicas with simulations ranging from 250 K to 450 K:
@@ -97,6 +79,8 @@ sbatch submit_all.slurm
 ```
 
 ### Metadynamics Simulations
+
+
 
 #### Multiple Walkers
 
