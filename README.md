@@ -111,9 +111,78 @@ This command will generate a plain text file, `HBOND_SUMS`, which we can use to 
   <img src="https://github.com/shirtsgroup/terphenyl_simulations/blob/update_readme/figures/mop_tetramer_unbiased_timeseries.png" alt="MOP-Tetramer Native Contact Timeseries"/>
 </p>
 
+Using the "Sum of H-Bonds" timeseries we can estimate good starting parameters for the biased simulations of this system.
+
+### Biased Simulations
+
+Once we have a good initial parameters for the biased simulations we can start running biased metadynamics simulations. Here we take the standard deviation of the unbiased CV and use that as a starting value for the metadynamics hyperparmaeter `SIGMA`. `SIGMA` controls the width of the gaussian biases placed along the CV we are biasing and ultimately determines the resolution of the free energy surface we construct along the CV of interest. Other metadynamics hyperparameters that we need to determine for these simulations are `HEIGHT`, the initial height of the gaussian biasing potentials, `PACE`, the frequency in which biasing potentials are placed, and `BIASFACTOR`, a parameter that controls how quickly biasing potentials decay over time.
+
+An example metadynamics simulation can be found in `terphenyl_simulations/simulations/terphenyl_mop/tetramer_metad/h_bonds/biased/helix`. These metadynamics simulation directories are setup with [Signac](https://github.com/glotzerlab/signac) to perform scans in hyperparameter space to find optimal metadynamics simulations. For more information about using the Signac command line API check out their [documentation](https://docs.signac.io/projects/core/en/latest/cli.html).
+
+To initialize the metadynamics directory, we can simply run:
+```
+$ signac init # This should be run if a signac project has not been initialized yet
+$ python signac_init.py
+```
+
+We can change hyperparameter space explored from these simulations by editing the parameters at the top of the `main` functionn in `signac_init.py`. Currently this directory is setup to run metadynamics simulations with `HEIGHT` values from 2.5 to 3 kJ, `SIGMA` values from 0.1 to 3, and `BIASFACTOR` values from 50 to 200. Signac will create every combination parameters provided in the `signac_init.py` script. Here we have 3 `HEIGHT` values, 3 `SIGMA` values and 4 `BIASFACTOR`, resulting in 36 metadynamics simulations.
+
+Other changes to the simulation directories, such as changes to topology files, SLURM headers and submission scripts, can be made in the `simulation_template` directory before running `signac_init.py` script.
+
+Once the simulations directories are initialized we can check the status of simulations with:
+
+```
+$ python signac_project.py status
+Using environment configuration: DefaultSlurmEnvironment
+Querying scheduler...
+Fetching status: 0it [00:00, ?it/s]
+Fetching labels: 0it [00:00, ?it/s]
+
+Overview: 0 jobs/aggregates, 0 jobs/aggregates with eligible operations.
+
+label
+-------
 
 
-#### Multiple Walkers
+operation/group
+-----------------
+
+
+[U]:unknown [R]:registered [I]:inactive [S]:submitted [H]:held [Q]:queued [A]:active [E]:error [GR]:group_registered [GI]:group_inactive [GS]:group_submitted [GH]:group_held [GQ]:group_queued [GA]:group_active [GE]:group_error
+
+
+WARNING: The status compilation took more than 0.2s per job. Consider using `--profile` to determine bottlenecks within the project workflow definition.
+Execute `signac config set flow.status_performance_warn_threshold VALUE` to specify the warning threshold in seconds.
+To speed up the compilation, try executing `signac config set flow.status_parallelization 'process'` to set the status_parallelization config value to process.Use -1 to completely suppress this warning.
+
+(hs_analysis) [thfo9888@c3cpu-c9-u3-4 helix]$ python signac_init.py 
+(hs_analysis) [thfo9888@c3cpu-c9-u3-4 helix]$ python signac_project.py status
+Using environment configuration: DefaultSlurmEnvironment
+Querying scheduler...
+Fetching status: 100%|█████████████████████████████████████████████| 252/252 [00:00<00:00, 22163.23it/s]
+Fetching labels: 100%|████████████████████████████████████████████████| 36/36 [00:00<00:00, 4490.82it/s]
+
+Overview: 36 jobs/aggregates, 36 jobs/aggregates with eligible operations.
+
+label
+-------
+
+
+operation/group                     number of eligible jobs  submission status
+--------------------------------  -------------------------  -------------------
+submit_all_simulations                                   36  [U]: 36
+submit_berendsen_nvt_simulations                         36  [U]: 36
+
+[U]:unknown [R]:registered [I]:inactive [S]:submitted [H]:held [Q]:queued [A]:active [E]:error [GR]:group_registered [GI]:group_inactive [GS]:group_submitted [GH]:group_held [GQ]:group_queued [GA]:group_active [GE]:group_error
+```
+
+This returns a list of possible operations that we can run on the 36 simulations directories. We see that 36 simulations eligible for the `submit_all_simulations` and `submit_berendsen_nvt_simulations` operations. These operations submit the individual simulations using the Signac framework. WThe `submit_all_simulations` operation,  will submit unbiased equilibration simulations and production metadynamics simulations to the SLURM scheduler. We can run this operation for all simulation directories using:
+
+```
+$ python signac_project.py run -o submit_all_simulations
+```
+
+This will submit 96 simulations to the SLURM scheduler, which can be verified by running `squeue --me`.
 
 #### Bias Exchange Metadynamics
 
