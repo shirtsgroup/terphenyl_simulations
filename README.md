@@ -83,7 +83,7 @@ Metadynamics simulations are used to improve sampling along specified collective
 
 First, in metadynamics simulations, CV selection is an difficult and nuanced step required to have a successful metadynamics simulation. In this repository, we bias the formation of native contacts determined from unbiased T-REMD simulations. In the figure below the native contacts of this helical configruation
 
-![MOP-terphenyl Octamer Native Contacts](insert-link-here)
+![MOP-terphenyl Octamer Native Contacts](https://github.com/shirtsgroup/terphenyl_simulations/blob/update_readme/figures/mop_octamer_nc.png)
 
 
 
