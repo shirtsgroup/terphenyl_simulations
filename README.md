@@ -105,7 +105,12 @@ After the unbiased simulation has finished running we can analyze the CVs of int
 $ plumed driver --plumed plumed_hbonds.dat --pdb build_system/solvated_tetramer.pdb --mf_xtc npt_new.xtc
 ```
 
-This command will generate a plain text file, `HBOND_SUMS`, which has information 
+This command will generate a plain text file, `HBOND_SUMS`, which we can use to take unbiased statistics of the CV of interest. `plumed_analysis.ipynb` is used plot the timeseries shown below:
+
+<p align="center">
+  <img src="https://github.com/shirtsgroup/terphenyl_simulations/blob/update_readme/figures/mop_tetramer_unbiased_timeseries.png" alt="MOP-Tetramer Native Contact Timeseries"/>
+</p>
+
 
 
 #### Multiple Walkers
