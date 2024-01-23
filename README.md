@@ -79,6 +79,13 @@ sbatch submit_all.slurm
 
 ### Metadynamics Simulations
 
+Metadynamics simulations are used to improve sampling along specified collective variables (CVs) in longer foldamer systems. In these simulations gaussian biasing potentials are added to a specified CV to push the simulation to sample different values of the CV over the course of the simulation. Before running a metadynamics simulation, there a few important considerations that we must make before running our simulation. 
+
+First, in metadynamics simulations, CV selection is an difficult and nuanced step required to have a successful metadynamics simulation. In this repository, we bias the formation of native contacts determined from unbiased T-REMD simulations. In the figure below the native contacts of this helical configruation
+
+![MOP-terphenyl Octamer Native Contacts](insert-link-here)
+
+
 
 
 #### Multiple Walkers
