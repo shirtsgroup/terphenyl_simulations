@@ -10,6 +10,7 @@ import re
 import shutil as sh
 import sys
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) # This is your Project Root
 
 class TopFileObject:
     def __init__(self, filename):

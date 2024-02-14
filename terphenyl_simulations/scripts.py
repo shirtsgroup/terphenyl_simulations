@@ -370,7 +370,7 @@ def REMD_setup():
                              type = str,
                              help="base name of dirs containing simulation",
                             )
-    args_parser.add_argument("--extra_files",
+    args_parser.add_argument("--topology_files",
                              type = str,
                              nargs = "+",
                              help="Additional files requied for REMD simulations"
@@ -412,7 +412,7 @@ def REMD_setup():
                             w.write(line.replace("TEMP", str(t_i)))
                         else:
                             w.write(line)
-        for extra in args.extra_files:
+        for extra in args.topology_files:
             shutil.copy(extra, os.path.join(sim_path, extra))
 def METAD_analysis():
     """

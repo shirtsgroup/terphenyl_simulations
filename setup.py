@@ -7,7 +7,7 @@ A package for running terphenyl oligomery systems
 import sys
 import os
 import fastentrypoints
-from importlib_metadata import entry_points
+from importlib.metadata import entry_points
 from setuptools import setup, find_packages
 import versioneer
 short_description = __doc__.split("\n")
