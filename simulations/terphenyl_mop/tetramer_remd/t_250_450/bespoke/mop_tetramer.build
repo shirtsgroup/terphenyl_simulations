@@ -1,0 +1,7 @@
+structure_file : mop_tetramer
+foldamer_smile : C(=O)c1ccc(c2c(cc(OC)cc2)(c3cccc(c3)[C@@H](N)C))cc1
+upper_connect : 25
+lower_connect : 40
+residue_name : MOP
+cap_smiles : {upper : CO, lower : CC(C)(C)OC=O}
+foldamer_length : 4

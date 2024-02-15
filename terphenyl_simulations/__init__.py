@@ -10,6 +10,7 @@ import terphenyl_simulations.scripts
 import terphenyl_simulations.clustering
 import terphenyl_simulations.plotting
 import terphenyl_simulations.edit_conf
+import terphenyl_simulations.build
 import terphenyl_simulations.analysis_workflows.utils
 
 # Handle versioneer

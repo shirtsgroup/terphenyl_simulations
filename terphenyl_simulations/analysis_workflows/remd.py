@@ -2,6 +2,7 @@ import shutil
 import os
 import subprocess
 import yaml
+import glob
 import signac
 from flow import FlowProject
 import terphenyl_simulations
@@ -27,21 +28,25 @@ def signac_init():
         job = project.open_job(sp)
         if "init" in job.doc.keys():
             continue
-        job['init'] = True
+        job.doc['init'] = True
 
         # Setup job directory with template files
-        shutil.copytree(os.path.join(terphenyl_simulations.utils.ROOT_DIR, 'simulation_templates', 'remd'), job.path)
-        foldamer_builder = terphenyl_simulations.build.FoldamerBuilder('mop_tetramer.build')
-        foldamer_builder.build_foldamer(path = job.fn(""))
+        remd_files = glob.glob(os.path.join(terphenyl_simulations.utils.ROOT_DIR, 'simulation_templates', 'remd/*'))
 
-if __name__ == '__main__':
-    if not os.path.isdir("workspace"):
-        subprocess.run("signac init".split(" "))
-        terphenyl_simulations.analysis_workflows.remd.signac_init()
+        for sim_file in remd_files:
+            shutil.copy(sim_file, job.path)
+        shutil.copy(simulation_parameters['build_foldamer'], job.fn(simulation_parameters['build_foldamer']))
+        shutil.copy('remd_parameters.yml', job.fn('remd_parameters.yml'))
+        
+
+@FlowProject.operation
+def build_foldamer(job):
+    foldamer_builder = terphenyl_simulations.build.FoldamerBuilder(job.sp['build_foldamer'])
+    foldamer_builder.build_foldamer(path = job.fn(""))
 
 if __name__ == "__main__":
     if not os.path.isdir("workspace"):
         subprocess.run("signac init".split(" "))
-    signac_init()
+        signac_init()
     FlowProject().main()
         
