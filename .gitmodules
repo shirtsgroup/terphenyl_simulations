@@ -1,3 +1,6 @@
 [submodule "packmol"]
-	path = packmol
+	path = submodules/packmol
+	url = https://github.com/m3g/packmol
+[submodule "submodules/packmol"]
+	path = submodules/packmol
 	url = https://github.com/m3g/packmol
