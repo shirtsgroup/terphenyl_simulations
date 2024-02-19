@@ -44,9 +44,12 @@ def build_foldamer(job):
     foldamer_builder = terphenyl_simulations.build.FoldamerBuilder(job.sp['build_foldamer'])
     foldamer_builder.build_foldamer(path = job.fn(""))
 
-if __name__ == "__main__":
+def main():
     if not os.path.isdir("workspace"):
         subprocess.run("signac init".split(" "))
         signac_init()
     FlowProject().main()
+
+if __name__ == "__main__":
+    main()
         

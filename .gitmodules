@@ -1,0 +1,3 @@
+[submodule "packmol"]
+	path = packmol
+	url = https://github.com/m3g/packmol
