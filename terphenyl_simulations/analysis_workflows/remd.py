@@ -39,10 +39,19 @@ def signac_init():
         shutil.copy('remd_parameters.yml', job.fn('remd_parameters.yml'))
         
 
+# @FlowProject.post.isfile()
 @FlowProject.operation
 def build_foldamer(job):
     foldamer_builder = terphenyl_simulations.build.FoldamerBuilder(job.sp['build_foldamer'])
     foldamer_builder.build_foldamer(path = job.fn(""))
+
+@FlowProject
+def parameterize_foldamer(job):
+    pass
+
+@FlowProject.operation
+def build_system(job):
+    pass
 
 def main():
     if not os.path.isdir("workspace"):

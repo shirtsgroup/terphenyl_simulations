@@ -2,9 +2,19 @@ import yaml
 import os
 import mbuild as mb
 from mbuild.lib.recipes.polymer import Polymer
+from .utils import ROOT_DIR
 
+PACKMOL = os.path.join(ROOT_DIR, 'submodules/packmol')
 
 class FoldamerBuilder:
+    """
+    The FoldamerBuilder object is used to build foldamers with MBuild based on
+    instructions provided in a foldamer build YML file. These YML input files
+    provide the monomer unit SMILE string, connection atoms, and capping residues.
+    It may take some hand-tuning of the Polymer object's parameters to get the
+    foldamer be chemically correct. These parameters can be modified in the input 
+    build.yml file.
+    """
     def __init__(self, build_file_yml):
         with open(build_file_yml, 'r') as f:
             self.build_params = yaml.safe_load(f)
