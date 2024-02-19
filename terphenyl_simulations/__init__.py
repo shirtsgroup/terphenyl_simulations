@@ -1,6 +1,6 @@
 """
 Heteropolymer Simulations
-A package for running terphenyl oligomery systems
+A package for running terphenyl oligomer simulations
 """
 
 import terphenyl_simulations.utils

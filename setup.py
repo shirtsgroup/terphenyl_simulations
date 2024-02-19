@@ -9,6 +9,9 @@ import os
 import fastentrypoints
 from importlib.metadata import entry_points
 from setuptools import setup, find_packages
+from setuptools.command.develop import develop
+from setuptools.command.install import install
+from subprocess import check_call
 import versioneer
 short_description = __doc__.split("\n")
 
@@ -23,8 +26,26 @@ try:
 except:
     long_description = "\n".join(short_description[2:]),
 
+class PostDevelopCommand(develop):
+    """Post-installation for development mode."""
+    def run(self):
+        develop.run(self)
+        start_dir = os.path.abspath('')
+        os.chdir('submodules/packmol')
+        check_call('./configure'.split())
+        check_call('make'.split())
+        os.chdir(start_dir)
+        # PUT YOUR POST-INSTALL SCRIPT HERE or CALL A FUNCTION
 
-
+class PostInstallCommand(install):
+    """Post-installation for installation mode."""
+    def run(self):
+        install.run(self)
+        start_dir = os.path.abspath('')
+        os.chdir('submodules/packmol')
+        check_call('./configure'.split())
+        check_call('make'.split())
+        os.chdir(start_dir)
 
 setup(
     # Self-descriptive entries which should always be present
@@ -35,7 +56,10 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
+    cmdclass={
+        'develop': PostDevelopCommand,
+        'install': PostInstallCommand,
+        },
     license='MIT',
 
     # Which Python importable modules should be included when your package is installed
