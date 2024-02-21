@@ -7,6 +7,8 @@ import signac
 from flow import FlowProject
 import terphenyl_simulations
 
+# Initialize Signac Project
+
 def signac_init():
     # Open parameter file and create a list of statepoints to define
     simulation_statepoints = []
@@ -31,31 +33,37 @@ def signac_init():
         job.doc['init'] = True
 
         # Setup job directory with template files
-        remd_files = glob.glob(os.path.join(terphenyl_simulations.utils.ROOT_DIR, 'simulation_templates', 'remd/*'))
+        remd_files = glob.glob(os.path.join(terphenyl_simulations.utils.ROOT_DIR, 'data/simulation_templates', 'remd/*'))
 
         for sim_file in remd_files:
             shutil.copy(sim_file, job.path)
         shutil.copy(simulation_parameters['build_foldamer'], job.fn(simulation_parameters['build_foldamer']))
         shutil.copy('remd_parameters.yml', job.fn('remd_parameters.yml'))
-        
 
-# @FlowProject.post.isfile()
+        with open(job.fn(simulation_parameters['build_foldamer']), 'r') as f:
+            job.doc['build_parameters'] = yaml.safe_load(f)
+
+# FlowProject Operations
+
+@FlowProject.post(lambda job: os.path.exists(job.fn(job.doc['build_parameters']['structure_file'] + '.pdb')))
 @FlowProject.operation
 def build_foldamer(job):
     foldamer_builder = terphenyl_simulations.build.FoldamerBuilder(job.sp['build_foldamer'])
     foldamer_builder.build_foldamer(path = job.fn(""))
 
-@FlowProject
+@FlowProject.operation
 def parameterize_foldamer(job):
     pass
 
 @FlowProject.operation
 def build_system(job):
-    pass
+    packmol_builder = terphenyl_simulations.build.SystemBuilder(job.sp['build_foldamer'], path = job.fn(''))
+    packmol_builder.build_packmol_inp()
+    packmol_builder.build_system()
 
 def main():
-    if not os.path.isdir("workspace"):
-        subprocess.run("signac init".split(" "))
+    if not os.path.isdir('workspace'):
+        subprocess.run('signac init'.split(' '))
         signac_init()
     FlowProject().main()
 
