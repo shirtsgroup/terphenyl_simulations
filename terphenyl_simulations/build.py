@@ -8,7 +8,7 @@ import warnings
 from mbuild.lib.recipes.polymer import Polymer
 from .utils import ROOT_DIR, replace_all_pattern
 
-PACKMOL = os.path.abspath(os.path.join(ROOT_DIR, '../submodules/packmol/packmol'))
+PACKMOL = shutil.which('packmol')
 
 class FoldamerBuilder:
     """
