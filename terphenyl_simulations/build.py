@@ -85,6 +85,29 @@ class SystemBuilder:
             self.output_file
         )
 
+        # Get solvent PDB location
+
+        # Check top signac directory
+        solvent_pdb = self.build_params['system']['solvent'] + '.pdb'
+        print(os.listdir(os.path.join(ROOT_DIR, 'data/solvents/')))
+
+        # Check stored solvent pdbs
+        if not os.path.exists(solvent_pdb) and solvent_pdb in os.listdir(os.path.join(ROOT_DIR, 'data/solvents/')):
+            print('Using ' + solvent_pdb + ' from the internal library of solvents. If this ' + \
+                  'is not the behavior you intend, please include the solvent pdb you wish ' + \
+                  'to solvate the system with in your working directory.')
+            solvent_pdb = os.path.join(ROOT_DIR, 'data/solvents/', self.build_params['system']['solvent'] + '.pdb')
+        
+        # Copy to path directory
+            shutil.copy(
+                solvent_pdb,
+                os.path.join(self.path, solvent_pdb.split('/')[-1])
+            )
+        else:
+            warnings.warn('Warning! Unable to find ' + solvent_pdb + ' in the working directory \
+                          or the internal library.')
+        
+
         # Make replacements to the template inp file
         replace_all_pattern('OUTPUT_FILENAME', os.path.join(self.path, 'solvated_' + self.build_params['structure_file'] + '.pdb'), self.output_file)
         replace_all_pattern('SOLUTE_PDB', os.path.join(self.path, self.build_params['structure_file'] + '.pdb'), self.output_file)
@@ -100,18 +123,6 @@ class SystemBuilder:
         ]
         solute_position_str = [str(round(n, 1)) for n in solute_position]
         replace_all_pattern('SOLUTE_POSITION', ' '.join(solute_position_str), self.output_file)
-        
-        # Get solvent PDB location
-        solvent_pdb = self.build_params['system']['solvent'] + '.pdb'
-        print(os.listdir(os.path.join(ROOT_DIR, 'data/solvents/')))
-        if not os.path.exists(solvent_pdb) and solvent_pdb in os.listdir(os.path.join(ROOT_DIR, 'data/solvents/')):
-            print('Using ' + solvent_pdb + ' from the internal library of solvents. If this ' + \
-                  'is not the behavior you intend, please include the solvent pdb you wish ' + \
-                  'to solvate the system with in your working directory.')
-            solvent_pdb = os.path.join(ROOT_DIR, 'data/solvents/', self.build_params['system']['solvent'] + '.pdb')
-        else:
-            warnings.warn('Warning! Unable to find ' + solvent_pdb + ' in the working directory \
-                          or the internal library.')
         replace_all_pattern('SOLVENT_PDB', solvent_pdb, self.output_file)
         replace_all_pattern('N_SOLVENT', str(self.build_params['system']['n_solvent']), self.output_file)
         
@@ -133,6 +144,7 @@ class SystemBuilder:
         with open('temp', 'w') as f:
             f.write(cmdline_entry)
 
+        print(cmdline_entry)
         process = Popen(['bash temp'], shell = True, stdin=PIPE)
         process.wait()
         os.remove('temp')

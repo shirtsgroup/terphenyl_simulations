@@ -244,7 +244,7 @@ def torsion_clustering_grid_search(
         min_samples_values,
         [round(eps, 2) for eps in eps_values],
         "Min. Samples",
-        "$\epsilon_{DBSCAN}$",
+        "$\\epsilon_{DBSCAN}$",
         prefix  + "_" + plot_filename,
         "Avg. Silhouette Score"
     )
@@ -368,7 +368,7 @@ def clustering_grid_search(
         min_samples_values,
         [round(eps, 2) for eps in eps_values],
         "Min. Samples",
-        "$\epsilon_{DBSCAN}$",
+        "$\\epsilon_{DBSCAN}$",
         prefix  + "_" + plot_filename,
         "Avg. Silhouette Score"
     )

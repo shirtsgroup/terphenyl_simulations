@@ -262,8 +262,8 @@ def plot_ramachandran_plot(traj_file, top_file, prefix = "remd", bins = 50, titl
     
     plt.figure(figsize=[5,5])
     plt.hist2d(phi_angles, psi_angles, bins = np.linspace(-180, 180, bins + 1))
-    plt.xlabel("$\Phi$ Angle (Degrees)")
-    plt.ylabel("$\Psi$ Angle (Degrees)")
+    plt.xlabel("$\\Phi$ Angle (Degrees)")
+    plt.ylabel("$\\Psi$ Angle (Degrees)")
 
     for scatter_points_file in scatter_points_files:
         frame = md.load(scatter_points_file)

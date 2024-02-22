@@ -51,15 +51,26 @@ def build_foldamer(job):
     foldamer_builder = terphenyl_simulations.build.FoldamerBuilder(job.sp['build_foldamer'])
     foldamer_builder.build_foldamer(path = job.fn(""))
 
+@FlowProject.pre.after(build_foldamer)
 @FlowProject.operation
 def parameterize_foldamer(job):
     pass
 
+@FlowProject.post((lambda job: os.path.exists(job.fn('solvated_' + job.doc['build_parameters']['structure_file'] + '.pdb'))))
 @FlowProject.operation
 def build_system(job):
-    packmol_builder = terphenyl_simulations.build.SystemBuilder(job.sp['build_foldamer'], path = job.fn(''))
+    top_dir = os.path.abspath('.')
+    os.chdir(job.fn(''))
+    packmol_builder = terphenyl_simulations.build.SystemBuilder(job.sp['build_foldamer'])
     packmol_builder.build_packmol_inp()
     packmol_builder.build_system()
+    os.chdir(top_dir)
+
+@FlowProject.pre.after(build_system)
+@FlowProject.operation
+def parameterize_system(job):
+    pass
+
 
 def main():
     if not os.path.isdir('workspace'):
