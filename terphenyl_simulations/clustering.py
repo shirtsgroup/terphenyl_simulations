@@ -26,7 +26,10 @@ def construct_rmsd_matrix(traj):
 def DBSCAN_torsion_clustering(torsion_traj, eps, min_samples, parallel=True):
     pass
 
-def DBSCAN_clustering(rmsd_matrix, eps, min_samples, parallel=True, metric = "precomputed"):
+
+def DBSCAN_clustering(
+    rmsd_matrix, eps, min_samples, parallel=True, metric="precomputed"
+):
 
     # Create DBSCAN object
     # print("Running DBSCAN clustering...")
@@ -41,14 +44,15 @@ def DBSCAN_clustering(rmsd_matrix, eps, min_samples, parallel=True, metric = "pr
     # print("Identified", len(cluster_ids), "cluster(s)!")
     return dbscan, labels
 
+
 def write_medoids_to_file(
     labels,
     sil_scores,
     traj_object,
-    output_dir = "clustering_output",
-    prefix = None,
+    output_dir="clustering_output",
+    prefix=None,
     output_format="gro",
-    backoff = False
+    backoff=False,
 ):
     if os.path.isdir(output_dir):
         if backoff:
@@ -72,7 +76,7 @@ def write_medoids_to_file(
             output_dir, prefix + "medoid_" + str(label) + "." + output_format
         )
         medoid.save(medoid_filename)
-    
+
 
 def write_clusters_to_file(
     labels,
@@ -80,7 +84,7 @@ def write_clusters_to_file(
     output_dir="clustering_output",
     prefix=None,
     output_format="gro",
-    backoff = True
+    backoff=True,
 ):
 
     # Write to output directory
@@ -122,13 +126,14 @@ def silhouette_score_metric(rmsd_matrix, dbscan_list_of_lists):
                 result[i, j] = np.nan
     return result
 
+
 def n_clusters_metric(rmsd_matrix, dbscan_list_of_lists):
     result = np.zeros((len(dbscan_list_of_lists), len(dbscan_list_of_lists[0])))
     print("Getting N Clusters...")
     for i in tqdm(range(len(dbscan_list_of_lists))):
         for j in range(len(dbscan_list_of_lists[i])):
             labels = dbscan_list_of_lists[i][j]
-            result[i,j] = len(np.unique(labels))
+            result[i, j] = len(np.unique(labels))
     return result
 
 
@@ -139,11 +144,11 @@ def combination_metric(rmsd_matrix, dbscan_list_of_lists):
     for i in tqdm(range(len(dbscan_list_of_lists))):
         for j in range(len(dbscan_list_of_lists[i])):
             labels = dbscan_list_of_lists[i][j]
-            n_clusters[i,j] = len(np.unique(labels))
+            n_clusters[i, j] = len(np.unique(labels))
             if len(np.unique(labels)) > 2:
-                ss[i,j] = metrics.silhouette_score(rmsd_matrix, labels)
+                ss[i, j] = metrics.silhouette_score(rmsd_matrix, labels)
             else:
-                ss[i,j] = np.nan
+                ss[i, j] = np.nan
 
     m1 = (ss - np.nanmin(ss)) / (np.nanmax(ss) - np.nanmin(ss))
     m2 = (-n_clusters - np.min(-n_clusters)) / (
@@ -154,12 +159,14 @@ def combination_metric(rmsd_matrix, dbscan_list_of_lists):
 
     return result
 
-def plot_RMSD_histogram(rmsd_matrix, prefix = "remd"):
+
+def plot_RMSD_histogram(rmsd_matrix, prefix="remd"):
     rmsd_values = rmsd_matrix.reshape(-1)
-    plt.hist(rmsd_values[rmsd_values > 0.00001], bins = 100, density = True)
+    plt.hist(rmsd_values[rmsd_values > 0.00001], bins=100, density=True)
     plt.xlabel("RMSD (nm)")
     plt.ylabel("Density")
     plt.savefig(prefix + "_rmsd_hist.png")
+
 
 def torsion_clustering_grid_search(
     file_list,
@@ -173,24 +180,27 @@ def torsion_clustering_grid_search(
     frame_start=0,
     frame_end=-1,
     frame_stride=1,
-    plot_filename = "torsion_ss.png",
-    output_dir = "clustering_output",
-    overwrite = True,
-    write_selection = None
+    plot_filename="torsion_ss.png",
+    output_dir="clustering_output",
+    overwrite=True,
+    write_selection=None,
 ):
     if overwrite == False:
         if os.path.isdir(output_dir):
-            print("The output directory", output_dir, "already exists. " + 
-                  "Skipping clustering. If you want to overwrite the existsing " +
-                  "clustering ouput, set `overwrite = True`."
+            print(
+                "The output directory",
+                output_dir,
+                "already exists. "
+                + "Skipping clustering. If you want to overwrite the existsing "
+                + "clustering ouput, set `overwrite = True`.",
             )
             return
-    
+
     # Load trajectory
     if type(file_list) == list:
         traj = md.load(file_list[0], top=top_file)
         for i in range(1, len(file_list)):
-            tmp_traj = md.load(file_list[i], top = top_file)
+            tmp_traj = md.load(file_list[i], top=top_file)
             tmp_traj = tmp_traj[frame_start:frame_end:frame_stride]
             traj = traj.join(tmp_traj)
 
@@ -211,7 +221,7 @@ def torsion_clustering_grid_search(
     psi_yc = np.sin(psi_angles)
 
     # concatenate torsion components
-    clustering_matrix = np.concatenate((phi_xc, phi_yc, psi_xc, psi_yc), axis = 1)
+    clustering_matrix = np.concatenate((phi_xc, phi_yc, psi_xc, psi_yc), axis=1)
 
     # Setup DBSCAN clustering hyperparameters
     total_frames = traj.n_frames
@@ -231,7 +241,7 @@ def torsion_clustering_grid_search(
     for i, eps in enumerate(tqdm(eps_values)):
         for j, ms in enumerate(min_samples_values):
             dbscan, labels = DBSCAN_clustering(
-                clustering_matrix, eps, ms, parallel=n_processes, metric = "euclidean"
+                clustering_matrix, eps, ms, parallel=n_processes, metric="euclidean"
             )
             n_clusters[i, j] = len(np.unique(labels))
             if len(np.unique(labels)) > 1:
@@ -245,8 +255,8 @@ def torsion_clustering_grid_search(
         [round(eps, 2) for eps in eps_values],
         "Min. Samples",
         "$\\epsilon_{DBSCAN}$",
-        prefix  + "_" + plot_filename,
-        "Avg. Silhouette Score"
+        prefix + "_" + plot_filename,
+        "Avg. Silhouette Score",
     )
 
     # Get max value of first metric
@@ -272,13 +282,13 @@ def torsion_clustering_grid_search(
         clustering_matrix,
         eps_values[max_indices[0][0]],
         min_samples_values[max_indices[0][1]],
-        metric = "euclidean"
+        metric="euclidean",
     )
 
     # Identify cluster medoids
     sil_scores = metrics.silhouette_samples(clustering_matrix, labels)
-    write_clusters_to_file(labels, write_traj_object, output_dir = output_dir)
-    write_medoids_to_file(labels, sil_scores, write_traj_object, output_dir = output_dir)
+    write_clusters_to_file(labels, write_traj_object, output_dir=output_dir)
+    write_medoids_to_file(labels, sil_scores, write_traj_object, output_dir=output_dir)
 
 
 def clustering_grid_search(
@@ -294,29 +304,31 @@ def clustering_grid_search(
     frame_start=0,
     frame_end=-1,
     frame_stride=1,
-    plot_filename = "ss.png",
-    output_dir = "clustering_output",
-    overwrite = True,
-    write_selection = None
+    plot_filename="ss.png",
+    output_dir="clustering_output",
+    overwrite=True,
+    write_selection=None,
 ):
 
     if overwrite == False:
         if os.path.isdir(output_dir):
-            print("The output directory", output_dir, "already exists. " + 
-                  "Skipping clustering. If you want to overwrite the existsing " +
-                  "clustering ouput, set `overwrite = True`."
+            print(
+                "The output directory",
+                output_dir,
+                "already exists. "
+                + "Skipping clustering. If you want to overwrite the existsing "
+                + "clustering ouput, set `overwrite = True`.",
             )
             return
 
     if write_selection is None:
         write_selection = cluster_selection
 
-
     # Load trajectory
     if type(file_list) == list:
         traj = md.load(file_list[0], top=top_file)
         for i in range(1, len(file_list)):
-            tmp_traj = md.load(file_list[i], top = top_file)
+            tmp_traj = md.load(file_list[i], top=top_file)
             tmp_traj = tmp_traj[frame_start:frame_end:frame_stride]
             traj = traj.join(tmp_traj)
 
@@ -362,15 +374,14 @@ def clustering_grid_search(
             else:
                 ss[i, j] = np.nan
 
-
     plot_grid_search(
         ss,
         min_samples_values,
         [round(eps, 2) for eps in eps_values],
         "Min. Samples",
         "$\\epsilon_{DBSCAN}$",
-        prefix  + "_" + plot_filename,
-        "Avg. Silhouette Score"
+        prefix + "_" + plot_filename,
+        "Avg. Silhouette Score",
     )
 
     # Get max value of first metric
@@ -400,8 +411,8 @@ def clustering_grid_search(
 
     # Identify cluster medoids
     sil_scores = metrics.silhouette_samples(rmsd_matrix, labels)
-    write_clusters_to_file(labels, write_traj_object, output_dir = output_dir)
-    write_medoids_to_file(labels, sil_scores, write_traj_object, output_dir = output_dir)
+    write_clusters_to_file(labels, write_traj_object, output_dir=output_dir)
+    write_medoids_to_file(labels, sil_scores, write_traj_object, output_dir=output_dir)
 
 
 def main():
