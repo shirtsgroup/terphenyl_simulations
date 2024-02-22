@@ -12,6 +12,8 @@ import terphenyl_simulations.plotting
 import terphenyl_simulations.edit_conf
 import terphenyl_simulations.build
 import terphenyl_simulations.analysis_workflows.utils
+import terphenyl_simulations.force_fields
+import terphenyl_simulations.gromacs_wrapper
 
 # Handle versioneer
 from ._version import get_versions
