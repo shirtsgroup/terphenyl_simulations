@@ -37,7 +37,6 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install Package
       run: |
-        micromamba activate terphenyl
         python -m pip install .
 #     - name: Lint with flake8
 #       run: |
