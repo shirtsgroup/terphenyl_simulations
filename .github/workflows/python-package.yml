@@ -30,8 +30,6 @@ jobs:
         environment-file: environment.yml
         create-args: >-
           python=${{ matrix.python-version }}
-      run: |
-        micromamba  activate terphenyl
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -39,6 +37,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Install Package
       run: |
+        micromamba activate terphenyl
         python -m pip install .
 #     - name: Lint with flake8
 #       run: |
