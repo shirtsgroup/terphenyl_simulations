@@ -5,6 +5,7 @@ channels:
 dependencies:
   - python
   - pip
+  - pytest
   - rdkit
   - pyyaml
   - mbuild=0.14.2
@@ -25,6 +26,5 @@ dependencies:
   - ca-certificates
   - certifi
   - openssl
-  - pytest
   - openbabel
 prefix: /home/lenny/miniforge3/envs/terphenyl

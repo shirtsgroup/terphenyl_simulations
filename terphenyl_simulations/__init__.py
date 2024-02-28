@@ -3,7 +3,6 @@ Heteropolymer Simulations
 A package for running terphenyl oligomer simulations
 """
 
-import terphenyl_simulations.remd_utils
 import terphenyl_simulations.observables
 import terphenyl_simulations.scripts
 import terphenyl_simulations.clustering
@@ -14,6 +13,8 @@ import terphenyl_simulations.analysis_workflows.utils
 import terphenyl_simulations.force_fields
 import terphenyl_simulations.gromacs_wrapper
 import terphenyl_simulations.utils
+import terphenyl_simulations.remd_utils
+
 
 
 # Handle versioneer
