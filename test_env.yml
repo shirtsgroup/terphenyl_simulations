@@ -19,7 +19,7 @@ dependencies:
   - pandas
   - seaborn
   - openff-toolkit
-  - mbuild ==0.14
+  - mbuild ==0.14.2
   - rdkit
   - ca-certificates
   - certifi
