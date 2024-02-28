@@ -2,7 +2,6 @@
 import getpass
 import os
 from datetime import datetime
-import rdkit
 from rdkit import Chem
 import platform
 import numpy as np
