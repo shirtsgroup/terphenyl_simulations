@@ -1,0 +1,29 @@
+name: terphenyl
+channels:
+  - conda-forge
+  - omnia
+dependencies:
+  - python
+  - pip
+  - pyyaml
+  - mbuild=0.14.2
+  - mdtraj
+  - numpy
+  - matplotlib
+  - scikit-learn
+  - tqdm
+  - mdanalysis
+  - signac
+  - signac-flow
+  - panedr
+  - pandas
+  - seaborn
+  - openff-toolkit
+  - mbuild ==0.14
+  - rdkit
+  - ca-certificates
+  - certifi
+  - openssl
+  - pytest
+  - openbabel
+prefix: /home/lenny/miniforge3/envs/terphenyl

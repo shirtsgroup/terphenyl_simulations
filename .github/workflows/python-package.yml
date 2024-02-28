@@ -27,7 +27,7 @@ jobs:
     - name: Install conda environment
       uses: mamba-org/setup-micromamba@v1
       with:
-        environment-file: environment.yml
+        environment-file: test_env.yml
         create-args: >-
           python=${{ matrix.python-version }}
     - name: Install dependencies
