@@ -7,8 +7,11 @@ A package for running terphenyl oligomery systems
 import sys
 import os
 import fastentrypoints
-from importlib_metadata import entry_points
+from importlib.metadata import entry_points
 from setuptools import setup, find_packages
+from setuptools.command.develop import develop
+from setuptools.command.install import install
+from subprocess import check_call
 import versioneer
 short_description = __doc__.split("\n")
 
@@ -22,9 +25,6 @@ try:
         long_description = handle.read()
 except:
     long_description = "\n".join(short_description[2:]),
-
-
-
 
 setup(
     # Self-descriptive entries which should always be present
@@ -76,6 +76,7 @@ setup(
             'metad_analysis = terphenyl_simulations.analysis_workflows.metad:main',
             'bemetad_analysis = terphenyl_simulations.analysis_workflows.bemetad:main',
             'md_analysis = terphenyl_simulations.analysis_workflows.md_temperature:main',
+            'remd_workflow = terphenyl_simulations.analysis_workflows.remd:main',
             'RMSD_demux = terphenyl_simulations.scripts:RMSD_demux',
         ]
     }

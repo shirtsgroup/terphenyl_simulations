@@ -1,138 +1,111 @@
-import terphenyl_simulations as hs
-import mdtraj as md
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn import metrics
-from sklearn import preprocessing
-import time
-import sys
+import shutil
 import os
-from tqdm import tqdm
-import MDAnalysis as mda
+import subprocess
+import yaml
 import glob
-import csv
-import argparse
+import signac
+from flow import FlowProject
+import terphenyl_simulations
 
-# sns.set_style('whitegrid')
-sns.color_palette("bwr", as_cmap=True)
+# Initialize Signac Project
 
-def parse_args():
-    argparser = argparse.ArgumentParser(
-        description = "Analysis script for terphenyl REMD simulations"
+
+def signac_init():
+    # Open parameter file and create a list of statepoints to define
+    simulation_statepoints = []
+    with open("remd_parameters.yml", "r") as f:
+        simulation_parameters = yaml.safe_load(f)
+
+    # Remove replicas and replace with replica_id
+    for i in range(simulation_parameters["n_replicas"]):
+        sp_i = dict(simulation_parameters)
+        sp_i["replica"] = i
+        del sp_i["n_replicas"]
+        simulation_statepoints.append(sp_i)
+
+    project = signac.get_project()
+
+    # Setup simulation directories
+    for sp in simulation_statepoints:
+        # Quick check to see if sp exists already
+        job = project.open_job(sp)
+        if "init" in job.doc.keys():
+            continue
+        job.doc["init"] = True
+
+        # Setup job directory with template files
+        remd_files = glob.glob(
+            os.path.join(
+                terphenyl_simulations.utils.ROOT_DIR,
+                "data/simulation_templates",
+                "remd/*",
+            )
+        )
+
+        for sim_file in remd_files:
+            shutil.copy(sim_file, job.path)
+        shutil.copy(
+            simulation_parameters["build_foldamer"],
+            job.fn(simulation_parameters["build_foldamer"]),
+        )
+        shutil.copy("remd_parameters.yml", job.fn("remd_parameters.yml"))
+
+        with open(job.fn(simulation_parameters["build_foldamer"]), "r") as f:
+            job.doc["build_parameters"] = yaml.safe_load(f)
+
+
+# FlowProject Operations
+
+
+@FlowProject.post(
+    lambda job: os.path.exists(
+        job.fn(job.doc["build_parameters"]["structure_file"] + ".pdb")
     )
-    argparser.add_argument(
-        "-R","--res_name",
-        type = str,
-        help = "Selection used to identify oligomer in simulation."
+)
+@FlowProject.operation
+def build_foldamer(job):
+    foldamer_builder = terphenyl_simulations.build.FoldamerBuilder(
+        job.sp["build_foldamer"]
     )
+    foldamer_builder.build_foldamer(path=job.fn(""))
 
-    return argparser.parse_args()
+
+@FlowProject.pre.after(build_foldamer)
+@FlowProject.operation
+def parameterize_foldamer(job):
+    pass
 
 
+@FlowProject.post(
+    (
+        lambda job: os.path.exists(
+            job.fn("solvated_" + job.doc["build_parameters"]["structure_file"] + ".pdb")
+        )
+    )
+)
+@FlowProject.operation
+def build_system(job):
+    top_dir = os.path.abspath(".")
+    os.chdir(job.fn(""))
+    packmol_builder = terphenyl_simulations.build.SystemBuilder(
+        job.sp["build_foldamer"]
+    )
+    packmol_builder.build_packmol_inp()
+    packmol_builder.build_system()
+    os.chdir(top_dir)
+
+
+@FlowProject.pre.after(build_system)
+@FlowProject.operation
+def parameterize_system(job):
+    pass
 
 
 def main():
-    t1 = time.time()
-
-    args = parse_args()
-
-    # Clustering workflow
-    hs.clustering.clustering_grid_search(
-        [
-            "sim0/npt_new.whole.xtc",
-            "sim1/npt_new.whole.xtc",
-            "sim2/npt_new.whole.xtc",
-            "sim3/npt_new.whole.xtc",
-            "sim4/npt_new.whole.xtc",
-            "sim5/npt_new.whole.xtc",
-            "sim6/npt_new.whole.xtc",
-            "sim7/npt_new.whole.xtc",
-            "sim8/npt_new.whole.xtc",
-            "sim9/npt_new.whole.xtc",
-        ],
-        "sim0/berendsen_npt.gro",
-        "resname " + args.res_id +" or resname CAP",
-        n_min_samples=40,
-        n_eps=40,
-        n_processes=32,
-        prefix="grid_search",
-        eps_limits=[0.01, 0.2],
-        min_sample_limits=[0.005, 0.1],
-        plot_filename = "ss.png",
-        frame_stride = 2
-    )
-
-    # Read in cluster outputs and REMD trajs
-    cluster_file_list = glob.glob("clustering_output/cluster*")
-    print("Loading Cluster trajectory files...")
-    cluster_trajs = [
-        md.load(gro_file) for gro_file in tqdm(cluster_file_list)
-    ]
-
-    remd_file_list = ["sim" + str(i) + "/npt_new.whole.xtc" for i in range(64)]
-    print("Loading REMD trajectory files...")
-    remd_trajs = [
-        md.load(xtc_file, top="sim0/berendsen_npt.gro")
-        for xtc_file in tqdm(remd_file_list)
-    ]
-
-    hexamer_u = mda.Universe("sim0/npt_new.tpr", "sim0/npt_new.gro")
-
-    # Torsion definitions for first residue
-    with open("torsion_ids", 'r') as stream:
-        monomer_torsions = yaml.safe_load(stream)
-
-    # Torsion Analysis
-    cluster_entropy = np.zeros(len(cluster_trajs))
-
-    hs.utils.make_path("torsion_plots")
-    for torsion_type in monomer_torsions.keys():
-        print("Working on", torsion_type, "torsion...")
-        torsion_atom_names = hs.utils.get_torsion_ids(
-            hexamer_u, args.res_id, monomer_torsions[torsion_type], template_residue_i = monomer_torsions["resid"]
-        )
-
-        hs.plotting.plot_torsions_distributions(
-            remd_trajs,
-            torsion_atom_names,
-            torsion_type + "Torsion (radians)",
-            torsion_type + "_remd",
-            torsion_type + " Torsion Plot",
-            figsize = [5,5],
-            cbar_params = [250, 450, "Temperature (K)"]
-        )
-        
-        for i, traj in enumerate(cluster_trajs):
-
-            entropy = hs.observables.calculate_torsion_entropy(traj, torsion_atom_names)
-            cluster_entropy[i] += entropy
-
-            hs.plotting.plot_torsions_distributions(
-                traj,
-                torsion_atom_names,
-                torsion_type.upper() + " Torsion (radians)",
-                "torsion_plots/" + torsion_type + "_" + cluster_file_list[i].split("/")[-1].split(".")[0],
-                torsion_type + " Torsion Plot " + "Entropy: " + str(entropy),
-                figsize=[5,5],
-            )
-
-
-    # Write entropy to file
-
-    csv_header = [name.split("/")[-1].split(".")[0] for name in cluster_file_list]
-
-    print(cluster_entropy)
-
-    with open("cluster_torsion_entropy.csv", "w", newline='') as csv_file:
-        csv_writer = csv.writer(csv_file)
-        csv_writer.writerow(csv_header)
-        csv_writer.writerow(cluster_entropy)
-        
-
-    t2 = time.time()
-    print("Analysis took:", round(t2 - t1, 2), "seconds.")
-
+    if not os.path.isdir("workspace"):
+        subprocess.run("signac init".split(" "))
+        signac_init()
+    FlowProject().main()
 
 
 if __name__ == "__main__":

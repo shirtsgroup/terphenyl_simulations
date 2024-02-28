@@ -1,2 +1,4 @@
 sim*
 old_system/*
+.signac/
+workspace/

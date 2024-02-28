@@ -2,13 +2,14 @@
 import getpass
 import os
 from datetime import datetime
-import rdkit
 from rdkit import Chem
 import platform
 import numpy as np
 import re
 import shutil as sh
 import sys
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
 
 class TopFileObject:
@@ -132,12 +133,13 @@ def backoff_directory(dir_name):
     print("Backoff! Moving the old " + dir_name + " to " + old_path)
     sh.move(dir_name, old_path)
 
-def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 1):
+
+def get_torsion_ids(universe, resname, torsion_id, template_residue_i=1):
     """
     Using an MDAnalysis universe file with proper residue definitions, this function
     will extract the torsion ids of all torsions propagated along the chain. Specifically
     torsions should try to be fully defined within a single residue.
-    
+
     Parameters
     ----------
     universe : MDAnalysis.Universe
@@ -157,11 +159,16 @@ def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 1):
     """
 
     # Get index in residue
-    atoms_in_residue = [a.name for a in universe.select_atoms("resid " + str(template_residue_i + 1)).atoms]
+    atoms_in_residue = [
+        a.name
+        for a in universe.select_atoms("resid " + str(template_residue_i + 1)).atoms
+    ]
 
     # Case where all atoms in dihedral are defined the given residue
     if all([atom_id in atoms_in_residue for atom_id in torsion_id]):
-        residue_atom_index  = [atoms_in_residue.index(a) for a in torsion_id if a in atoms_in_residue ]    
+        residue_atom_index = [
+            atoms_in_residue.index(a) for a in torsion_id if a in atoms_in_residue
+        ]
         dihedral_ids = []
         for residue in universe.residues:
             if residue.resname == resname:
@@ -169,37 +176,69 @@ def get_torsion_ids(universe, resname, torsion_id, template_residue_i = 1):
                 dihedral_ids.append([ta.name for ta in torsion_atoms])
     # Case where 1 or more atoms in dihedral are not in given residue
     elif any([atom_id in atoms_in_residue for atom_id in torsion_id]):
-        if all([universe.select_atoms("name " + atom_id).resnames[0] == resname for atom_id in torsion_id]):
+        if all(
+            [
+                universe.select_atoms("name " + atom_id).resnames[0] == resname
+                for atom_id in torsion_id
+            ]
+        ):
             dihedral_ids = []
-            resid_in_torsion = np.array([universe.select_atoms("name " + atom_id).resids[0] for atom_id in torsion_id])
+            resid_in_torsion = np.array(
+                [
+                    universe.select_atoms("name " + atom_id).resids[0]
+                    for atom_id in torsion_id
+                ]
+            )
             resid_diff = resid_in_torsion - template_residue_i - 1
             atom_resid_res_inds = []
             for i, atom in enumerate(torsion_id):
-                atoms_in_res_i = [a.name for a in universe.select_atoms("resid " + str(resid_in_torsion[i])).atoms]
+                atoms_in_res_i = [
+                    a.name
+                    for a in universe.select_atoms(
+                        "resid " + str(resid_in_torsion[i])
+                    ).atoms
+                ]
                 atom_res_index = atoms_in_res_i.index(atom)
-                atom_resid_index = (resid_in_torsion[i] - template_residue_i - 1, atom_res_index)
+                atom_resid_index = (
+                    resid_in_torsion[i] - template_residue_i - 1,
+                    atom_res_index,
+                )
                 atom_resid_res_inds.append(atom_resid_index)
             for i in range(len(universe.residues)):
                 if np.max(np.array(resid_diff) + i) == len(universe.residues):
                     continue
-                if all([universe.residues[i].resname == universe.residues[i + diff].resname for diff in resid_diff]) and universe.residues[i].resname == resname:
-                    torsion_atoms = [universe.residues[i + diff].atoms[j].name for diff, j in atom_resid_res_inds]
+                if (
+                    all(
+                        [
+                            universe.residues[i].resname
+                            == universe.residues[i + diff].resname
+                            for diff in resid_diff
+                        ]
+                    )
+                    and universe.residues[i].resname == resname
+                ):
+                    torsion_atoms = [
+                        universe.residues[i + diff].atoms[j].name
+                        for diff, j in atom_resid_res_inds
+                    ]
                     dihedral_ids.append(torsion_atoms)
     else:
-        print("All atoms in the dihedral are not present in the template residue. " + \
-            "Please change `template_residue_i` to be consistent with the residue  " + \
-            "where the atom names are originally from.")
-        return(None)
+        print(
+            "All atoms in the dihedral are not present in the template residue. "
+            + "Please change `template_residue_i` to be consistent with the residue  "
+            + "where the atom names are originally from."
+        )
+        return None
 
-        
-    return(dihedral_ids)
+    return dihedral_ids
 
-def get_angle_ids(universe, resname, angle_id, template_residue_i = 0):
+
+def get_angle_ids(universe, resname, angle_id, template_residue_i=0):
     """
     Using an MDAnalysis universe with proper residue definitions, this function
     will extract the angle atom ids of all angles propagated along the chain. Specifically
     bond-angles should try to be fully defined within a single residue.
-    
+
     Parameters
     ----------
     universe : MDAnalysis.Universe
@@ -219,38 +258,73 @@ def get_angle_ids(universe, resname, angle_id, template_residue_i = 0):
     """
 
     # Get index in residue
-    atoms_in_residue = [a.name for a in universe.select_atoms("resid " + str(template_residue_i + 1)).atoms]
-    
+    atoms_in_residue = [
+        a.name
+        for a in universe.select_atoms("resid " + str(template_residue_i + 1)).atoms
+    ]
+
     if all([atom_id in atoms_in_residue for atom_id in angle_id]):
-        residue_atom_index  = [atoms_in_residue.index(a) for a in angle_id if a in atoms_in_residue ]    
+        residue_atom_index = [
+            atoms_in_residue.index(a) for a in angle_id if a in atoms_in_residue
+        ]
         angle_ids = []
         for residue in universe.residues:
             if residue.resname == resname:
                 angle_atoms = [residue.atoms[i] for i in residue_atom_index]
                 angle_ids.append([ta.name for ta in angle_atoms])
-        return(angle_ids)
+        return angle_ids
 
     # Case where 1 or more atoms in dihedral are not in given residue
     elif any([atom_id in atoms_in_residue for atom_id in angle_id]):
-        if all([universe.select_atoms("name " + atom_id).resnames[0] == resname for atom_id in angle_id]):
+        if all(
+            [
+                universe.select_atoms("name " + atom_id).resnames[0] == resname
+                for atom_id in angle_id
+            ]
+        ):
             angle_ids = []
-            resid_in_torsion = np.array([universe.select_atoms("name " + atom_id).resids[0] for atom_id in angle_id])
+            resid_in_torsion = np.array(
+                [
+                    universe.select_atoms("name " + atom_id).resids[0]
+                    for atom_id in angle_id
+                ]
+            )
             resid_diff = resid_in_torsion - template_residue_i - 1
             atom_resid_res_inds = []
             for i, atom in enumerate(angle_id):
-                atoms_in_res_i = [a.name for a in universe.select_atoms("resid " + str(resid_in_torsion[i])).atoms]
+                atoms_in_res_i = [
+                    a.name
+                    for a in universe.select_atoms(
+                        "resid " + str(resid_in_torsion[i])
+                    ).atoms
+                ]
                 atom_res_index = atoms_in_res_i.index(atom)
-                atom_resid_index = (resid_in_torsion[i] - template_residue_i - 1, atom_res_index)
+                atom_resid_index = (
+                    resid_in_torsion[i] - template_residue_i - 1,
+                    atom_res_index,
+                )
                 atom_resid_res_inds.append(atom_resid_index)
             for i in range(len(universe.residues)):
                 if np.max(np.array(resid_diff) + i) == len(universe.residues):
                     continue
-                if all([universe.residues[i].resname == universe.residues[i + diff].resname for diff in resid_diff]) and universe.residues[i].resname == resname:
-                    torsion_atoms = [universe.residues[i + diff].atoms[j].name for diff, j in atom_resid_res_inds]
+                if (
+                    all(
+                        [
+                            universe.residues[i].resname
+                            == universe.residues[i + diff].resname
+                            for diff in resid_diff
+                        ]
+                    )
+                    and universe.residues[i].resname == resname
+                ):
+                    torsion_atoms = [
+                        universe.residues[i + diff].atoms[j].name
+                        for diff, j in atom_resid_res_inds
+                    ]
                     angle_ids.append(torsion_atoms)
     else:
         pass
-    return(angle_ids)
+    return angle_ids
 
 
 def replace_all_pattern(pattern, replace, file):
@@ -284,50 +358,57 @@ class GromacsLogFile:
         lines = list(filter(lambda x: expression in x, self.log_file_lines))
         lines = [line.strip() for line in lines]
         return lines
-    
+
     def _find_text_block(self, expression, lines_after):
-        line_idx= [i for i in range(len(self.log_file_lines)) if expression in self.log_file_lines[i]]
+        line_idx = [
+            i
+            for i in range(len(self.log_file_lines))
+            if expression in self.log_file_lines[i]
+        ]
         block = []
         for i in line_idx:
-            lines = [line.strip() for line in self.log_file_lines[i:i+lines_after+1]]
+            lines = [
+                line.strip() for line in self.log_file_lines[i : i + lines_after + 1]
+            ]
             block.append(lines)
         return block
-    
+
     def _extract_info(self):
         # Basic information about simulation
         print("Extracting simulation information...")
         self.gmx_version = self._find_expression("GROMACS version:")[0].split()[-1]
-        self.cmd_line_call = self._find_text_block("Command line:", lines_after = 1)[0][-1].strip()
+        self.cmd_line_call = self._find_text_block("Command line:", lines_after=1)[0][
+            -1
+        ].strip()
         self.hostname = self._find_expression("Hardware detected on host")[0].split()[4]
         self.working_dir = self._find_expression("Working dir:")[0].split()[-1]
         self.input_mdp = self._find_text_block("Input Parameters:", 174)[0]
-        
 
         print("Extracting Observables Output...")
         # Time block
         time_blocks = self._find_text_block("Step           Time", 1)
         obs_blocks = self._find_text_block("Energies (kJ/mol)", 8)
         observables = {
-            "step" : [],
-            "time" : [],
-            "bond" : [],
-            "angle" : [],
-            "proper_dih" : [],
-            "per_imp_dih" : [],
-            "lj_14" : [],
-            "coulomb_14" : [],
-            "LJ_sr" : [],
-            "disper_corr" : [],
-            "coulomb_sr" : [],
-            "coulomb_recip" : [],
-            "potential" : [],
-            "kinetic" : [],
-            "total" : [],
-            "conserved" : [],
-            "temperature" : [],
-            "pres_dc" : [],
-            "pressure" : [],
-            "constr_rmsd" : []
+            "step": [],
+            "time": [],
+            "bond": [],
+            "angle": [],
+            "proper_dih": [],
+            "per_imp_dih": [],
+            "lj_14": [],
+            "coulomb_14": [],
+            "LJ_sr": [],
+            "disper_corr": [],
+            "coulomb_sr": [],
+            "coulomb_recip": [],
+            "potential": [],
+            "kinetic": [],
+            "total": [],
+            "conserved": [],
+            "temperature": [],
+            "pres_dc": [],
+            "pressure": [],
+            "constr_rmsd": [],
         }
 
         for time_block in time_blocks:
@@ -364,20 +445,22 @@ class GromacsLogFile:
             print("Extracting state trajectories...")
             sp_lines = self._find_expression("Order After Exchange:")
             sp_lines = [sl.replace("Order After Exchange:", "") for sl in sp_lines]
-            states = [sl.replace("x","").split() for sl in sp_lines]
+            states = [sl.replace("x", "").split() for sl in sp_lines]
             states = [[int(s_i) for s_i in state] for state in states]
             self.states = states
             self.n_states = max(states[0]) + 1
 
             # Collect Empirical Exchange Transition Matrix
-            ex_matrix = self._find_text_block("Empirical Transition Matrix", self.n_states+1)
+            ex_matrix = self._find_text_block(
+                "Empirical Transition Matrix", self.n_states + 1
+            )
 
             if len(ex_matrix) != 0:
                 ex_probs = []
                 for i in range(self.n_states):
-                    ex_prob_str = ex_matrix[i+2].split()[1:self.n_states+1]
+                    ex_prob_str = ex_matrix[i + 2].split()[1 : self.n_states + 1]
                     ex_probs.append([float(p) for p in ex_prob_str])
-                
+
                 self.transition_matrix = np.array(ex_probs)
 
 

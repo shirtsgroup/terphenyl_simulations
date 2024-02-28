@@ -234,6 +234,7 @@ def hmr_topology():
 
     gmx_top.write(args.output)
 
+
 def parameterize_foldamer():
 
     def parse_args():
@@ -249,14 +250,12 @@ def parameterize_foldamer():
             "--pdb", type=str, help="PDB structure file of polymer to be parameterized"
         )
 
-        parser.add_argument(
-            "--output",
-            type=str,
-            help="Output name of files"
-        )
+        parser.add_argument("--output", type=str, help="Output name of files")
 
         parser.add_argument(
-            "--sdf", type=str, help="Optional SDF file if AM1-BCC charges are already assigned"
+            "--sdf",
+            type=str,
+            help="Optional SDF file if AM1-BCC charges are already assigned",
         )
 
         parser.add_argument(
@@ -274,9 +273,7 @@ def parameterize_foldamer():
     omm_topology = pdbfile.topology
 
     # Create OpenFF topology
-    off_topology = Topology.from_openmm(
-        omm_topology, unique_molecules=[molecule]
-    )
+    off_topology = Topology.from_openmm(omm_topology, unique_molecules=[molecule])
 
     # Calculate or Read in partial charges
     print("Getting partial charges...")
@@ -285,7 +282,7 @@ def parameterize_foldamer():
 
     if not os.path.exists(args.sdf):
         molecule.assign_partial_charges(partial_charge_method="am1bcc")
-        molecule.to_file(args.sdf, file_format = 'sdf')
+        molecule.to_file(args.sdf, file_format="sdf")
     else:
         molecule = Molecule.from_file(args.sdf)
 
@@ -296,13 +293,13 @@ def parameterize_foldamer():
     forcefield = ForceField(args.ff)
 
     # Prepare OpenMM system
-    omm_system = forcefield.create_openmm_system(off_topology, charge_from_molecule = [molecule])
+    omm_system = forcefield.create_openmm_system(
+        off_topology, charge_from_molecule=[molecule]
+    )
 
     # Create Interchange object
     interchange = Interchange.from_smirnoff(
-        force_filed=forcefield,
-        topology=off_topology,
-        charge_from_molecules = [molecule]
+        force_filed=forcefield, topology=off_topology, charge_from_molecules=[molecule]
     )
     interchange.positions = pdbfile.positions
 
@@ -324,7 +321,10 @@ def calculate_average_rtt():
         )
 
         parser.add_argument(
-            "-l", "--log_file", type=str, help="file name of original .top file to convert"
+            "-l",
+            "--log_file",
+            type=str,
+            help="file name of original .top file to convert",
         )
 
         return parser.parse_args()
@@ -336,66 +336,113 @@ def calculate_average_rtt():
     log_file_obj = ts.remd_utils.REMDLogFile(log_file)
     rtts = ts.remd_utils.calculate_roundtrip_times(log_file_obj)
 
-    print(len(rtts), "out of",log_file_obj.n_states ,"simulations complete at least 1 RT.")
+    print(
+        len(rtts),
+        "out of",
+        log_file_obj.n_states,
+        "simulations complete at least 1 RT.",
+    )
     print("Average RTT: ", np.mean(rtts), "ns +/-", np.std(rtts))
 
     t2 = time.time()
     print("This analysis took:", round(t2 - t1), "second(s).")
 
+
 def REMD_setup():
     args_parser = argparse.ArgumentParser(
         description="This script is used to setup REMD directories. "
     )
-    args_parser.add_argument("-N","--n_replicas",
-                             type = int,
-                             help = "Number of replicas",
-                            )
-    args_parser.add_argument("--t_range",
-                             type = float,
-                             nargs = 2,
-                             help = "Temperature ranges over which to create for replicas",
-                             required = True
-                            )
-    args_parser.add_argument("--mdps",
-                             type = str,
-                             nargs = "+",
-                             help = "List of mdps to move and edit in each replica",
-                             required = True
-                            )
-    args_parser.add_argument("-R","--common_ratio",
-                             type = float,
-                             help = "Common_ratio",
-                            )
-    args_parser.add_argument("--sim_id",
-                             type = str,
-                             help="base name of dirs containing simulation",
-                            )
-    args_parser.add_argument("--extra_files",
-                             type = str,
-                             nargs = "+",
-                             help="Additional files requied for REMD simulations"
-                            )
+    args_parser.add_argument(
+        "-N",
+        "--n_replicas",
+        type=int,
+        help="Number of replicas",
+    )
+    args_parser.add_argument(
+        "--t_range",
+        type=float,
+        nargs=2,
+        help="Temperature ranges over which to create for replicas",
+        required=True,
+    )
+    args_parser.add_argument(
+        "--mdps",
+        type=str,
+        nargs="+",
+        help="List of mdps to move and edit in each replica",
+        required=True,
+    )
+    args_parser.add_argument(
+        "-R",
+        "--common_ratio",
+        type=float,
+        help="Common_ratio",
+    )
+    args_parser.add_argument(
+        "--sim_id",
+        type=str,
+        help="base name of dirs containing simulation",
+    )
+    args_parser.add_argument(
+        "--topology_files",
+        type=str,
+        nargs="+",
+        help="Additional files requied for REMD simulations",
+    )
     args = args_parser.parse_args()
 
-    if sum([inp is not None for inp in [args.n_replicas, args.t_range, args.common_ratio]]) < 2:
-        print(sum([inp is None for inp in [args.n_replicas, args.t_range, args.common_ratio]])) 
-        print("Too few parameters specified! Please specify ONLY 2 of the following inputs:", file=sys.stderr)
-        print("--n_replicas --t_range --common_ratio", file = sys.stderr)
+    if (
+        sum(
+            [
+                inp is not None
+                for inp in [args.n_replicas, args.t_range, args.common_ratio]
+            ]
+        )
+        < 2
+    ):
+        print(
+            sum(
+                [
+                    inp is None
+                    for inp in [args.n_replicas, args.t_range, args.common_ratio]
+                ]
+            )
+        )
+        print(
+            "Too few parameters specified! Please specify ONLY 2 of the following inputs:",
+            file=sys.stderr,
+        )
+        print("--n_replicas --t_range --common_ratio", file=sys.stderr)
         sys.exit(1)
-    
-    if sum([inp is not None for inp in [args.n_replicas, args.t_range, args.common_ratio]]) > 2:
-        print("Too many parameters specified! Please specify ONLY 2 of the following inputs:", file=sys.stderr)
-        print("--n_replicas --t_range --common_ratio", file = sys.stderr)
+
+    if (
+        sum(
+            [
+                inp is not None
+                for inp in [args.n_replicas, args.t_range, args.common_ratio]
+            ]
+        )
+        > 2
+    ):
+        print(
+            "Too many parameters specified! Please specify ONLY 2 of the following inputs:",
+            file=sys.stderr,
+        )
+        print("--n_replicas --t_range --common_ratio", file=sys.stderr)
         sys.exit(1)
-    
+
     if args.n_replicas == None:
-        args.n_replicas = int(np.log(args.t_range[1]/args.t_range[0])/np.log(args.common_ratio)-1)
+        args.n_replicas = int(
+            np.log(args.t_range[1] / args.t_range[0]) / np.log(args.common_ratio) - 1
+        )
 
     if args.common_ratio == None:
-        args.common_ratio = np.power(args.t_range[1]/args.t_range[0], 1/(args.n_replicas-1))
+        args.common_ratio = np.power(
+            args.t_range[1] / args.t_range[0], 1 / (args.n_replicas - 1)
+        )
 
     for i in range(args.n_replicas):
-        t_i = args.t_range[0] * args.common_ratio ** i
+        t_i = args.t_range[0] * args.common_ratio**i
         sim_path = args.sim_id + str(i)
         if os.path.isdir(sim_path):
             n = 1
@@ -412,37 +459,42 @@ def REMD_setup():
                             w.write(line.replace("TEMP", str(t_i)))
                         else:
                             w.write(line)
-        for extra in args.extra_files:
+        for extra in args.topology_files:
             shutil.copy(extra, os.path.join(sim_path, extra))
+
+
 def METAD_analysis():
     """
-    Script for running the metadynamics analysis workflow generalized to all versions 
+    Script for running the metadynamics analysis workflow generalized to all versions
     terphenyl oligomers.
     """
 
     pass
 
+
 def METAD_add_files():
 
     def parse_args():
         parser = argparse.ArgumentParser(
-            description = "A script to add files to signac projects",
+            description="A script to add files to signac projects",
         )
 
         parser.add_argument(
-            "-f", "--file_path",
-            type = str,
-            nargs = "+",
-            help = "files to add to signac projects"
+            "-f",
+            "--file_path",
+            type=str,
+            nargs="+",
+            help="files to add to signac projects",
         )
 
         parser.add_argument(
-            "-r", "--replace",
-            type = str,
-            nargs = "+",
-            help = "List of string needed to repalce in added files. \
+            "-r",
+            "--replace",
+            type=str,
+            nargs="+",
+            help="List of string needed to repalce in added files. \
                 Currently this only works for WALKER_DIRS and strings \
-                matching the statepoint variables."
+                matching the statepoint variables.",
         )
 
         return parser.parse_args()
@@ -455,57 +507,63 @@ def METAD_add_files():
             filename = file_path.split("/")[-1]
             n_walkers = len(glob.glob(job.fn("WALKER*")))
             if replace == "WALKER_DIRS":
-                walker_dirs = " ".join(["WALKER" + str(walker_id) for walker_id in range(n_walkers)])
+                walker_dirs = " ".join(
+                    ["WALKER" + str(walker_id) for walker_id in range(n_walkers)]
+                )
                 shutil.copy(file_path, job.fn(filename))
                 replace_all_pattern("WALKER_DIRS", walker_dirs, job.fn(filename))
             if replace in job.sp.keys():
-                walker_dirs = ["WALKER" + str(walker_id) for walker_id in range(n_walkers)]
+                walker_dirs = [
+                    "WALKER" + str(walker_id) for walker_id in range(n_walkers)
+                ]
                 for walker_dir in walker_dirs:
                     shutil.copy(file_path, job.fn(os.path.join(walker_dir, filename)))
-                    replace_all_pattern(replace, str(job.sp[replace]), job.fn(os.path.join(walker_dir, filename)))
+                    replace_all_pattern(
+                        replace,
+                        str(job.sp[replace]),
+                        job.fn(os.path.join(walker_dir, filename)),
+                    )
 
-            
 
 def RMSD_demux():
     def parse_args():
         parser = argparse.ArgumentParser(
-            description = "A script to add files to signac projects",
+            description="A script to add files to signac projects",
         )
 
         parser.add_argument(
-            "--trajs",
-            type = str,
-            nargs = "+",
-            help = "List of files to run demuxing on"
+            "--trajs", type=str, nargs="+", help="List of files to run demuxing on"
         )
 
         parser.add_argument(
-            "--topology",
-            type = str,
-            help = "File name of a MDTraj compatible topology"
+            "--topology", type=str, help="File name of a MDTraj compatible topology"
         )
 
         parser.add_argument(
-            "-O", "--output_dir",
-            default = "demux",
-            type = str,
-            help = "Directory to write resulting trajectories"
+            "-O",
+            "--output_dir",
+            default="demux",
+            type=str,
+            help="Directory to write resulting trajectories",
         )
 
         parser.add_argument(
             "--selection",
-            type = str,
-            help = "Selection string for specifying which atoms to run demuxing"
+            type=str,
+            help="Selection string for specifying which atoms to run demuxing",
         )
 
         parser.add_argument(
-            "--gmx_tpr",
-            type = str,
-            help = "GROMACS tpr file, used to make whole molecules"
+            "--gmx_tpr", type=str, help="GROMACS tpr file, used to make whole molecules"
         )
 
-
         return parser.parse_args()
-    
+
     args = parse_args()
-    RMSD_demux_trajectories(args.trajs, args.topology, output_dir = args.output_dir, selection = args.selection, gmx_tpr = args.gmx_tpr)
+    RMSD_demux_trajectories(
+        args.trajs,
+        args.topology,
+        output_dir=args.output_dir,
+        selection=args.selection,
+        gmx_tpr=args.gmx_tpr,
+    )

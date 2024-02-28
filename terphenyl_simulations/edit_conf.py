@@ -184,9 +184,12 @@ class InternalCoordinateEditor:
             torsion_index = self.torsion_ids.index(torsion_id)
             return self.torsions[torsion_index]
         else:
-            print(" ".join(torsion_id), "is not a valid torsion ID. Available torsion \
-                can be found in InternalCoordinateEditor.torsion_ids")
-    
+            print(
+                " ".join(torsion_id),
+                "is not a valid torsion ID. Available torsion \
+                can be found in InternalCoordinateEditor.torsion_ids",
+            )
+
     def get_bond_angle(self, bond_angle_id):
         """
         Get bond angle value for a specified angle id
@@ -244,7 +247,7 @@ class InternalCoordinateEditor:
             # print("Setting", torsion_id, "to", new_torsion * 180 / np.pi)
         else:
             print(torsion_id, "is not a valid torsion ID.")
-    
+
     def set_angle(self, angle_id, new_angle):
         """
         Set a new angle within the InternalCoordinateEditor specified by its atom ids

@@ -20,7 +20,7 @@ source /projects/thfo9888/software/gromacs-2022.5/bin/GMXRC
 
 
 # Extend npt_new.tpr file using convert-tpr
-for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi convert-tpr -s npt_new.tpr -extend 100000 -o npt_new.tpr; cd ..; done
+for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi convert-tpr -s production_npt.tpr -extend 100000 -o production_npt.tpr; cd ..; done
 
 # Run all berendsen_nvt simulations in parallel
-mpirun -np 128 gmx_mpi mdrun -v -multidir sim{0..63} -deffnm npt_new -ntomp 1 -nex 262144 -replex 100 -cpi npt_new.cpt
+mpirun -np 128 gmx_mpi mdrun -v -multidir sim{0..63} -deffnm npt_new -ntomp 1 -nex 262144 -replex 100 -cpi production_npt.cpt
