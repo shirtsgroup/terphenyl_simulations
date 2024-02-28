@@ -34,8 +34,10 @@ jobs:
     - name: Environment Information
       run: |
         which python
-        conda info
-        conda list
+        micromamba activate terphenyl
+        which python
+        micromamba info
+        micromamba list
     - name: Install Package
       run: |
         python -m pip install .
@@ -47,4 +49,4 @@ jobs:
 #         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest
+        python -m pytest
