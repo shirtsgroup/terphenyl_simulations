@@ -30,6 +30,12 @@ jobs:
         environment-file: test_env.yml
         create-args: >-
           python=${{ matrix.python-version }}
+
+    - name: Environment Information
+      run: |
+        which python
+        conda info
+        conda list
     - name: Install Package
       run: |
         python -m pip install .
