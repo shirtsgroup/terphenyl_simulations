@@ -113,7 +113,7 @@ This command will generate a plain text file, `HBOND_SUMS`, which we can use to 
 
 Using the "Sum of H-Bonds" timeseries we can estimate good starting parameters for the biased simulations of this system.
 
-### Biased Simulations
+#### Biased Simulations
 
 Once we have a good initial parameters for the biased simulations we can start running biased metadynamics simulations. Here we take the standard deviation of the unbiased CV and use that as a starting value for the metadynamics hyperparmaeter `SIGMA`. `SIGMA` controls the width of the gaussian biases placed along the CV we are biasing and ultimately determines the resolution of the free energy surface we construct along the CV of interest. Other metadynamics hyperparameters that we need to determine for these simulations are `HEIGHT`, the initial height of the gaussian biasing potentials, `PACE`, the frequency in which biasing potentials are placed, and `BIASFACTOR`, a parameter that controls how quickly biasing potentials decay over time.
 
@@ -184,7 +184,9 @@ $ python signac_project.py run -o submit_all_simulations
 
 This will submit 96 simulations to the SLURM scheduler, which can be verified by running `squeue --me`.
 
-#### Bias Exchange Metadynamics
+### Multiple Walker Metadynamics Simulations
+
+### Bias Exchange Metadynamics
 
 ## Examples
 
