@@ -18,7 +18,7 @@ def setup_default_ff_tests():
     top_dir = os.path.abspath("")
     os.chdir(os.path.join(ROOT_DIR, "tests/test_topology_generator"))
     if os.path.isdir("output"):
-        make_path("output")
+        shutil.rmtree("output")
     yield FoldamerOFFDefault("mop_dimer.mol", "mop_dimer.pdb", path="output")
     os.chdir(top_dir)
 

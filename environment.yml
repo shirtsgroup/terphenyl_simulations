@@ -27,4 +27,5 @@ dependencies:
   - certifi
   - openssl
   - openbabel
+  - gromacs
 prefix: /home/lenny/miniforge3/envs/terphenyl
