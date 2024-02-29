@@ -9,3 +9,4 @@ sim_id : sim
 build_foldamer : mop_tetramer.build
 param_method : bespoke
 n_replicas : 3
+gromacs_exe : 

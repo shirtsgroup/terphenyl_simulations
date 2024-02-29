@@ -9,6 +9,7 @@ from openbabel import openbabel
 from abc import ABC, abstractclassmethod
 from mbuild.lib.recipes.polymer import Polymer
 from .utils import ROOT_DIR, replace_all_pattern, make_path, renumber_pdb_atoms
+from .force_fields import FoldamerOFFDefault, FoldamerOFFBespoke
 
 PACKMOL = shutil.which("packmol")
 
@@ -95,8 +96,8 @@ class FoldamerBuilder:
 
 # Requires packmol
 class SystemBuilder:
-    """ """
-
+    """
+    """
     def __init__(self, build_file_yml, path=""):
         with open(build_file_yml, "r") as f:
             self.build_params = yaml.safe_load(f)
@@ -121,6 +122,8 @@ class SystemBuilder:
             self.path, self.build_params["system"]["solvent"] + ".pdb"
         )
 
+        print(solvent_pdb)
+
         # Check stored solvent pdbs
         if not os.path.exists(solvent_pdb) and solvent_pdb.split("/")[-1] in os.listdir(
             os.path.join(ROOT_DIR, "data/solvents/")
@@ -144,10 +147,10 @@ class SystemBuilder:
             )
         else:
             warnings.warn(
-                "Warning! Unable to find "
-                + solvent_pdb
-                + " in the working directory \
-                          or the internal library."
+                "Warning! Unable to find " + \
+                 solvent_pdb + \
+                " in the working directory " + \
+                "or the internal library. "
             )
             sys.exit()
 
@@ -209,21 +212,30 @@ class SystemBuilder:
 
 
 class SimulationTopologyGenerator:
-    def __init__(self, build_file_yml, path=""):
+    def __init__(self, build_file_yml, ff_method, path="", ff_name = "openff-2.0.0"):
         with open(build_file_yml, "r") as f:
             self.build_params = yaml.safe_load(f)
         self.path = path
+        self.name = self.build_params["structure_file"]
         if not os.path.isdir(self.path):
             make_path(path)
 
-    def set_parameterization_method(self, parameter_object):
-        self.ff_generator = parameter_object
+        self._ff_generation_methods = {
+            'openff-default' : FoldamerOFFDefault,
+            'openff-bespoke' : FoldamerOFFBespoke
+        }
+
+        if ff_method in self._ff_generation_methods.keys():
+            mol_file = os.path.join(self.path, self.name + '.mol')
+            pdb_file = os.path.join(self.path, self.name + '.pdb')
+            self.ff_generator = self._ff_generation_methods[ff_method](mol_file, pdb_file, path = self.path, ff_str = ff_name)
+        else:
+            warnings.warn('WARNING: ' + ff_method + ' is not one of the available ' + \
+                          'force field parameter generation methods. Please pick from:\n' + \
+                            ' '.join(self._ff_generation_methods.keys()))
 
     def set_simulation_engine(self, md_engine_object):
         self.md_engine = md_engine_object
 
     def assign_parameters(self):
-        pass
-
-    def write_topology(self):
-        pass
+        self.ff_generator.assign_parameters()

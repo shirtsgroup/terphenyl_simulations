@@ -56,7 +56,6 @@ def signac_init():
 
 # FlowProject Operations
 
-
 @FlowProject.post(
     lambda job: os.path.exists(
         job.fn(job.doc["build_parameters"]["structure_file"] + ".pdb")
@@ -65,23 +64,18 @@ def signac_init():
 @FlowProject.operation
 def build_foldamer(job):
     foldamer_builder = terphenyl_simulations.build.FoldamerBuilder(
-        job.sp["build_foldamer"]
+        job.sp["build_foldamer"],
+        path=job.fn("")
     )
-    foldamer_builder.build_foldamer(path=job.fn(""))
-
+    foldamer_builder.build_foldamer()
+    foldamer_builder.write_pdb()
+    foldamer_builder.write_mol()
 
 @FlowProject.pre.after(build_foldamer)
-@FlowProject.operation
-def parameterize_foldamer(job):
-    pass
-
-
 @FlowProject.post(
-    (
         lambda job: os.path.exists(
             job.fn("solvated_" + job.doc["build_parameters"]["structure_file"] + ".pdb")
         )
-    )
 )
 @FlowProject.operation
 def build_system(job):
@@ -91,14 +85,36 @@ def build_system(job):
         job.sp["build_foldamer"]
     )
     packmol_builder.build_packmol_inp()
-    packmol_builder.build_system()
+    packmol_builder.solvate_system()
     os.chdir(top_dir)
+
+
+@FlowProject.pre.after(build_foldamer)
+@FlowProject.post(
+    lambda job: os.path.exists(
+        job.fn(job.doc["build_parameters"]["structure_file"] + "_openff-2.0.0.top")
+    )
+)
+@FlowProject.operation
+def parameterize_foldamer(job):
+    top_generator = terphenyl_simulations.build.SimulationTopologyGenerator(
+        job.sp["build_foldamer"],
+        job.doc["build_parameters"]["ff_method"],
+        path = job.fn("")
+    )
+    top_generator.assign_parameters()
+
+@FlowProject.pre.after(parameterize_foldamer)
+@FlowProject.operation
+def minimize_foldamer(job):
+    
 
 
 @FlowProject.pre.after(build_system)
 @FlowProject.operation
 def parameterize_system(job):
     pass
+
 
 
 def main():
