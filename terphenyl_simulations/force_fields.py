@@ -23,7 +23,8 @@ class FoldamerOFFDefault:
 
     def assign_parameters(self, charge_method = 'am1bcc'):
         self._get_partial_charges(charge_method)
-        self._generate_ff_topologies()
+        top_file, gro_file = self._generate_ff_topologies()
+        return top_file, gro_file
 
     def _get_partial_charges(self, method="am1bcc"):
         sdf_file = os.path.join(
@@ -45,8 +46,12 @@ class FoldamerOFFDefault:
         )
         interchange.positions = self.pdb_file.getPositions()
 
-        interchange.to_top(os.path.join(self.path, self.name + "_openff-2.0.0.top"))
-        interchange.to_gro(os.path.join(self.path, self.name + "_openff-2.0.0.gro"))
+        top_file = os.path.join(self.path, self.name + "_openff-2.0.0.top")
+        gro_file = os.path.join(self.path, self.name + "_openff-2.0.0.gro")
+        interchange.to_top(top_file)
+        interchange.to_gro(gro_file)
+
+        return top_file, gro_file
 
 
 

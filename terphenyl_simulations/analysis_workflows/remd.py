@@ -103,11 +103,22 @@ def parameterize_foldamer(job):
         path = job.fn("")
     )
     top_generator.assign_parameters()
+    job.doc['foldamer_topology'] = top_generator.top_file
+    job.doc['foldamer_gro'] = top_generator.gro_file
 
 @FlowProject.pre.after(parameterize_foldamer)
 @FlowProject.operation
 def minimize_foldamer(job):
+    top_dir = os.path.abspath(".")
+    os.chdir(job.fn(""))
+    gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(job.sp['gromacs_exe'])
+    out_name = job.doc['foldamer_gro'].split('.gro')[0] + '_centered.gro'
+    gmx_wrapper.center(job.doc['foldamer_gro'], out_name)
+    job.doc['foldamer_gro'] = out_name
+    gmx_wrapper.minimize(job.doc['foldamer_gro'], job.doc['foldamer_topology'])
     
+    os.chdir(top_dir)
+
 
 
 @FlowProject.pre.after(build_system)

@@ -234,8 +234,15 @@ class SimulationTopologyGenerator:
                           'force field parameter generation methods. Please pick from:\n' + \
                             ' '.join(self._ff_generation_methods.keys()))
 
+        # Define other attributes populated by other functions
+        self.md_engine = None
+        self.top_file = None
+        self.gro_file = None
+
     def set_simulation_engine(self, md_engine_object):
         self.md_engine = md_engine_object
 
     def assign_parameters(self):
-        self.ff_generator.assign_parameters()
+        top_file, gro_file = self.ff_generator.assign_parameters()
+        self.top_file = top_file
+        self.gro_file = gro_file

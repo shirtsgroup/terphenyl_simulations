@@ -30,9 +30,16 @@ class GromacsWrapper(MDEngineWrapper):
             self.mpi = True
             self.gmx = 'mpirun -np 1 ' + self.gmx
 
+    def center(self, gro_file, out_file):
+        editconf_call = self.gmx + ' editconf -f ' + gro_file + \
+                                            ' -c yes' + \
+                                            ' -o ' + out_file
+        process = subprocess.Popen(editconf_call.split(' '))
+        process.wait()
+
     def minimize(self, gro_file, top_file, prefix = 'em', mdp = 'em.mdp'):
         # Check for mdp file
-        if mdp not in os.listdir(self.path):
+        if not mdp in os.listdir(self.path):
             mdp = os.path.join(ROOT_DIR, 'data/simulation_templates/remd/em.mdp')
 
         # Run gmx grompp
@@ -50,7 +57,7 @@ class GromacsWrapper(MDEngineWrapper):
         process = subprocess.Popen(mdrun_call.split(' '))
         process.wait()
 
-        
+
 
         
             
