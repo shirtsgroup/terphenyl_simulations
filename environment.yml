@@ -2,6 +2,7 @@ name: terphenyl
 channels:
   - conda-forge
   - omnia
+  - openeye
 dependencies:
   - python
   - pip
@@ -27,5 +28,6 @@ dependencies:
   - certifi
   - openssl
   - openbabel
+  - openeye-toolkits
   - gromacs
 prefix: /home/lenny/miniforge3/envs/terphenyl

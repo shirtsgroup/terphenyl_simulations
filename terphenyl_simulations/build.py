@@ -9,7 +9,7 @@ from openbabel import openbabel
 from abc import ABC, abstractclassmethod
 from mbuild.lib.recipes.polymer import Polymer
 from .utils import ROOT_DIR, replace_all_pattern, make_path, renumber_pdb_atoms
-from .force_fields import FoldamerOFFDefault, FoldamerOFFBespoke
+from .force_fields import FoldamerOFFDefault, FoldamerOFFBespoke, SystemOFFDefault
 
 PACKMOL = shutil.which("packmol")
 
@@ -96,8 +96,8 @@ class FoldamerBuilder:
 
 # Requires packmol
 class SystemBuilder:
-    """
-    """
+    """ """
+
     def __init__(self, build_file_yml, path=""):
         with open(build_file_yml, "r") as f:
             self.build_params = yaml.safe_load(f)
@@ -147,10 +147,10 @@ class SystemBuilder:
             )
         else:
             warnings.warn(
-                "Warning! Unable to find " + \
-                 solvent_pdb + \
-                " in the working directory " + \
-                "or the internal library. "
+                "Warning! Unable to find "
+                + solvent_pdb
+                + " in the working directory "
+                + "or the internal library. "
             )
             sys.exit()
 
@@ -211,28 +211,32 @@ class SystemBuilder:
         os.remove("temp")
 
 
-class SimulationTopologyGenerator:
-    def __init__(self, build_file_yml, ff_method, path="", ff_name = "openff-2.0.0"):
-        with open(build_file_yml, "r") as f:
-            self.build_params = yaml.safe_load(f)
+class TopologyGenerator:
+    def __init__(self, molecule_files, pdb_file, output_file, ff_method, path="", ff_name="openff-2.0.0"):
         self.path = path
-        self.name = self.build_params["structure_file"]
+        self.name = output_file
         if not os.path.isdir(self.path):
             make_path(path)
 
         self._ff_generation_methods = {
-            'openff-default' : FoldamerOFFDefault,
-            'openff-bespoke' : FoldamerOFFBespoke
+            "openff-foldamer" : FoldamerOFFDefault,
+            "bespoke-foldamer" : FoldamerOFFBespoke,
+            "openff-system" : SystemOFFDefault,
         }
 
+
         if ff_method in self._ff_generation_methods.keys():
-            mol_file = os.path.join(self.path, self.name + '.mol')
-            pdb_file = os.path.join(self.path, self.name + '.pdb')
-            self.ff_generator = self._ff_generation_methods[ff_method](mol_file, pdb_file, path = self.path, ff_str = ff_name)
+            self.ff_generator = self._ff_generation_methods[ff_method](
+                molecule_files, pdb_file, path=self.path, ff_str=ff_name
+            )
         else:
-            warnings.warn('WARNING: ' + ff_method + ' is not one of the available ' + \
-                          'force field parameter generation methods. Please pick from:\n' + \
-                            ' '.join(self._ff_generation_methods.keys()))
+            warnings.warn(
+                "WARNING: "
+                + ff_method
+                + " is not one of the available "
+                + "force field parameter generation methods. Please pick from:\n"
+                + " ".join(self._ff_generation_methods.keys())
+            )
 
         # Define other attributes populated by other functions
         self.md_engine = None
@@ -246,3 +250,10 @@ class SimulationTopologyGenerator:
         top_file, gro_file = self.ff_generator.assign_parameters()
         self.top_file = top_file
         self.gro_file = gro_file
+
+    def minimize(self):
+        self.md_engine.center_configuration(
+            self.gro_file, self.gro_file.split(".gro") + "_box.gro"
+        )
+        self.gro_file = self.gro_file.split(".gro") + "_box.gro"
+        self.md_engine.minimize(self.gro_file, self.top_file)
