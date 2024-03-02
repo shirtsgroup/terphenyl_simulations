@@ -30,12 +30,20 @@ class GromacsWrapper(MDEngineWrapper):
             self.mpi = True
             self.gmx = 'mpirun -np 1 ' + self.gmx
 
-    def center(self, gro_file, out_file):
+    def center_configuration(self, gro_file, out_file):
         editconf_call = self.gmx + ' editconf -f ' + gro_file + \
                                             ' -c yes' + \
                                             ' -o ' + out_file
         process = subprocess.Popen(editconf_call.split(' '))
         process.wait()
+
+    def add_box(self, gro_file, box_size, out_file):
+        editconf_call = self.gmx + ' editconf -f ' + gro_file + \
+                                            ' -box ' + str(box_size) +  \
+                                            ' -o ' + out_file
+        process = subprocess.Popen(editconf_call.split(' '))
+        process.wait()
+
 
     def minimize(self, gro_file, top_file, prefix = 'em', mdp = 'em.mdp'):
         # Check for mdp file

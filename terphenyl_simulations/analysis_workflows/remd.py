@@ -88,6 +88,10 @@ def build_system(job):
     packmol_builder.solvate_system()
     os.chdir(top_dir)
 
+@FlowProject.operation
+def parameterize_solvated_system(job):
+    pass
+
 
 @FlowProject.pre.after(build_foldamer)
 @FlowProject.post(
@@ -113,12 +117,10 @@ def minimize_foldamer(job):
     os.chdir(job.fn(""))
     gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(job.sp['gromacs_exe'])
     out_name = job.doc['foldamer_gro'].split('.gro')[0] + '_centered.gro'
-    gmx_wrapper.center(job.doc['foldamer_gro'], out_name)
+    gmx_wrapper.center_configuration(job.doc['foldamer_gro'], out_name)
     job.doc['foldamer_gro'] = out_name
     gmx_wrapper.minimize(job.doc['foldamer_gro'], job.doc['foldamer_topology'])
-    
     os.chdir(top_dir)
-
 
 
 @FlowProject.pre.after(build_system)
