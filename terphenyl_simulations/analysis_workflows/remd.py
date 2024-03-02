@@ -53,7 +53,14 @@ def signac_init():
 
         with open(job.fn(simulation_parameters["build_foldamer"]), "r") as f:
             job.doc["build_parameters"] = yaml.safe_load(f)
+        job.doc["foldamer_name"] = job.doc["build_parameters"]["structure_file"]
+        job.doc["system_name"] = "system"
 
+def main():
+    if not os.path.isdir("workspace"):
+        subprocess.run("signac init".split(" "))
+        signac_init()
+    FlowProject().main()
 
 # Decorator to cd into and out of workspace
 # before and after operation
@@ -70,7 +77,7 @@ def cd_to_job_dir(function):
 # FlowProject Operations
 @FlowProject.post(
     lambda job: os.path.exists(
-        job.fn(job.doc["build_parameters"]["structure_file"] + ".pdb")
+        job.fn(job.doc["foldamer_name"] + ".pdb")
     )
 )
 @FlowProject.operation
@@ -87,7 +94,46 @@ def build_foldamer(job):
 @FlowProject.pre.after(build_foldamer)
 @FlowProject.post(
     lambda job: os.path.exists(
-        job.fn("solvated_" + job.doc["build_parameters"]["structure_file"] + ".pdb")
+        job.fn(job.doc["foldamer_name"] + "_openff-2.0.0.top")
+    )
+)
+@FlowProject.operation
+@cd_to_job_dir
+def parameterize_foldamer(job):
+    mol_file = job.doc["foldamer_name"] + ".mol"
+    pdb_file = job.doc["foldamer_name"] + ".pdb"
+    top_generator = terphenyl_simulations.build.TopologyGenerator(
+        mol_file,
+        pdb_file,
+        None,
+        job.doc["build_parameters"]["ff_method"],
+    )
+    top_generator.assign_parameters()
+    job.doc["foldamer_topology"] = top_generator.top_file
+    job.doc["foldamer_gro"] = top_generator.gro_file
+
+
+@FlowProject.pre.after(parameterize_foldamer)
+@FlowProject.post(
+    lambda job: os.path.exists(
+        job.fn("em.gro")
+    )
+)
+@FlowProject.operation
+@cd_to_job_dir
+def minimize_foldamer(job):
+    gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(
+        job.sp["gromacs_exe"]
+    )
+    out_name = job.doc["foldamer_gro"].split(".gro")[0] + "_centered.gro"
+    gmx_wrapper.center_configuration(job.doc["foldamer_gro"], out_name)
+    job.doc["foldamer_gro"] = out_name
+    gmx_wrapper.minimize(job.doc["foldamer_gro"], job.doc["foldamer_topology"], prefix = "em_" + job.doc["str"])
+
+@FlowProject.pre.after(minimize_foldamer)
+@FlowProject.post(
+    lambda job: os.path.exists(
+        job.fn("solvated_" + job.doc["foldamer_name"] + ".pdb")
     )
 )
 @FlowProject.operation
@@ -100,50 +146,25 @@ def build_system(job):
     packmol_builder.solvate_system()
 
 @FlowProject.pre.after(build_system)
-@FlowProject.operation
-def parameterize_solvated_system(job):
-    pass
-
-
-@FlowProject.pre.after(build_foldamer)
 @FlowProject.post(
     lambda job: os.path.exists(
-        job.fn(job.doc["build_parameters"]["structure_file"] + "_openff-2.0.0.top")
+        job.fn("system_openff.top")
     )
 )
 @FlowProject.operation
 @cd_to_job_dir
-def parameterize_foldamer(job):
-    mol_file = job.doc["build_parameters"]["structure_file"] + ".mol"
-    pdb_file = job.doc["build_parameters"]["structure_file"] + ".pdb"
+def parameterize_solvated_system(job):
+    mol_files = [ job.doc["foldamer_name"] + "_charges.sdf", job.doc["build_parameters"]["system"]["solvent"] + ".pdb"]
+    pdb_file = "solvated_" + job.doc["foldamer_name"] + ".pdb"
     top_generator = terphenyl_simulations.build.TopologyGenerator(
-        mol_file,
+        mol_files,
         pdb_file,
-        job.doc["build_parameters"]["ff_method"],
+        "system_openff",
+        "openff-system",
     )
     top_generator.assign_parameters()
     job.doc["foldamer_topology"] = top_generator.top_file
     job.doc["foldamer_gro"] = top_generator.gro_file
-
-
-@FlowProject.pre.after(parameterize_foldamer)
-@FlowProject.operation
-@cd_to_job_dir
-def minimize_foldamer(job):
-    gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(
-        job.sp["gromacs_exe"]
-    )
-    out_name = job.doc["foldamer_gro"].split(".gro")[0] + "_centered.gro"
-    gmx_wrapper.center_configuration(job.doc["foldamer_gro"], out_name)
-    job.doc["foldamer_gro"] = out_name
-    gmx_wrapper.minimize(job.doc["foldamer_gro"], job.doc["foldamer_topology"])
-
-def main():
-    if not os.path.isdir("workspace"):
-        subprocess.run("signac init".split(" "))
-        signac_init()
-    FlowProject().main()
-
 
 if __name__ == "__main__":
     main()

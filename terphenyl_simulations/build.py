@@ -164,7 +164,7 @@ class SystemBuilder:
         )
         replace_all_pattern(
             "SOLUTE_PDB",
-            os.path.join(self.path, self.build_params["structure_file"] + ".pdb"),
+            os.path.join(self.path, "em_" + self.build_params["structure_file"] + ".pdb"),
             self.inp_file,
         )
 
@@ -237,6 +237,7 @@ class TopologyGenerator:
                 + "force field parameter generation methods. Please pick from:\n"
                 + " ".join(self._ff_generation_methods.keys())
             )
+            sys.exit()
 
         # Define other attributes populated by other functions
         self.md_engine = None

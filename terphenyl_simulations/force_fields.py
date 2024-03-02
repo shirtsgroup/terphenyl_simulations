@@ -16,7 +16,7 @@ class OFFMethod(ABC):
 
 
 class FoldamerOFFDefault(OFFMethod):
-    def __init__(self, mol_file, pdb_file, path="", ff_str="openff-2.0.0"):
+    def __init__(self, mol_file, pdb_file, output_file = None, path="", ff_str="openff-2.0.0"):
         if type(mol_file) is not str:
             print('FoldamerOFFDefault method does cannot take process multiple molecules, try' + \
                   'SystemOFFDefault method instead.')
@@ -24,7 +24,9 @@ class FoldamerOFFDefault(OFFMethod):
         if not os.path.isdir(path):
             make_path(path)
         self.molecule = Molecule.from_file(mol_file)
-        self.name = mol_file.split("/")[-1].split(".mol")[0]
+        self.name = output_file
+        if output_file is None:
+            self.name = mol_file.split("/")[-1].split(".mol")[0]
         self.path = path
         pdb_path = pdb_file.split(".pdb")[0]
         renumber_pdb_atoms(pdb_file, os.path.join(path, pdb_path + "_renum.pdb"))
@@ -42,7 +44,6 @@ class FoldamerOFFDefault(OFFMethod):
 
     def _get_partial_charges(self, method="am1bcc"):
         sdf_file = os.path.join(self.path, self.name + "_charges.sdf")
-        print(sdf_file)
         if not os.path.exists(sdf_file):
             # Expensive step
             self.molecule.assign_partial_charges(partial_charge_method=method)
@@ -84,9 +85,9 @@ class SystemOFFDefault(OFFMethod):
             off_molecule = Molecule.from_file(molecule)
             self.molecules.append(off_molecule)
             self.charges.append(off_molecule.partial_charges != None)
-        self.pdb_file = app.PDBFile(os.path.join(path, pdb_path))
+        self.pdb_file = system_pdb
         self.off_topology = Topology.from_pdb(
-            system_pdb, unique_molecules=self.molecules
+            self.pdb_file, unique_molecules=self.molecules
         )
         self.force_field = ForceField(ff_str + ".offxml")
 
