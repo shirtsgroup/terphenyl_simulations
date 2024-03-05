@@ -106,7 +106,7 @@ class SystemBuilder:
         if not os.path.isdir(self.path):
             make_path(path)
 
-    def build_packmol_inp(self):
+    def build_packmol_inp(self, prefix = None):
         self.inp_file = os.path.join(self.path, "solvate.inp")
 
         # Get template solvation script from terphenyl_simulations/data/solvents
@@ -121,8 +121,6 @@ class SystemBuilder:
         solvent_pdb = os.path.join(
             self.path, self.build_params["system"]["solvent"] + ".pdb"
         )
-
-        print(solvent_pdb)
 
         # Check stored solvent pdbs
         if not os.path.exists(solvent_pdb) and solvent_pdb.split("/")[-1] in os.listdir(
@@ -162,9 +160,15 @@ class SystemBuilder:
             ),
             self.inp_file,
         )
+
+        solute_pdb_str = os.path.join(self.path, self.build_params["structure_file"] + ".pdb")
+        if prefix:
+            solute_pdb_str = os.path.join(self.path, prefix + "_" + self.build_params["structure_file"] + ".pdb"),
+
+
         replace_all_pattern(
             "SOLUTE_PDB",
-            os.path.join(self.path, "em_" + self.build_params["structure_file"] + ".pdb"),
+            solute_pdb_str,
             self.inp_file,
         )
 

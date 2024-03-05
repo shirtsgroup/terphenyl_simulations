@@ -6,7 +6,7 @@ output from the FoldamerBuilder/SystemBuilder objects
 """
 
 from terphenyl_simulations.force_fields import FoldamerOFFDefault, FoldamerOFFBespoke
-from terphenyl_simulations.build import SimulationTopologyGenerator
+from terphenyl_simulations.build import TopologyGenerator
 from terphenyl_simulations.utils import ROOT_DIR, make_path
 import pytest
 import os
