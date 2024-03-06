@@ -74,15 +74,21 @@ class FoldamerOFFBespoke(OFFMethod):
 
 class SystemOFFDefault(OFFMethod):
     def __init__(
-        self, system_molecules_list, system_pdb, path="", ff_str="openff-2.0.0"
+        self, system_molecules_list, charge_files, system_pdb, path="", ff_str="openff-2.0.0"
     ):
         if not os.path.isdir(path):
             make_path(path)
         self.path = path
         self.molecules = []
         self.charges = []
-        for molecule in system_molecules_list:
+        for molecule, charge_file in zip(system_molecules_list, charge_files):
             off_molecule = Molecule.from_file(molecule)
+            # If we have partial charges in a file use it
+            if charge_file != None and os.path.exists(charge_file):
+                print("Getting charges for", molecule, "from", charge_file)
+                molecule_charges = Molecule.from_file(charge_file).partial_charges
+                off_molecule.partial_charges = molecule_charges
+                off_molecule.perceive_residues()
             self.molecules.append(off_molecule)
             self.charges.append(off_molecule.partial_charges != None)
         self.pdb_file = system_pdb

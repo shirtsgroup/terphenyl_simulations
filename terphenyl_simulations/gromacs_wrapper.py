@@ -38,6 +38,20 @@ class GromacsWrapper(MDEngineWrapper):
         process = subprocess.Popen(editconf_call.split(" "))
         process.wait()
 
+    def edit_conf(self, **kwargs):
+        editconf_call = self.gmx + " editconf"
+        for flag, value in kwargs.items():
+            editconf_call += " -" + flag + " " + value
+        process = subprocess.Popen(editconf_call.split(" "))
+        process.wait()
+
+    def trjconv(self, **kwargs):
+        editconf_call = self.gmx + " trjconv"
+        for flag, value in kwargs.items():
+            editconf_call += " -" + flag + " " + value
+        process = subprocess.Popen(editconf_call.split(" "))
+        process.wait()
+
     def add_box(self, gro_file, box_size, out_file):
         editconf_call = (
             self.gmx

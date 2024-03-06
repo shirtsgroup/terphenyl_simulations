@@ -102,7 +102,7 @@ def build_foldamer(job):
 def parameterize_foldamer(job):
     mol_file = job.doc["foldamer_name"] + ".mol"
     pdb_file = job.doc["foldamer_name"] + ".pdb"
-    top_generator = terphenyl_simulations.build.TopologyGenerator(
+    top_generator = terphenyl_simulations.build.MoleculeTopologyGenerator(
         mol_file,
         pdb_file,
         None,
@@ -116,7 +116,7 @@ def parameterize_foldamer(job):
 @FlowProject.pre.after(parameterize_foldamer)
 @FlowProject.post(
     lambda job: os.path.exists(
-        job.fn("em.gro")
+        job.fn("em_" + job.doc["foldamer_name"] + ".pdb")
     )
 )
 @FlowProject.operation
@@ -125,10 +125,12 @@ def minimize_foldamer(job):
     gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(
         job.sp["gromacs_exe"]
     )
-    out_name = job.doc["foldamer_gro"].split(".gro")[0] + "_centered.gro"
-    gmx_wrapper.center_configuration(job.doc["foldamer_gro"], out_name)
-    job.doc["foldamer_gro"] = out_name
-    gmx_wrapper.minimize(job.doc["foldamer_gro"], job.doc["foldamer_topology"], prefix = "em_" + job.doc["str"])
+    centered_out_name = job.doc["foldamer_gro"].split(".gro")[0] + "_centered.gro"
+    gmx_wrapper.center_configuration(job.doc["foldamer_gro"], centered_out_name)
+    gmx_wrapper.minimize(centered_out_name, job.doc["foldamer_topology"], prefix = "em_" + job.doc["foldamer_name"])
+    gmx_wrapper.edit_conf(f = "em_" + job.doc["foldamer_name"] + ".tpr", o = "em_" + job.doc["foldamer_name"] + ".pdb", conect = "yes")
+    job.doc["foldamer_gro"] = "em_" + job.doc["foldamer_name"] + ".gro"
+
 
 @FlowProject.pre.after(minimize_foldamer)
 @FlowProject.post(
@@ -140,6 +142,7 @@ def minimize_foldamer(job):
 @cd_to_job_dir
 def build_system(job):
     packmol_builder = terphenyl_simulations.build.SystemBuilder(
+        "em_" + job.doc["foldamer_name"] + ".pdb",
         job.sp["build_foldamer"]
     )
     packmol_builder.build_packmol_inp()
@@ -154,10 +157,12 @@ def build_system(job):
 @FlowProject.operation
 @cd_to_job_dir
 def parameterize_solvated_system(job):
-    mol_files = [ job.doc["foldamer_name"] + "_charges.sdf", job.doc["build_parameters"]["system"]["solvent"] + ".pdb"]
+    molecule_pdb_files = [ "em_" + job.doc["foldamer_name"] + ".pdb", job.doc["build_parameters"]["system"]["solvent"] + ".pdb"]
+    charge_files = [job.doc["foldamer_name"] + "_charges.sdf", None]
     pdb_file = "solvated_" + job.doc["foldamer_name"] + ".pdb"
-    top_generator = terphenyl_simulations.build.TopologyGenerator(
-        mol_files,
+    top_generator = terphenyl_simulations.build.SystemTopologyGenerator(
+        molecule_pdb_files,
+        charge_files,
         pdb_file,
         "system_openff",
         "openff-system",
