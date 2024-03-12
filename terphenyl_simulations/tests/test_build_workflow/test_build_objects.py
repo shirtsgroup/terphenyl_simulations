@@ -34,7 +34,10 @@ def setup_system_builder_tests():
     os.chdir(os.path.join(ROOT_DIR, "tests/test_build_workflow"))
     if os.path.isdir("output"):
         shutil.rmtree("output")
-    yield SystemBuilder("mop_tetramer.build", path="output")
+    fb = FoldamerBuilder("mop_tetramer.build", path="output")
+    fb.build_foldamer()
+    fb.write_pdb()
+    yield SystemBuilder("TCM", "mop_tetramer.build", path="output")
     os.chdir(top_dir)
 
 
@@ -72,9 +75,6 @@ def test_system_builder_inp(setup_system_builder_tests):
 
 
 def test_system_builder_packmol(setup_system_builder_tests):
-    foldamer_builder = FoldamerBuilder("mop_tetramer.build", path="output")
-    foldamer_builder.build_foldamer()
-    foldamer_builder.write_pdb()
     system_builder = setup_system_builder_tests
     system_builder.build_packmol_inp()
     system_builder.solvate_system()

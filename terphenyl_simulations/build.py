@@ -9,6 +9,7 @@ from openbabel import openbabel
 from abc import ABC, abstractclassmethod
 from mbuild.lib.recipes.polymer import Polymer
 from .utils import ROOT_DIR, replace_all_pattern, make_path, renumber_pdb_atoms
+from .force_fields import FoldamerOFFDefault, FoldamerOFFBespoke, SystemOFFDefault
 
 PACKMOL = shutil.which("packmol")
 
@@ -95,13 +96,16 @@ class FoldamerBuilder:
 
 # Requires packmol
 class SystemBuilder:
-    """ """
-
-    def __init__(self, build_file_yml, path=""):
+    """
+    """
+    def __init__(self, solute_pdb, build_file_yml, path=""):
         with open(build_file_yml, "r") as f:
             self.build_params = yaml.safe_load(f)
         self.packmol = PACKMOL
         self.path = path
+        if ".pdb" not in solute_pdb:
+            solute_pdb += ".pdb"
+        self.solute_pdb = solute_pdb
         if not os.path.isdir(self.path):
             make_path(path)
 
@@ -122,34 +126,37 @@ class SystemBuilder:
         )
 
         # Check stored solvent pdbs
-        if not os.path.exists(solvent_pdb) and solvent_pdb.split("/")[-1] in os.listdir(
-            os.path.join(ROOT_DIR, "data/solvents/")
-        ):
-            print(
-                "Using "
-                + solvent_pdb
-                + " from the internal library of solvents. If this "
-                + "is not the behavior you intend, please include the solvent pdb you wish "
-                + "to solvate the system with in your working directory."
-            )
-            stored_solvent = os.path.join(
-                ROOT_DIR,
-                "data/solvents/",
-                self.build_params["system"]["solvent"] + ".pdb",
-            )
 
-            # Copy to path directory
-            shutil.copy(
-                stored_solvent, os.path.join(self.path, solvent_pdb.split("/")[-1])
-            )
-        else:
-            warnings.warn(
-                "Warning! Unable to find "
-                + solvent_pdb
-                + " in the working directory \
-                          or the internal library."
-            )
-            sys.exit()
+        print(os.listdir(os.path.join(ROOT_DIR, "data/solvents/")))
+
+        if not os.path.exists(solvent_pdb):
+            if solvent_pdb.split("/")[-1] in os.listdir(
+            os.path.join(ROOT_DIR, "data/solvents/")):
+                print(
+                    "Using "
+                    + solvent_pdb
+                    + " from the internal library of solvents. If this "
+                    + "is not the behavior you intend, please include the solvent pdb you wish "
+                    + "to solvate the system with in your working directory."
+                )
+                stored_solvent = os.path.join(
+                    ROOT_DIR,
+                    "data/solvents/",
+                    self.build_params["system"]["solvent"] + ".pdb",
+                )
+
+                # Copy to path directory
+                shutil.copy(
+                    stored_solvent, os.path.join(self.path, solvent_pdb.split("/")[-1])
+                )
+            else:
+                warnings.warn(
+                    "Warning! Unable to find "
+                    + solvent_pdb
+                    + " in the working directory "
+                    + "or the internal library. "
+                )
+                sys.exit()
 
         # Make replacements to the template inp file
         replace_all_pattern(
@@ -159,9 +166,12 @@ class SystemBuilder:
             ),
             self.inp_file,
         )
+
+        solute_pdb_str = os.path.join(self.path, self.solute_pdb)
+
         replace_all_pattern(
             "SOLUTE_PDB",
-            os.path.join(self.path, self.build_params["structure_file"] + ".pdb"),
+            solute_pdb_str,
             self.inp_file,
         )
 
@@ -207,23 +217,96 @@ class SystemBuilder:
         process.wait()
         os.remove("temp")
 
-
-class SimulationTopologyGenerator:
-    def __init__(self, build_file_yml, path=""):
-        with open(build_file_yml, "r") as f:
-            self.build_params = yaml.safe_load(f)
+# I probably best to get rid of this class
+class MoleculeTopologyGenerator:
+    def __init__(self, molecule_file, pdb_file, output_file, ff_method, path="", ff_name="openff-2.0.0"):
         self.path = path
+        self.name = output_file
         if not os.path.isdir(self.path):
             make_path(path)
 
-    def set_parameterization_method(self, parameter_object):
-        self.ff_generator = parameter_object
+        self._ff_generation_methods = {
+            "openff-foldamer" : FoldamerOFFDefault,
+            "bespoke-foldamer" : FoldamerOFFBespoke,
+        }
+
+
+        if ff_method in self._ff_generation_methods.keys():
+            self.ff_generator = self._ff_generation_methods[ff_method](
+                molecule_file, pdb_file, path=self.path, ff_str=ff_name
+            )
+        else:
+            warnings.warn(
+                "WARNING: "
+                + ff_method
+                + " is not one of the available "
+                + "force field parameter generation methods. Please pick from:\n"
+                + " ".join(self._ff_generation_methods.keys())
+            )
+            sys.exit()
+
+        # Define other attributes populated by other functions
+        self.md_engine = None
+        self.top_file = None
+        self.gro_file = None
 
     def set_simulation_engine(self, md_engine_object):
         self.md_engine = md_engine_object
 
     def assign_parameters(self):
-        pass
+        top_file, gro_file = self.ff_generator.assign_parameters()
+        self.top_file = top_file
+        self.gro_file = gro_file
 
-    def write_topology(self):
-        pass
+    def minimize(self):
+        self.md_engine.center_configuration(
+            self.gro_file, self.gro_file.split(".gro") + "_box.gro"
+        )
+        self.gro_file = self.gro_file.split(".gro") + "_box.gro"
+        self.md_engine.minimize(self.gro_file, self.top_file)
+
+class SystemTopologyGenerator:
+    def __init__(self, molecule_files, charge_files, pdb_file, output_file, ff_method, path="", ff_name="openff-2.0.0"):
+        self.path = path
+        self.name = output_file
+        if not os.path.isdir(self.path):
+            make_path(path)
+
+        self._ff_generation_methods = {
+            "openff-system" : SystemOFFDefault,
+        }
+
+
+        if ff_method in self._ff_generation_methods.keys():
+            self.ff_generator = self._ff_generation_methods[ff_method](
+                molecule_files, charge_files, pdb_file, path=self.path, ff_str=ff_name
+            )
+        else:
+            warnings.warn(
+                "WARNING: "
+                + ff_method
+                + " is not one of the available "
+                + "force field parameter generation methods. Please pick from:\n"
+                + " ".join(self._ff_generation_methods.keys())
+            )
+            sys.exit()
+
+        # Define other attributes populated by other functions
+        self.md_engine = None
+        self.top_file = None
+        self.gro_file = None
+
+    def set_simulation_engine(self, md_engine_object):
+        self.md_engine = md_engine_object
+
+    def assign_parameters(self):
+        top_file, gro_file = self.ff_generator.assign_parameters()
+        self.top_file = top_file
+        self.gro_file = gro_file
+
+    def minimize(self):
+        self.md_engine.center_configuration(
+            self.gro_file, self.gro_file.split(".gro") + "_box.gro"
+        )
+        self.gro_file = self.gro_file.split(".gro") + "_box.gro"
+        self.md_engine.minimize(self.gro_file, self.top_file)

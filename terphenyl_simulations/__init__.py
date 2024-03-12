@@ -16,7 +16,6 @@ import terphenyl_simulations.utils
 import terphenyl_simulations.remd_utils
 
 
-
 # Handle versioneer
 from ._version import get_versions
 
