@@ -6,7 +6,7 @@ output from the FoldamerBuilder/SystemBuilder objects
 """
 
 from terphenyl_simulations.force_fields import FoldamerOFFDefault, FoldamerOFFBespoke
-from terphenyl_simulations.build import TopologyGenerator
+from terphenyl_simulations.build import MoleculeTopologyGenerator, SystemTopologyGenerator
 from terphenyl_simulations.utils import ROOT_DIR, make_path
 import pytest
 import os
@@ -45,6 +45,7 @@ def test_default_topology_generator(setup_default_ff_tests):
     assert default_ff_object.omm_topology.getNumChains() == 1
 
 
+@pytest.mark.skip(reason = "this test is very slow unless OpenEye is installed")
 def test_default_tg_charges(setup_default_ff_tests):
     default_ff_object = setup_default_ff_tests
     default_ff_object._get_partial_charges()

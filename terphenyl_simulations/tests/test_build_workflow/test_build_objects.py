@@ -37,7 +37,7 @@ def setup_system_builder_tests():
     fb = FoldamerBuilder("mop_tetramer.build", path="output")
     fb.build_foldamer()
     fb.write_pdb()
-    yield SystemBuilder("mop_tetramer.build", path="output")
+    yield SystemBuilder("TCM", "mop_tetramer.build", path="output")
     os.chdir(top_dir)
 
 

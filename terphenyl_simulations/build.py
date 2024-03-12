@@ -103,6 +103,8 @@ class SystemBuilder:
             self.build_params = yaml.safe_load(f)
         self.packmol = PACKMOL
         self.path = path
+        if ".pdb" not in solute_pdb:
+            solute_pdb += ".pdb"
         self.solute_pdb = solute_pdb
         if not os.path.isdir(self.path):
             make_path(path)
