@@ -56,12 +56,6 @@ def signac_init():
         job.doc["foldamer_name"] = job.doc["build_parameters"]["structure_file"]
         job.doc["system_name"] = "system"
 
-def main():
-    if not os.path.isdir("workspace"):
-        subprocess.run("signac init".split(" "))
-        signac_init()
-    FlowProject().main()
-
 # Decorator to cd into and out of workspace
 # before and after operation
 def cd_to_job_dir(function):
@@ -170,6 +164,14 @@ def parameterize_solvated_system(job):
     top_generator.assign_parameters()
     job.doc["foldamer_topology"] = top_generator.top_file
     job.doc["foldamer_gro"] = top_generator.gro_file
+
+
+def main():
+    if not os.path.isdir("workspace"):
+        subprocess.run("signac init".split(" "))
+        signac_init()
+    FlowProject().main()
+
 
 if __name__ == "__main__":
     main()

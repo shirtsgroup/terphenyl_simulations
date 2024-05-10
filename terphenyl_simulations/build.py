@@ -2,6 +2,8 @@ import yaml
 import os
 import sys
 import shutil
+import pickle
+import json
 from subprocess import Popen, PIPE
 import mbuild as mb
 import warnings
@@ -12,6 +14,65 @@ from .utils import ROOT_DIR, replace_all_pattern, make_path, renumber_pdb_atoms
 from .force_fields import FoldamerOFFDefault, FoldamerOFFBespoke, SystemOFFDefault
 
 PACKMOL = shutil.which("packmol")
+
+class TopologyManager:
+    """
+    The TopologyManager class is responsible for storing and keeping track of
+    existing molecule topologies. Since parameter assigment can be a costly
+    computation, this object stores topology files in a local file system, 
+    and provides these files to simulations when needed.
+    """
+
+    def __init__(self, topology_dir = None, topology_object = "topology_manager.pkl"):
+        # Default values
+        if topology_dir is None:
+            topology_dir = os.path.join(ROOT_DIR, "data/topology_files")
+        if topology_object is None:
+            topology_object = "topology_manager.pkl"
+        
+        # Save values to object
+        self.topology_dir = topology_dir
+        self.topology_object = os.path.join(topology_dir, topology_object)
+        
+        # Generate path for saving topologies
+        if not os.path.isdir(topology_dir) and len(topology_dir) > 0:
+            os.makedirs(topology_dir)
+        if not os.path.exists(self.topology_object):
+            print("saving...")
+            # Initialize object once
+            # This dictionary will hold the paths to topology files
+            self.topology_dictionary = {}
+            self.save()
+        else:
+            print("loading")
+            # If a pickled object exists for this object
+            # Load it into this object
+            self.load()
+
+        print("outside if statement")
+
+    def save(self):
+        with open(self.topology_object, 'wb') as fw:
+            pickle.dump(self.__dict__, fw)
+
+    def load(self):
+        print("Loading TopologyManager from file...")
+        with open(self.topology_object, 'rb') as fr:
+            tmp_dict = pickle.load(fr)
+        self.__dict__.update(tmp_dict)
+
+    def add_topology(self, build_file, filename_list):
+        with open(build_file, "r") as stream:
+            topology_dict = yaml.safe_load(stream)
+
+        topology_json = json.dumps(topology_dict)
+        self.topology_dictionary[topology_json] = {}
+
+        for file in filename_list:
+            shutil.copy(file, self.topology_dir)
+            file_format = file.split(".")[-1]
+            self.topology_dictionary[topology_json][file_format] = os.path.join(self.topology_dir, file)
+        self.save()
 
 
 class FoldamerBuilder:

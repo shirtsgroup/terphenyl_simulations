@@ -25,6 +25,11 @@ class GromacsWrapper(MDEngineWrapper):
             self.gmx = gromacs_exe
         else:
             self.gmx = shutil.which("gmx")
+            if self.gmx is None:
+                self.gmx = shutil.which("gmx_mpi")
+        
+        if self.gmx is None:
+            raise ModuleNotFoundError("Gromacs executable not found!")
 
         self.mpi = False
         if "mpi" in self.gmx:
