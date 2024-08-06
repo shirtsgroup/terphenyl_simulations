@@ -80,9 +80,7 @@ def build_foldamer(job):
     foldamer_builder = terphenyl_simulations.build.FoldamerBuilder(
         job.sp["build_foldamer"]
     )
-    foldamer_builder.build_foldamer()
-    foldamer_builder.write_pdb()
-    foldamer_builder.write_mol()
+    foldamer_builder.get_foldamer()
 
 
 @FlowProject.pre.after(build_foldamer)
