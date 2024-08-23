@@ -18,10 +18,10 @@ def signac_init():
         simulation_parameters = yaml.safe_load(f)
 
     # Remove replicas and replace with replica_id
-    for i in range(simulation_parameters["n_replicas"]):
+    for i in range(simulation_parameters["n_simulations"]):
         sp_i = dict(simulation_parameters)
         sp_i["replica"] = i
-        del sp_i["n_replicas"]
+        del sp_i["n_simulations"]
         simulation_statepoints.append(sp_i)
 
     project = signac.get_project()
@@ -97,10 +97,10 @@ def parameterize_foldamer(job):
     top_generator = terphenyl_simulations.build.MoleculeTopologyGenerator(
         mol_file,
         pdb_file,
-        None,
+        job.sp["build_foldamer"],
         job.doc["build_parameters"]["ff_method"],
     )
-    top_generator.assign_parameters()
+    top_generator.get_ff_parameters()
     job.doc["foldamer_topology"] = top_generator.top_file
     job.doc["foldamer_gro"] = top_generator.gro_file
 

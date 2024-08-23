@@ -5,6 +5,7 @@ import shutil
 import pickle
 import json
 import uuid
+from glob import glob
 from subprocess import Popen, PIPE
 import mbuild as mb
 import warnings
@@ -49,7 +50,6 @@ class TopologyManager:
             pickle.dump(self.__dict__, fw)
 
     def load(self):
-        print("Loading TopologyManager from file...")
         with open(self.topology_object, 'rb') as fr:
             tmp_dict = pickle.load(fr)
         self.__dict__.update(tmp_dict)
@@ -66,10 +66,11 @@ class TopologyManager:
         unique_dir = "".join([a for a in unique_dir_str if a != "-"])
         return unique_dir
 
-    def check_buildfile_entry(self, build_file, label):
+    def check_file_type(self, build_file, label, filetype):
         topology_json = self.get_build_json(build_file)
         unique_dir = self.get_entry_dir_id(topology_json)
-        return os.path.isdir(os.path.join(self.topology_dir, unique_dir, label))
+        files = glob(os.path.join(self.topology_dir, unique_dir, label, "*." + filetype))
+        return len(files) > 0
 
     def add_buildfile_entry(self, build_file):
         print("Adding", build_file, "to TopologyManager...")
@@ -111,8 +112,6 @@ class TopologyManager:
         entry_id = self.get_entry_dir_id(topology_json)
         label_directory = os.path.join(self.topology_dir, entry_id, label)
         if os.path.exists(os.path.join(label_directory, structure_file)):
-            print("Structure file", structure_file, "already exists in TopologyManager database.")
-            print(os.listdir(label_directory))
             return
         else:
             shutil.copy(structure_file, label_directory)
@@ -132,13 +131,11 @@ class TopologyManager:
             index = stored_file_types.index(filetype)
             return self.topology_dictionary[topology_json][label]["structure_files"][index]
 
-
-
-    def add_topology(self, build_file, topology_file, label):
+    def add_topology(self, topology_file, build_file, label):
         topology_json = self.get_build_json(build_file)
 
         # Add to internal dictionary
-        self.topology_dictionary[topology_json][label]["structure_file"] = topology_file
+        self.topology_dictionary[topology_json][label]["topology_file"] = topology_file
 
         # Save files internally
         entry_id = self.get_entry_dir_id(topology_json)
@@ -146,6 +143,8 @@ class TopologyManager:
         shutil.copy(topology_file, label_directory)
         self.save()
 
+    def get_topology(self):
+        pass
 
 class FoldamerBuilder:
     """
@@ -176,7 +175,7 @@ class FoldamerBuilder:
 
     def get_foldamer(self):
         # Check DB of entries first
-        if self.topology_manager.check_buildfile_entry(self.build_file, self.label):
+        if self.topology_manager.check_file_type(self.build_file, self.label, "pdb"):
             print("Using database structure_file...")
             self.chain = mb.load(self.topology_manager.get_structure(self.build_file, self.label))
         else:
@@ -245,7 +244,6 @@ class FoldamerBuilder:
         self.topology_manager.add_structure(mol_fn, self.build_file, self.label)
 
 
-
 # Requires packmol
 class SystemBuilder:
     """
@@ -278,8 +276,6 @@ class SystemBuilder:
         )
 
         # Check stored solvent pdbs
-
-        print(os.listdir(os.path.join(ROOT_DIR, "data/solvents/")))
 
         if not os.path.exists(solvent_pdb):
             if solvent_pdb.split("/")[-1] in os.listdir(
@@ -371,9 +367,11 @@ class SystemBuilder:
 
 # I probably best to get rid of this class
 class MoleculeTopologyGenerator:
-    def __init__(self, molecule_file, pdb_file, output_file, ff_method, path="", ff_name="openff-2.0.0"):
+    def __init__(self, molecule_file, pdb_file, build_file, ff_method, path="", ff_name="openff-2.0.0", topology_manager = TopologyManager(), topology_label = "molecule"):
         self.path = path
-        self.name = output_file
+        self.build_file = build_file
+        self.topology_manager = topology_manager
+        self.topology_label = topology_label
         if not os.path.isdir(self.path):
             make_path(path)
 
@@ -402,6 +400,13 @@ class MoleculeTopologyGenerator:
         self.top_file = None
         self.gro_file = None
 
+    def get_ff_parameters(self):
+        if self.topology_manager.check_file_type(self.build_file, self.topology_label, "top"):
+            self.top_file = self.topology_manager.get_topology(self.build_file, self.topology_label)
+            self.gro_file = self.topology_manager.get_structure(self.build_file, self.topology_label)
+        else:
+            self.assign_parameters()
+
     def set_simulation_engine(self, md_engine_object):
         self.md_engine = md_engine_object
 
@@ -409,6 +414,7 @@ class MoleculeTopologyGenerator:
         top_file, gro_file = self.ff_generator.assign_parameters()
         self.top_file = top_file
         self.gro_file = gro_file
+        self.topology_manager.add_topology(self.top_file, self.build_file, self.topology_label)
 
     def minimize(self):
         self.md_engine.center_configuration(
