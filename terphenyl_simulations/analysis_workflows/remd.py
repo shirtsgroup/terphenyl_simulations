@@ -159,7 +159,7 @@ def parameterize_solvated_system(job):
         "system_openff",
         "openff-system",
     )
-    top_generator.assign_parameters()
+    top_generator.get_parameters()
     job.doc["foldamer_topology"] = top_generator.top_file
     job.doc["foldamer_gro"] = top_generator.gro_file
 
