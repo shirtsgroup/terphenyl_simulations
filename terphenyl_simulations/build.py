@@ -14,6 +14,8 @@ from abc import ABC, abstractclassmethod
 from mbuild.lib.recipes.polymer import Polymer
 from .utils import ROOT_DIR, replace_all_pattern, make_path, renumber_pdb_atoms
 from .force_fields import FoldamerOFFDefault, FoldamerOFFBespoke, SystemOFFDefault
+from openff.interchange.components._packmol import pack_box, UNIT_CUBE
+
 
 PACKMOL = shutil.which("packmol")
 
@@ -35,6 +37,7 @@ class TopologyManager:
             os.makedirs(topology_dir)
         if not os.path.exists(self.topology_object):
             print("Creating a new TopologyManager:", self.topology_object)
+            print("THIS SHOULD ONLY HAPPEN ONCE!")
             # Initialize object once
             # This dictionary will hold the paths to topology files
             self.topology_dictionary = {}
@@ -61,57 +64,55 @@ class TopologyManager:
         topology_json = json.dumps(topology_dict)
         return topology_json
 
-    def get_entry_dir_id(self, top_json):
-        unique_dir_str = str(uuid.uuid5(uuid.NAMESPACE_X500, str(top_json)))
+    def get_entry_dir_id(self, build_file):
+        build_json = self.get_build_json(build_file)
+        unique_dir_str = str(uuid.uuid5(uuid.NAMESPACE_X500, str(build_json)))
         unique_dir = "".join([a for a in unique_dir_str if a != "-"])
         return unique_dir
 
     def check_file_type(self, build_file, label, filetype):
-        topology_json = self.get_build_json(build_file)
-        unique_dir = self.get_entry_dir_id(topology_json)
-        files = glob(os.path.join(self.topology_dir, unique_dir, label, "*." + filetype))
+        build_file_id = self.get_entry_dir_id(build_file)
+        files = glob(os.path.join(self.topology_dir, build_file_id, label, "*." + filetype))
         return len(files) > 0
 
     def add_buildfile_entry(self, build_file):
         print("Adding", build_file, "to TopologyManager...")
-        topology_json = self.get_build_json(build_file)
-        
+        build_file_id = self.get_entry_dir_id(build_file)
+
         # Generate entry for internal dictionary
-        self.topology_dictionary[topology_json] = {}
+        self.topology_dictionary[build_file_id] = {}
 
         # Make filesystem reflecting new entry
         # Generate unique key for JSON file
 
-        unique_dir = self.get_entry_dir_id(topology_json)
-        output_dir = os.path.join(self.topology_dir, unique_dir)
+        output_dir = os.path.join(self.topology_dir, build_file_id)
         os.makedirs(output_dir)
         self.save()
 
     def add_entry_label(self, build_file, label):
         # Add label to entry
-        topology_json = self.get_build_json(build_file)
-        self.topology_dictionary[topology_json][label] = {
+        build_file_key = self.get_entry_dir_id(build_file)
+
+        self.topology_dictionary[build_file_key][label] = {
             "structure_files" :[],
             "topology_files" : [],
         }
 
         # Add directory to local storage
-        unique_dir = self.get_entry_dir_id(topology_json)
-        label_dir = output_dir = os.path.join(self.topology_dir, unique_dir, label)
+        label_dir = os.path.join(self.topology_dir, build_file_key, label)
         os.makedirs(label_dir)
         self.save()
         
     def add_structure(self, structure_file, build_file, label):
-        topology_json = self.get_build_json(build_file)
+        build_file_id = self.get_entry_dir_id(build_file)
         filename = structure_file.split("/")[-1]
-        if topology_json not in self.topology_dictionary.keys():
+        if build_file_id not in self.topology_dictionary.keys():
             self.add_buildfile_entry(build_file)
-        if label not in self.topology_dictionary[topology_json].keys():
+        if label not in self.topology_dictionary[build_file_id].keys():
             self.add_entry_label(build_file, label)
 
         # Save files internally
-        entry_id = self.get_entry_dir_id(topology_json)
-        label_directory = os.path.join(self.topology_dir, entry_id, label)
+        label_directory = os.path.join(self.topology_dir, build_file_id, label)
         if os.path.exists(os.path.join(label_directory, filename)):
             return
         else:
@@ -119,33 +120,55 @@ class TopologyManager:
 
         # Add to internal dictionary
         # But check if extension already exists
-        self.topology_dictionary[topology_json][label]["structure_files"].append(os.path.join(label_directory, structure_file))
-
+        self.topology_dictionary[build_file_id][label]["structure_files"].append(os.path.join(label_directory, structure_file))
         self.save()
+        print(self.topology_dictionary)
 
-    def get_structure(self, build_file, label, filetype = None):
-        topology_json = self.get_build_json(build_file)
+    def get_structure(self, build_file, label, path, filetype = None):
+        build_file_id = self.get_entry_dir_id(build_file)
+        # Get most recently stored file
         if filetype is None:
-            return self.topology_dictionary[topology_json][label]["structure_files"][0]
+            database_file = self.topology_dictionary[build_file_id][label]["structure_files"][-1]
         else:
-            stored_file_types = [structure.split(".")[-1] for structure in self.topology_dictionary[topology_json][label]["structure_files"]]
+            stored_file_types = [structure.split(".")[-1] for structure in self.topology_dictionary[build_file_id][label]["structure_files"]]
             index = stored_file_types.index(filetype)
-            return self.topology_dictionary[topology_json][label]["structure_files"][index]
+            database_file =  self.topology_dictionary[build_file_id][label]["structure_files"][index]
+
+        output_file = os.path.join(path, database_file.split("/")[-1])
+        shutil.copy(database_file, output_file)
+        return output_file
+
 
     def add_topology(self, topology_file, build_file, label):
-        topology_json = self.get_build_json(build_file)
+        build_file_id = self.get_entry_dir_id(build_file)
+        # Save files internally
+        label_directory = os.path.join(self.topology_dir, build_file_id, label)
+        stored_filename = os.path.join(label_directory, topology_file.split("/")[-1])
+        shutil.copy(topology_file, stored_filename)
 
         # Add to internal dictionary
-        self.topology_dictionary[topology_json][label]["topology_file"] = topology_file
-
-        # Save files internally
-        entry_id = self.get_entry_dir_id(topology_json)
-        label_directory = os.path.join(self.topology_dir, entry_id, label)
-        shutil.copy(topology_file, label_directory)
+        print(build_file_id)
+        print(self.topology_dictionary)
+        self.topology_dictionary[build_file_id][label]["topology_files"].append(stored_filename)
         self.save()
 
-    def get_topology(self):
-        pass
+    def get_topology(self, build_file, label, path, filetype = None):
+        build_file_id = self.get_entry_dir_id(build_file)
+        print(build_file_id)
+        print(self.topology_dictionary)
+        if filetype is None:
+            database_file =  self.topology_dictionary[build_file_id][label]["topology_files"][0]
+        else:
+            stored_file_types = [structure.split(".")[-1] for structure in self.topology_dictionary[build_file_id][label]["structure_files"]]
+            index = stored_file_types.index(filetype)
+            database_file =  self.topology_dictionary[build_file_id][label]["topology_files"][index]
+
+        print(database_file)
+        output_file = os.path.join(path, database_file.split("/")[-1])
+        print(output_file)
+        shutil.copy(database_file, output_file)
+        return output_file
+    
 
 class FoldamerBuilder:
     """
@@ -178,12 +201,13 @@ class FoldamerBuilder:
         # Check DB of entries first
         if self.topology_manager.check_file_type(self.build_file, self.label, "pdb"):
             print("Using database structure_file...")
-            self.chain = mb.load(self.topology_manager.get_structure(self.build_file, self.label))
+            self.topology_manager.get_structure(self.build_file, self.label, self.path, filetype = "pdb")
+            self.topology_manager.get_structure(self.build_file, self.label, self.path, filetype = "mol")
         else:
             print("Building Foldamer from", self.build_file + "...")
             self.build_foldamer()
-        self.write_pdb()
-        self.write_mol()
+            self.write_pdb()
+            self.write_mol()
 
     def build_foldamer(self):
         smile_str = self.build_params["foldamer_smile"]
@@ -213,6 +237,7 @@ class FoldamerBuilder:
             compound=tail_cap, index=-1, separation=0.15, label="tail", duplicate=False
         )
         self.chain.build(n=self.build_params["foldamer_length"], sequence="A")
+        self.chain.name = "MOP"
         # self.chain.energy_minimize()
 
         # Change residue names in chain object
@@ -255,6 +280,7 @@ class SystemBuilder:
             self.build_params = yaml.safe_load(f)
         self.packmol = PACKMOL
         self.path = path
+        self.topology_manager = topology_manager
         self.label = "system"
         if ".pdb" not in solute_pdb:
             solute_pdb += ".pdb"
@@ -263,11 +289,11 @@ class SystemBuilder:
             make_path(path)
 
     def get_system(self):
-        if self.topology_manager.check_file_type(self.build_file_yml, self.label, "pdb")
+        if False and self.topology_manager.check_file_type(self.build_file, self.label, "pdb"):
             print("Using database structure_file...")
-            database_file = self.topology_manager.get_structure(self.build_file, self.label, "pdb")
+            database_file = self.topology_manager.get_structure(self.build_file, self.label, "", "pdb")
             filename = database_file.split("/")[-1]
-            shutil.copy(, os.path.join(self.path, filename))
+            self.output_file = filename
         else:
             self.build_packmol_inp()
             self.solvate_system()
@@ -417,8 +443,8 @@ class MoleculeTopologyGenerator:
 
     def get_ff_parameters(self):
         if self.topology_manager.check_file_type(self.build_file, self.topology_label, "top"):
-            self.top_file = self.topology_manager.get_topology(self.build_file, self.topology_label)
-            self.gro_file = self.topology_manager.get_structure(self.build_file, self.topology_label)
+            self.top_file = self.topology_manager.get_topology(self.build_file, self.topology_label, self.path)
+            self.gro_file = self.topology_manager.get_structure(self.build_file, self.topology_label, self.path, filetype="gro")
         else:
             self.assign_parameters()
 
@@ -429,7 +455,10 @@ class MoleculeTopologyGenerator:
         top_file, gro_file = self.ff_generator.assign_parameters()
         self.top_file = top_file
         self.gro_file = gro_file
+
         self.topology_manager.add_topology(self.top_file, self.build_file, self.topology_label)
+        self.topology_manager.add_structure(self.ff_generator.sdf_file, self.build_file, self.topology_label)
+        self.topology_manager.add_structure(self.gro_file, self.build_file, self.topology_label)
 
     def minimize(self):
         self.md_engine.center_configuration(
@@ -476,14 +505,8 @@ class SystemTopologyGenerator:
     def get_parameters(self):
         if self.topology_manager.check_file_type(self.build_file, self.label, "top"):
             print("Getting Topology Files from", self.topology_manager.topology_object + "...")
-            database_top_file = self.topology_manager.get_topology(self.build_file, self.topology_label)
-            database_gro_file = self.topology_manager.get_structure(self.build_file, self.topology_label)
-            top_fn = database_top_file.split("/")[-1]
-            gro_fn = database_gro_file.split("/")[-1]
-            shutil.copy(database_top_file, os.path.join(self.path, top_fn))
-            shutil.copy(database_gro_file, os.path.join(self.path, gro_fn))
-            self.top_file = top_fn
-            self.gro_file = gro_fn
+            self.top_file = self.topology_manager.get_topology(self.build_file, self.topology_label, self.path)
+            self.gro_file = self.topology_manager.get_structure(self.build_file, self.topology_label, self.path)
         else:
             self.assign_parameters()
             self.minimize()

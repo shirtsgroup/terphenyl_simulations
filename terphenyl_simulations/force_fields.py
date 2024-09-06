@@ -43,11 +43,11 @@ class FoldamerOFFDefault(OFFMethod):
         return top_file, gro_file
 
     def _get_partial_charges(self, method="am1bcc"):
-        sdf_file = os.path.join(self.path, self.name + "_charges.sdf")
-        if not os.path.exists(sdf_file):
+        self.sdf_file = os.path.join(self.path, self.name + "_charges.sdf")
+        if not os.path.exists(self.sdf_file):
             # Expensive step
             self.molecule.assign_partial_charges(partial_charge_method=method)
-            self.molecule.to_file(sdf_file, file_format="sdf")
+            self.molecule.to_file(self.sdf_file, file_format="sdf")
         else:
             self.molecule = Molecule.from_file(sdf_file)
 
@@ -91,9 +91,11 @@ class SystemOFFDefault(OFFMethod):
                 off_molecule.perceive_residues()
             self.molecules.append(off_molecule)
             self.charges.append(off_molecule.partial_charges != None)
-        self.pdb_file = system_pdb
-        self.off_topology = Topology.from_pdb(
-            self.pdb_file, unique_molecules=self.molecules
+        self.pdb_file = app.PDBFile(system_pdb)
+        print([mol.name for mol in self.molecules])
+        print(self.pdb_file.topology)
+        self.off_topology = Topology.from_openmm(
+            self.pdb_file.topology, unique_molecules=self.molecules
         )
         self.force_field = ForceField(ff_str + ".offxml")
 

@@ -86,6 +86,8 @@ class GromacsWrapper(MDEngineWrapper):
             + top_file
             + " -o "
             + os.path.join(self.path, prefix)
+ #          + " -maxwarn 1"
+
         )
 
         process = subprocess.Popen(grompp_call.split(" "))

@@ -137,8 +137,7 @@ def build_system(job):
         "em_" + job.doc["foldamer_name"] + ".pdb",
         job.sp["build_foldamer"]
     )
-    packmol_builder.build_packmol_inp()
-    packmol_builder.solvate_system()
+    packmol_builder.get_system()
 
 @FlowProject.pre.after(build_system)
 @FlowProject.post(
