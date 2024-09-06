@@ -27,7 +27,7 @@ class GromacsWrapper(MDEngineWrapper):
             self.gmx = shutil.which("gmx")
             if self.gmx is None:
                 self.gmx = shutil.which("gmx_mpi")
-        
+
         if self.gmx is None:
             raise ModuleNotFoundError("Gromacs executable not found!")
 
@@ -86,8 +86,7 @@ class GromacsWrapper(MDEngineWrapper):
             + top_file
             + " -o "
             + os.path.join(self.path, prefix)
- #          + " -maxwarn 1"
-
+            #          + " -maxwarn 1"
         )
 
         process = subprocess.Popen(grompp_call.split(" "))

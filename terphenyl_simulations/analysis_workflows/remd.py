@@ -5,6 +5,8 @@ import subprocess
 import yaml
 import glob
 import signac
+import flow
+import sys
 from flow import FlowProject
 import terphenyl_simulations
 
@@ -56,6 +58,7 @@ def signac_init():
         job.doc["foldamer_name"] = job.doc["build_parameters"]["structure_file"]
         job.doc["system_name"] = "system"
 
+
 # Decorator to cd into and out of workspace
 # before and after operation
 def cd_to_job_dir(function):
@@ -65,16 +68,13 @@ def cd_to_job_dir(function):
         os.chdir(job.fn(""))
         function(job)
         os.chdir(top_dir)
+
     return wrap_flow_operation
 
 
 # FlowProject Operations
-@FlowProject.post(
-    lambda job: os.path.exists(
-        job.fn(job.doc["foldamer_name"] + ".pdb")
-    )
-)
-@FlowProject.operation
+@FlowProject.post(lambda job: os.path.exists(job.fn(job.doc["foldamer_name"] + ".pdb")))
+@FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def build_foldamer(job):
     foldamer_builder = terphenyl_simulations.build.FoldamerBuilder(
@@ -85,11 +85,9 @@ def build_foldamer(job):
 
 @FlowProject.pre.after(build_foldamer)
 @FlowProject.post(
-    lambda job: os.path.exists(
-        job.fn(job.doc["foldamer_name"] + "_openff-2.0.0.top")
-    )
+    lambda job: os.path.exists(job.fn(job.doc["foldamer_name"] + "_openff-2.0.0.top"))
 )
-@FlowProject.operation
+@FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def parameterize_foldamer(job):
     mol_file = job.doc["foldamer_name"] + ".mol"
@@ -107,11 +105,9 @@ def parameterize_foldamer(job):
 
 @FlowProject.pre.after(parameterize_foldamer)
 @FlowProject.post(
-    lambda job: os.path.exists(
-        job.fn("em_" + job.doc["foldamer_name"] + ".pdb")
-    )
+    lambda job: os.path.exists(job.fn("em_" + job.doc["foldamer_name"] + ".pdb"))
 )
-@FlowProject.operation
+@FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def minimize_foldamer(job):
     gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(
@@ -119,48 +115,62 @@ def minimize_foldamer(job):
     )
     centered_out_name = job.doc["foldamer_gro"].split(".gro")[0] + "_centered.gro"
     gmx_wrapper.center_configuration(job.doc["foldamer_gro"], centered_out_name)
-    gmx_wrapper.minimize(centered_out_name, job.doc["foldamer_topology"], prefix = "em_" + job.doc["foldamer_name"])
-    gmx_wrapper.edit_conf(f = "em_" + job.doc["foldamer_name"] + ".tpr", o = "em_" + job.doc["foldamer_name"] + ".pdb", conect = "yes")
+    gmx_wrapper.minimize(
+        centered_out_name,
+        job.doc["foldamer_topology"],
+        prefix="em_" + job.doc["foldamer_name"],
+    )
+    gmx_wrapper.edit_conf(
+        f="em_" + job.doc["foldamer_name"] + ".tpr",
+        o="em_" + job.doc["foldamer_name"] + ".pdb",
+        conect="yes",
+    )
     job.doc["foldamer_gro"] = "em_" + job.doc["foldamer_name"] + ".gro"
 
 
 @FlowProject.pre.after(minimize_foldamer)
 @FlowProject.post(
-    lambda job: os.path.exists(
-        job.fn("solvated_" + job.doc["foldamer_name"] + ".pdb")
-    )
+    lambda job: os.path.exists(job.fn(job.doc["foldamer_name"] + "_system.top"))
 )
-@FlowProject.operation
+@FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def build_system(job):
-    packmol_builder = terphenyl_simulations.build.SystemBuilder(
-        "em_" + job.doc["foldamer_name"] + ".pdb",
-        job.sp["build_foldamer"]
+    openff_builder = terphenyl_simulations.build.SystemBuilderOpenFF(
+        job.doc["foldamer_name"] + "_charges.sdf",
+        job.doc["build_parameters"]["system"]["solvent_smile_str"],
+        job.sp["build_foldamer"],
     )
-    packmol_builder.get_system()
+    openff_builder.get_system_topology()
+    openff_builder.minimize_system()
+    job.doc["foldamer_topology"] = openff_builder.top_file
+    job.doc["foldamer_gro"] = openff_builder.gro_file
 
 @FlowProject.pre.after(build_system)
 @FlowProject.post(
-    lambda job: os.path.exists(
-        job.fn("system_openff.top")
-    )
+    lambda job: os.path.exists(job.fn(job.doc["foldamer_name"] + "_system_hmr.top"))
 )
-@FlowProject.operation
+@FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
-def parameterize_solvated_system(job):
-    molecule_pdb_files = [ "em_" + job.doc["foldamer_name"] + ".pdb", job.doc["build_parameters"]["system"]["solvent"] + ".pdb"]
-    charge_files = [job.doc["foldamer_name"] + "_charges.sdf", None]
-    pdb_file = "solvated_" + job.doc["foldamer_name"] + ".pdb"
-    top_generator = terphenyl_simulations.build.SystemTopologyGenerator(
-        molecule_pdb_files,
-        charge_files,
-        pdb_file,
-        "system_openff",
-        "openff-system",
-    )
-    top_generator.get_parameters()
-    job.doc["foldamer_topology"] = top_generator.top_file
-    job.doc["foldamer_gro"] = top_generator.gro_file
+def apply_hmr_to_topology(job):
+    output_topology = job.doc["foldamer_name"] + "_system_hmr.top"
+    sys.argv = ["hmr_topology", "-t", job.doc["foldamer_topology"], "-o",  output_topology, "--hmr_ratio", "3"]
+    terphenyl_simulations.scripts.hmr_topology()
+
+
+# if slurm is an executable
+@FlowProject.pre.after(apply_hmr_to_topology)
+@FlowProject.pre(lambda job: shutil.which("slurm"))
+@FlowProject.operation(directives={"fork": True})
+def submit_simulations(job):
+    pass
+
+
+# if slurm isn't an executable
+@FlowProject.pre.after(apply_hmr_to_topology)
+@FlowProject.pre(lambda job: shutil.which("gmx_mpi"))
+@FlowProject.operation(directives={"fork": True})
+def run_simulations(job):
+    pass
 
 
 def main():

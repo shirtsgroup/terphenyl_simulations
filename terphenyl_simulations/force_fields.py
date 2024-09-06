@@ -16,10 +16,14 @@ class OFFMethod(ABC):
 
 
 class FoldamerOFFDefault(OFFMethod):
-    def __init__(self, mol_file, pdb_file, output_file = None, path="", ff_str="openff-2.0.0"):
+    def __init__(
+        self, mol_file, pdb_file, output_file=None, path="", ff_str="openff-2.0.0"
+    ):
         if type(mol_file) is not str:
-            print('FoldamerOFFDefault method does cannot take process multiple molecules, try' + \
-                  'SystemOFFDefault method instead.')
+            print(
+                "FoldamerOFFDefault method does cannot take process multiple molecules, try"
+                + "SystemOFFDefault method instead."
+            )
             sys.exit()
         if not os.path.isdir(path):
             make_path(path)
@@ -40,7 +44,7 @@ class FoldamerOFFDefault(OFFMethod):
     def assign_parameters(self, charge_method="am1bcc"):
         self._get_partial_charges(charge_method)
         top_file, gro_file = self._generate_ff_topologies()
-        return top_file, gro_file
+        return top_file, gro_file, self.sdf_file
 
     def _get_partial_charges(self, method="am1bcc"):
         self.sdf_file = os.path.join(self.path, self.name + "_charges.sdf")
@@ -74,7 +78,12 @@ class FoldamerOFFBespoke(OFFMethod):
 
 class SystemOFFDefault(OFFMethod):
     def __init__(
-        self, system_molecules_list, charge_files, system_pdb, path="", ff_str="openff-2.0.0"
+        self,
+        system_molecules_list,
+        charge_files,
+        system_pdb,
+        path="",
+        ff_str="openff-2.0.0",
     ):
         if not os.path.isdir(path):
             make_path(path)
@@ -101,9 +110,11 @@ class SystemOFFDefault(OFFMethod):
 
     def _generate_ff_topology(self):
         interchange = Interchange.from_smirnoff(
-            force_fild = self.force_field,
-            topology = self.off_topology,
-            charge_from_molecules = [mol for mol, charge in zip(self.molecules, self.charges) if charge]
+            force_fild=self.force_field,
+            topology=self.off_topology,
+            charge_from_molecules=[
+                mol for mol, charge in zip(self.molecules, self.charges) if charge
+            ],
         )
         interchange.positions = self.pdb_file.getPositions()
 
@@ -113,7 +124,7 @@ class SystemOFFDefault(OFFMethod):
         interchange.to_gro(gro_file)
 
         return top_file, gro_file
-    
+
     def assign_parameters(self):
         top_file, gro_file = self._generate_ff_topologies()
         return top_file, gro_file

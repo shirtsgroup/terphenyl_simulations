@@ -6,11 +6,16 @@ output from the FoldamerBuilder/SystemBuilder objects
 """
 
 from terphenyl_simulations.force_fields import FoldamerOFFDefault, FoldamerOFFBespoke
-from terphenyl_simulations.build import MoleculeTopologyGenerator, SystemTopologyGenerator, TopologyManager
+from terphenyl_simulations.build import (
+    MoleculeTopologyGenerator,
+    SystemTopologyGenerator,
+    TopologyManager,
+)
 from terphenyl_simulations.utils import ROOT_DIR, make_path
 import pytest
 import os
 import shutil
+
 
 @pytest.fixture
 def navigate_to_test_dir():
@@ -54,7 +59,7 @@ def test_default_topology_generator(setup_default_ff_tests):
     assert default_ff_object.omm_topology.getNumChains() == 1
 
 
-@pytest.mark.skip(reason = "this test is very slow unless OpenEye is installed")
+@pytest.mark.skip(reason="this test is very slow unless OpenEye is installed")
 def test_default_tg_charges(setup_default_ff_tests):
     default_ff_object = setup_default_ff_tests
     default_ff_object._get_partial_charges()
@@ -75,27 +80,39 @@ def test_default_tg_output(setup_default_ff_tests_post_charges):
     assert os.path.exists("output/mop_dimer_openff-2.0.0.gro")
 
 
-
 def test_topology_manager_save_load(navigate_to_test_dir):
     assert navigate_to_test_dir is None
-    tp_manager = TopologyManager(topology_dir = "", topology_object = "top_manager.pkl")
+    tp_manager = TopologyManager(topology_dir="", topology_object="top_manager.pkl")
     tp_manager.topology_dictionary["test_key"] = "test_value"
     tp_manager.save()
 
-    tp_manager_load = TopologyManager(topology_dir = "", topology_object = "top_manager.pkl")
+    tp_manager_load = TopologyManager(
+        topology_dir="", topology_object="top_manager.pkl"
+    )
 
     assert os.path.exists("top_manager.pkl")
     assert "test_key" in tp_manager_load.topology_dictionary.keys()
     assert tp_manager_load.topology_dictionary["test_key"] == "test_value"
     os.remove("top_manager.pkl")
 
+
 def test_topology_manager_save_top_file(setup_default_ff_tests_post_charges):
     default_ff_object = setup_default_ff_tests_post_charges
     default_ff_object._get_partial_charges()
     default_ff_object._generate_ff_topologies()
 
-    tp_manager = TopologyManager(topology_dir = "output_2", topology_object = "top_manager.pkl")
-    tp_manager.add_topology("mop_tetramer.build", ["output/mop_dimer_charges.sdf", "output/mop_dimer_openff-2.0.0.gro", "output/mop_dimer_openff-2.0.0.top", "output/mop_dimer_renum.pdb"])
+    tp_manager = TopologyManager(
+        topology_dir="output_2", topology_object="top_manager.pkl"
+    )
+    tp_manager.add_topology(
+        "mop_tetramer.build",
+        [
+            "output/mop_dimer_charges.sdf",
+            "output/mop_dimer_openff-2.0.0.gro",
+            "output/mop_dimer_openff-2.0.0.top",
+            "output/mop_dimer_renum.pdb",
+        ],
+    )
 
     assert os.path.exists("output_2/top_manager.pkl")
     assert os.path.exists("output_2/mop_dimer_charges.sdf")
@@ -111,10 +128,22 @@ def test_topology_manager_save_top_file(setup_default_ff_tests_post_charges):
     default_ff_object._get_partial_charges()
     default_ff_object._generate_ff_topologies()
 
-    tp_manager = TopologyManager(topology_dir = "output_2", topology_object = "top_manager.pkl")
-    tp_manager.add_topology("mop_tetramer.build", ["output/mop_dimer_charges.sdf", "output/mop_dimer_openff-2.0.0.gro", "output/mop_dimer_openff-2.0.0.top", "output/mop_dimer_renum.pdb"])
+    tp_manager = TopologyManager(
+        topology_dir="output_2", topology_object="top_manager.pkl"
+    )
+    tp_manager.add_topology(
+        "mop_tetramer.build",
+        [
+            "output/mop_dimer_charges.sdf",
+            "output/mop_dimer_openff-2.0.0.gro",
+            "output/mop_dimer_openff-2.0.0.top",
+            "output/mop_dimer_renum.pdb",
+        ],
+    )
 
-    loaded_tp = TopologyManager(topology_dir = "output_2", topology_object = "top_manager.pkl")
+    loaded_tp = TopologyManager(
+        topology_dir="output_2", topology_object="top_manager.pkl"
+    )
     print(loaded_tp)
 
     assert loaded_tp.topology_dictionary.keys() == tp_manager.topology_dictionary.keys()
