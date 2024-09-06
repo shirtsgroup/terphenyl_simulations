@@ -53,7 +53,7 @@ class FoldamerOFFDefault(OFFMethod):
             self.molecule.assign_partial_charges(partial_charge_method=method)
             self.molecule.to_file(self.sdf_file, file_format="sdf")
         else:
-            self.molecule = Molecule.from_file(sdf_file)
+            self.molecule = Molecule.from_file(self.sdf_file)
 
     def _generate_ff_topologies(self):
         interchange = Interchange.from_smirnoff(

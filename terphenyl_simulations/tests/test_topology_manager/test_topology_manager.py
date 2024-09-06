@@ -6,14 +6,21 @@ import shutil
 import uuid
 import yaml
 import json
+import pytest
 from glob import glob
 from terphenyl_simulations.build import (
-    TopologyManager,
+    TopologyManager, ROOT_DIR
 )  # Assuming this class is in a module named 'topology_manager'
 import terphenyl_simulations
 
 
 class TestTopologyManager(unittest.TestCase):
+    @pytest.fixture(autouse = True)
+    def navigate_to_test_dir(self):
+        top_dir = os.path.abspath("")
+        os.chdir(os.path.join(ROOT_DIR, "tests/test_topology_manager"))
+        yield
+        os.chdir(top_dir)
 
     @patch("os.makedirs")
     @patch("os.path.isdir", return_value=False)
