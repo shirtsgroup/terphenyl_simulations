@@ -155,10 +155,28 @@ def apply_hmr_to_topology(job):
     output_topology = job.doc["foldamer_name"] + "_system_hmr.top"
     sys.argv = ["hmr_topology", "-t", job.doc["foldamer_topology"], "-o",  output_topology, "--hmr_ratio", "3"]
     terphenyl_simulations.scripts.hmr_topology()
+    tm = terphenyl_simulations.build.TopologyManager()
+    tm.add_topology(output_topology, job.sp["build_foldamer"], "system")
+    job.doc["foldamer_topology"] = output_topology
 
+
+@FlowProject.pre.after(apply_hmr_to_topology)
+@FlowProject.operation(directives={"fork" : True})
+@cd_to_job_dir
+def setup_remd_simulations(job):
+    # Setup input arguments
+    sys.argv = ["REMD_setup", "-N", str(job.sp["n_replicas"]),
+                "--t_range", str(job.sp["t_range"][0]), str(job.sp["t_range"][1]),
+                "--sim_id", job.sp["sim_id"],
+                "--topology_files", job.doc["foldamer_gro"], job.doc["foldamer_topology"]
+            ]
+
+    sys.argv += ["--mdps"] + list(job.sp["mdps"])
+    # Run REMD setup
+    terphenyl_simulations.scripts.REMD_setup()
 
 # if slurm is an executable
-@FlowProject.pre.after(apply_hmr_to_topology)
+@FlowProject.pre.after(setup_remd_simulations)
 @FlowProject.pre(lambda job: shutil.which("slurm"))
 @FlowProject.operation(directives={"fork": True})
 def submit_simulations(job):
@@ -166,7 +184,7 @@ def submit_simulations(job):
 
 
 # if slurm isn't an executable
-@FlowProject.pre.after(apply_hmr_to_topology)
+@FlowProject.pre.after(setup_remd_simulations)
 @FlowProject.pre(lambda job: shutil.which("gmx_mpi"))
 @FlowProject.operation(directives={"fork": True})
 def run_simulations(job):

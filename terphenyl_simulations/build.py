@@ -22,9 +22,6 @@ from openff.interchange.components._packmol import pack_box, UNIT_CUBE
 from openff.toolkit import unit
 
 
-PACKMOL = shutil.which("packmol")
-
-
 class TopologyManager:
     """
     The TopologyManager class is responsible for storing and keeping track of
@@ -35,10 +32,11 @@ class TopologyManager:
 
     def __init__(
         self,
-        topology_dir=os.path.join(ROOT_DIR, "data/topology_files"),
-        topology_object=os.path.join(ROOT_DIR, "data/topology_files/top_manager.pkl"),
+        topology_dir=None,
+        topology_object="top_manager.pkl"
     ):
-        # Save values to object
+        if topology_dir is None:
+            topology_dir = os.path.join(ROOT_DIR, "data/topology_manager")
         self.topology_dir = topology_dir
         self.topology_object = os.path.join(topology_dir, topology_object)
 
@@ -52,10 +50,14 @@ class TopologyManager:
             self.topology_dictionary = {}
             self.save()
         else:
-            print("Loading TopologyManager:", self.topology_object)
+            # print("Loading TopologyManager:", self.topology_object)
             # If a pickled object exists for this object
             # Load it into this object
             self.load()
+            # Need to overwrite old topology dirs on new machines
+            # So path to ROOT_DIR is correct
+            self.topology_dir = topology_dir
+            self.topology_object = os.path.join(topology_dir, topology_object)
 
     def save(self):
         with open(self.topology_object, "wb") as fw:
@@ -84,7 +86,6 @@ class TopologyManager:
         files = glob.glob(
             os.path.join(self.topology_dir, build_file_id, label, "*." + filetype)
         )
-        print(files)
         return len(files) > 0
 
     def add_buildfile_entry(self, build_file):
@@ -133,7 +134,7 @@ class TopologyManager:
         # Add to internal dictionary
         # But check if extension already exists
         self.topology_dictionary[build_file_id][label]["structure_files"].append(
-            os.path.join(label_directory, structure_file)
+            structure_file
         )
         self.save()
 
@@ -155,7 +156,7 @@ class TopologyManager:
             database_file = self.topology_dictionary[build_file_id][label][
                 "structure_files"
             ][index]
-
+        database_file = os.path.join(self.topology_dir, build_file_id, label, database_file)
         output_file = os.path.join(path, database_file.split("/")[-1])
         shutil.copy(database_file, output_file)
         return output_file
@@ -168,9 +169,10 @@ class TopologyManager:
         shutil.copy(topology_file, stored_filename)
 
         # Add to internal dictionary
-        self.topology_dictionary[build_file_id][label]["topology_files"].append(
-            stored_filename
-        )
+        if not stored_filename.split("/")[-1] in self.topology_dictionary[build_file_id][label]["topology_files"]:
+            self.topology_dictionary[build_file_id][label]["topology_files"].append(
+                stored_filename.split("/")[-1]
+            )
         self.save()
 
     def get_topology(self, build_file, label, path, filetype=None):
@@ -191,6 +193,7 @@ class TopologyManager:
                 "topology_files"
             ][index]
 
+        database_file = os.path.join(self.topology_dir, build_file_id, label, database_file)
         output_file = os.path.join(path, database_file.split("/")[-1])
         shutil.copy(database_file, output_file)
         return output_file
@@ -367,7 +370,7 @@ class SystemBuilderOpenFF:
             centered_gro,
         )
         self.md_engine.minimize(centered_gro, self.top_file, prefix="em_solvated")
-        self.gro_file = "em_" + self.gro_file
+        self.gro_file = "em_solvated.gro"
 
 
 # I probably best to get rid of this class
