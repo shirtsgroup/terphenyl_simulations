@@ -161,6 +161,7 @@ def apply_hmr_to_topology(job):
 
 
 @FlowProject.pre.after(apply_hmr_to_topology)
+@FlowProject.post(lambda job: os.path.isdir(job.fn("sim0")))
 @FlowProject.operation(directives={"fork" : True})
 @cd_to_job_dir
 def setup_remd_simulations(job):
@@ -177,10 +178,13 @@ def setup_remd_simulations(job):
 
 # if slurm is an executable
 @FlowProject.pre.after(setup_remd_simulations)
-@FlowProject.pre(lambda job: shutil.which("slurm"))
+@FlowProject.pre(lambda job: shutil.which("sbatch"))
 @FlowProject.operation(directives={"fork": True})
+@cd_to_job_dir
 def submit_simulations(job):
-    pass
+    subprocess.run(["bash", "submit_all.slurm"], shell = True)
+    subprocess.wait()
+    
 
 
 # if slurm isn't an executable
