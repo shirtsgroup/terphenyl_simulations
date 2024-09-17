@@ -28,4 +28,12 @@ dependencies:
   - openssl
   - openbabel
   - gromacs
+  - openmm
+  - openff-units
+  - cachetools
+  - xmltodict
+  - openff-toolkit
+  - openff-bespokefit
+  - openff-interchange
+  - qcportal[version='<0.50']
 prefix: /home/lenny/miniforge3/envs/terphenyl

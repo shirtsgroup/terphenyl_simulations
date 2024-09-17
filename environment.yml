@@ -1,6 +1,8 @@
-name: ts_env
+name: terphenyl
 channels:
   - conda-forge
+  - omnia
+  - openeye
 dependencies:
   - python=3.11
   - ca-certificates
