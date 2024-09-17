@@ -9,8 +9,8 @@ from terphenyl_simulations.force_fields import FoldamerOFFDefault, FoldamerOFFBe
 from terphenyl_simulations.build import (
     MoleculeTopologyGenerator,
     SystemTopologyGenerator,
-    TopologyManager,
 )
+from terphenyl_simulations.topology_manager import TopologyManager
 from terphenyl_simulations.utils import ROOT_DIR, make_path
 import pytest
 import os
