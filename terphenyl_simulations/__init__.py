@@ -10,10 +10,11 @@ import terphenyl_simulations.plotting
 import terphenyl_simulations.edit_conf
 import terphenyl_simulations.build
 import terphenyl_simulations.analysis_workflows.utils
-import terphenyl_simulations.force_fields
+import terphenyl_simulations.assign_parameters
 import terphenyl_simulations.gromacs_wrapper
 import terphenyl_simulations.utils
 import terphenyl_simulations.remd_utils
+import terphenyl_simulations.topology_manager
 
 
 # Handle versioneer
