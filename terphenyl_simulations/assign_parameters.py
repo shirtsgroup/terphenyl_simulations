@@ -142,7 +142,7 @@ class FoldamerOFFBespoke(OFFMethod):
 
 class FoldamerOFFDefault(OFFMethod):
     def __init__(
-        self, mol_file, pdb_file, output_file=None, path="", ff_str="openff-2.0.0"
+        self, mol_file, pdb_file, output_file=None, path="", ff_str="openff-2.0.0", build_file = None
     ):
         if type(mol_file) is not str:
             print(
