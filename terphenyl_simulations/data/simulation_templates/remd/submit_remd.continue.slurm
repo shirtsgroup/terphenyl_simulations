@@ -3,7 +3,7 @@
 #SBATCH -t 20:00:00
 #SBATCH -p amilan
 #SBATCH -J 'mop-octamer-remd-continue'
-#SBATCH --account=ucb368_asc1
+#SBATCH --account=ucb469_asc1
 #SBATCH --mail-user=theodore.fobe@colorado.edu
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
