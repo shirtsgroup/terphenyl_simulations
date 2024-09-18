@@ -1,6 +1,7 @@
 name: ts_env
 channels:
   - conda-forge
+  - openeye
 dependencies:
   - python=3.11
   - ca-certificates
