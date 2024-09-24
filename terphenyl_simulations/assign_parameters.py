@@ -41,6 +41,7 @@ class FoldamerOFFBespoke(OFFMethod):
             make_path(path)
         self.molecule = Molecule.from_file(mol_file)
         self.name = output_file
+        self.initial_ff = ff_str
         self.build_file_yml = build_file
         if output_file is None:
             self.name = mol_file.split("/")[-1].split(".mol")[0]
@@ -59,18 +60,28 @@ class FoldamerOFFBespoke(OFFMethod):
         self.generate_trimer_molecule(self.build_file_yml)
         self.assign_trimer_partial_charges()
         self.setup_bespoke_fit_executor()
+        self._get_partial_charges()
+        top_file, gro_file = self.generate_ff_topologies()
+        return top_file, gro_file, self.sdf_file
 
+    def _get_partial_charges(self, method="am1bcc"):
+        self.sdf_file = os.path.join(self.path, self.name + "_charges.sdf")
+        if not os.path.exists(self.sdf_file):
+            self.molecule.assign_partial_charges(partial_charge_method = method)
+            self.molecule.to_file(self.sdf_file, file_format="sdf")
+        else:
+            self.molecule = Molecule.from_file(self.sdf_file)
 
     def generate_trimer_molecule(self, build_file_yml):
         from .build import FoldamerBuilder
 
         with open(build_file_yml, "r") as f:
-            build_params = yaml.safe_load(f)
-        build_params["foldamer_length"] = 3
-        self.trimer_buildfile = build_params["structure_file"].split("_")[0] + "_trimer.build"
-        build_params["structure_file"] = build_params["structure_file"].split("_")[0] + "_trimer"
+            self.build_params = yaml.safe_load(f)
+        self.build_params["foldamer_length"] = 3
+        self.trimer_buildfile = self.build_params["structure_file"].split("_")[0] + "_trimer.build"
+        self.build_params["structure_file"] = self.build_params["structure_file"].split("_")[0] + "_trimer"
         with open(self.trimer_buildfile, "w") as wf:
-            yaml.dump(build_params, wf)
+            yaml.dump(self.build_params, wf)
         foldamer_builder = FoldamerBuilder(self.trimer_buildfile)
         foldamer_builder.get_foldamer()
 
@@ -94,7 +105,7 @@ class FoldamerOFFBespoke(OFFMethod):
     def setup_bespoke_fit_executor(self, 
                                    n_fragmenter_workers = 4,
                                    n_qc_compute_workers = 4,
-                                   n_optimizer_workers = 4,
+                                   n_optimizer_workers = 12,
                             ):
 
         # Keep Bespoke Executor Files
@@ -126,7 +137,7 @@ class FoldamerOFFBespoke(OFFMethod):
             expand_torsion_terms=True,
             generate_bespoke_terms=True,
         )
-        self.factory.initial_force_field = self.force_field
+        self.force_field = None
         self.factory.optimizer = ForceBalanceSchema()
         self.factory.parameter_hyperparameters = [ProperTorsionHyperparameters()]
         self.factory.to_file('bespoke_flow.json')
@@ -138,7 +149,24 @@ class FoldamerOFFBespoke(OFFMethod):
         with self.bespoke_fit_executor:
             task_id = self.bespoke_fit_executor.submit(bespoke_workflow_schema)
             output = wait_until_complete(task_id)
+            self.force_field = output.bespoke_force_field
 
+        self.force_field.to_file(self.build_params["structure_file"] + "_bespoke_" + self.initial_ff + ".offxml")
+
+    def generate_ff_topologies(self):
+        interchange = self.force_field.create_interchange(
+            self.off_topology,
+            charge_from_molecules = [self.molecule]
+        )
+        interchange.positions = self.pdb_file.getPositions()
+
+        top_file = os.path.join(self.path, self.name + "_bespoke_" + self.initial_ff + ".top")
+        gro_file = os.path.join(self.path, self.name + "_bespoke_" + self.initial_ff + ".gro")
+
+        interchange.to_top(top_file)
+        interchange.to_gro(gro_file)
+
+        return top_file, gro_file
 
 class FoldamerOFFDefault(OFFMethod):
     def __init__(

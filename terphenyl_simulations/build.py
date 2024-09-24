@@ -1,6 +1,7 @@
 import yaml
 import os
 import sys
+import numpy as np
 from abc import ABC, abstractclassmethod
 from subprocess import Popen, PIPE
 import warnings
@@ -89,7 +90,19 @@ class FoldamerBuilder:
             compound=tail_cap, index=-1, separation=0.15, label="tail", duplicate=False
         )
         self.chain.build(n=self.build_params["foldamer_length"], sequence="A")
-        self.chain.name = "MOP"
+        self.chain.name = self.build_params["residue_name"]
+
+        # Adjust peptide bonds to be trans
+        for bond in self.chain.bonds(return_bond_order=True):
+            atom_1 = bond[0]
+            atom_2 = bond[1]
+
+            if (atom_1.name == "C" and atom_2.name == "N") or (atom_2.name == "C" and atom_1.name == "N"):
+                if atom_1.n_direct_bonds == 3 and atom_2.n_direct_bonds == 3:
+                    # This corrects dihedrals to be trans
+                    self.chain.rotate_dihedral(bond[0:2], np.pi + (50 * np.pi / 180))
+
+
         self.chain.energy_minimize(forcefield="MMFF94")
 
         # Change residue names in chain object
