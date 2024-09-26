@@ -105,7 +105,7 @@ class FoldamerOFFBespoke(OFFMethod):
     def setup_bespoke_fit_executor(self, 
                                    n_fragmenter_workers = 4,
                                    n_qc_compute_workers = 4,
-                                   n_optimizer_workers = 12,
+                                   n_optimizer_workers = 4,
                             ):
 
         # Keep Bespoke Executor Files

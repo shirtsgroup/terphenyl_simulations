@@ -53,6 +53,14 @@ class TopologyManager:
             tmp_dict = pickle.load(fr)
         self.__dict__.update(tmp_dict)
 
+        topology_entries = os.listdir(self.topology_dir)
+        topology_keys = list(self.topology_dictionary.keys())
+        for key in topology_keys:
+            if key not in topology_entries:
+                del self.topology_dictionary[key]
+
+
+
     def get_build_json(self, build_file):
         with open(build_file, "r") as stream:
             topology_dict = yaml.safe_load(stream)
