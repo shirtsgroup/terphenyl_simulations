@@ -12,7 +12,7 @@ dependencies:
   - psi4
   - dftd3-python
   - xtb-python
-  - mbuild=0.14.2
+  - mbuild
   - tqdm
   - pytest
   - rdkit

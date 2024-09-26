@@ -8,7 +8,7 @@ dependencies:
   - pytest
   - rdkit
   - pyyaml
-  - mbuild=0.14.2
+  - mbuild
   - mdtraj
   - numpy
   - matplotlib
@@ -21,7 +21,6 @@ dependencies:
   - pandas
   - seaborn
   - openff-toolkit
-  - mbuild ==0.14.2
   - rdkit
   - ca-certificates
   - certifi
