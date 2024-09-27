@@ -53,14 +53,18 @@ class FoldamerOFFBespoke(OFFMethod):
         self.off_topology = Topology.from_openmm(
             self.omm_topology, unique_molecules=[self.molecule]
         )
-        self.force_field = ff_str + ".offxml"
+        self.force_field = None
         self.topology_manager = TopologyManager()
 
     def assign_parameters(self):
-        self.generate_trimer_molecule(self.build_file_yml)
-        self.assign_trimer_partial_charges()
-        self.setup_bespoke_fit_executor()
-        self._get_partial_charges()
+        if not self.topology_manager.check_file_type(self.build_file_yml, "molecule", "offxml"):
+            self.generate_trimer_molecule(self.build_file_yml)
+            self.assign_trimer_partial_charges()
+            self.run_bespoke_fit_workflow()
+            self._get_partial_charges()
+        else:
+            self.force_field = self.topology_manager.get_force_field(self.build_file_yml, "molecule", self.path)
+            self.sdf_file = self.topology_manager.get_structure(self.build_file_yml, "molecule", self.path, filetype="sdf")
         top_file, gro_file = self.generate_ff_topologies()
         return top_file, gro_file, self.sdf_file
 
@@ -102,7 +106,7 @@ class FoldamerOFFBespoke(OFFMethod):
         else:
             self.topology_manager.get_structure(self.trimer_buildfile, "molecule", self.path, filetype="sdf")
 
-    def setup_bespoke_fit_executor(self, 
+    def run_bespoke_fit_workflow(self, 
                                    n_fragmenter_workers = 4,
                                    n_qc_compute_workers = 4,
                                    n_optimizer_workers = 4,
