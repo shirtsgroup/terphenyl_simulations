@@ -55,9 +55,13 @@ class TopologyManager:
 
         topology_entries = os.listdir(self.topology_dir)
         topology_keys = list(self.topology_dictionary.keys())
+        # Remove topologies from internal dict
+        # That are not present in filesystem
         for key in topology_keys:
             if key not in topology_entries:
                 del self.topology_dictionary[key]
+
+
 
 
 
