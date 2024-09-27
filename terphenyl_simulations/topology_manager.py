@@ -61,10 +61,6 @@ class TopologyManager:
             if key not in topology_entries:
                 del self.topology_dictionary[key]
 
-
-
-
-
     def get_build_json(self, build_file):
         with open(build_file, "r") as stream:
             topology_dict = yaml.safe_load(stream)
@@ -106,6 +102,7 @@ class TopologyManager:
         self.topology_dictionary[build_file_key][label] = {
             "structure_files": [],
             "topology_files": [],
+            "force_field_files" : [],
         }
 
         # Add directory to local storage
@@ -182,12 +179,51 @@ class TopologyManager:
             stored_file_types = [
                 structure.split(".")[-1]
                 for structure in self.topology_dictionary[build_file_id][label][
-                    "structure_files"
+                    "topology_files"
                 ]
             ]
             index = stored_file_types.index(filetype)
             database_file = self.topology_dictionary[build_file_id][label][
                 "topology_files"
+            ][index]
+
+        database_file = os.path.join(self.topology_dir, build_file_id, label, database_file)
+        output_file = os.path.join(path, database_file.split("/")[-1])
+        shutil.copy(database_file, output_file)
+        return output_file
+
+
+    def add_force_field(self, ff_file, build_file, label):
+        build_file_id = self.get_entry_dir_id(build_file)
+        # Save files internally
+        label_directory = os.path.join(self.topology_dir, build_file_id, label)
+        stored_filename = os.path.join(label_directory, ff_file.split("/")[-1])
+        shutil.copy(ff_file, stored_filename)
+
+        # Add to internal dictionary
+        if not stored_filename.split("/")[-1] in self.topology_dictionary[build_file_id][label]["topology_files"]:
+            self.topology_dictionary[build_file_id][label]["topology_files"].append(
+                stored_filename.split("/")[-1]
+            )
+        self.save()
+
+
+    def get_force_field(self, build_file, label, path, filetype = None):
+        build_file_id = self.get_entry_dir_id(build_file)
+        if filetype is None:
+            database_file = self.topology_dictionary[build_file_id][label][
+                "force_field_files"
+            ][0]
+        else:
+            stored_file_types = [
+                structure.split(".")[-1]
+                for structure in self.topology_dictionary[build_file_id][label][
+                    "force_field_files"
+                ]
+            ]
+            index = stored_file_types.index(filetype)
+            database_file = self.topology_dictionary[build_file_id][label][
+                "force_field_files"
             ][index]
 
         database_file = os.path.join(self.topology_dir, build_file_id, label, database_file)

@@ -151,7 +151,11 @@ class FoldamerOFFBespoke(OFFMethod):
             output = wait_until_complete(task_id)
             self.force_field = output.bespoke_force_field
 
-        self.force_field.to_file(self.build_params["structure_file"] + "_bespoke_" + self.initial_ff + ".offxml")
+        ff_file_name = self.build_params["structure_file"] + "_bespoke_" + self.initial_ff + ".offxml"
+        self.force_field.to_file(ff_file_name)
+        self.topology_manager.add_force_field(ff_file_name, self.build_file_yml, self.label)
+
+
 
     def generate_ff_topologies(self):
         interchange = self.force_field.create_interchange(
