@@ -86,7 +86,7 @@ def build_foldamer(job):
 
 @FlowProject.pre.after(build_foldamer)
 @FlowProject.post(
-    lambda job: os.path.exists(job.fn(job.doc["foldamer_name"] + "_openff-2.0.0.top"))
+    lambda job: glob.glob(job.fn(job.doc["foldamer_name"] + "*.top"))
 )
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir

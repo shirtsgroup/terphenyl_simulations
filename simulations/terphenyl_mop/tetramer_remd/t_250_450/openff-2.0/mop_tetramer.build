@@ -5,5 +5,5 @@ lower_connect : 40
 residue_name : MOP
 cap_smiles : {upper : CO, lower : CC(C)(C)OC=O}
 foldamer_length : 4
-system : {solvent : TCM, solvent_smile_str : 'ClC(Cl)Cl', n_solvent : 634, box_size : 55.4}
+system : {solvent : TCM, solvent_smile_str : ClC(Cl)Cl, n_solvent : 634, box_size : 55.4}
 ff_method : openff-foldamer
