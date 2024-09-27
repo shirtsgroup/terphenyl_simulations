@@ -9,16 +9,11 @@
 #SBATCH --mail-type=END
 #SBATCH --constraint=ib
 
-
-module load anaconda
-conda activate plumed_mpi
-
 module load gcc/11.2.0
 module load openmpi/4.1.1
 SLURM_EXPORT_ENV=ALL
 
-source /projects/thfo9888/software/gromacs-2022.5/bin/GMXRC
-
+source /projects/thfo9888/software/gromacs-2023.4/bin/GMXRC
 
 # Run grompp on all berendsen_nvt files
 # for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi grompp -f npt_new.mdp -c berendsen_npt.gro -p system_hmr.top -o npt_new -maxwarn 1; cd ..; done

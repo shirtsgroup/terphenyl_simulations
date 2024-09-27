@@ -1,15 +1,15 @@
 ;
 ;   File mop_tetramer_system_hmr.top  was generated
-;   By user: lenny (1000)
-;   On host:DESKTOP-HTCAJ46 
-;   At date:Tue. September  2 14:31:44 2024 
+;   By user: thfo9888 (564249)
+;   On host:c3cpu-c15-u32-4.rc.int.colorado.edu 
+;   At date:Thu. September  4 13:22:24 2024 
 ;
 ;   This is a standalone topology file
 ;
 ;   Created by:
 ;   ParmEd:       hmr_topology, VERSION4.2.2 
 ;   Executable:   hmr_topology
-;   Library dir:  /home/lenny/miniforge3/envs/ts_env/share/gromacs/top
+;   Library dir:  /projects/thfo9888/miniforge3/envs/ts_env/share/gromacs/top
 ;   Command line:
 ;     hmr_topology -t mop_tetramer_system.top -o mop_tetramer_system_hmr.top --hmr_ratio 3
 ;
