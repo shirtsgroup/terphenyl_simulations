@@ -9,6 +9,7 @@ import flow
 import sys
 from flow import FlowProject
 import terphenyl_simulations
+from terphenyl_simulations.utils import replace_all_pattern
 
 # Initialize Signac Project
 
@@ -158,6 +159,8 @@ def apply_hmr_to_topology(job):
     tm = terphenyl_simulations.build.TopologyManager()
     tm.add_topology(output_topology, job.sp["build_foldamer"], "system")
     job.doc["foldamer_topology"] = output_topology
+    for submit_file in glob.glob("submit*.slurm"):
+        replace_all_pattern("TOPOLOGY_FILE", output_topology, submit_file)
 
 
 @FlowProject.pre.after(apply_hmr_to_topology)
