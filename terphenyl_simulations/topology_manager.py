@@ -201,8 +201,10 @@ class TopologyManager:
         shutil.copy(ff_file, stored_filename)
 
         # Add to internal dictionary
-        if not stored_filename.split("/")[-1] in self.topology_dictionary[build_file_id][label]["topology_files"]:
-            self.topology_dictionary[build_file_id][label]["topology_files"].append(
+        if not "force_field_files" in self.topology_dictionary[build_file_id][label].keys():
+            self.topology_dictionary[build_file_id][label]["force_field_files"] = []
+        if not stored_filename.split("/")[-1] in self.topology_dictionary[build_file_id][label]["force_field_files"]:
+            self.topology_dictionary[build_file_id][label]["force_field_files"].append(
                 stored_filename.split("/")[-1]
             )
         self.save()
