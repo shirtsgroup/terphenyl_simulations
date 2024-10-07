@@ -70,7 +70,7 @@ class TopologyManager:
 
     def get_entry_dir_id(self, build_file):
         build_json = self.get_build_json(build_file)
-        unique_dir_str = str(uuid.uuid5(uuid.NAMESPACE_X500, str(build_json)))
+        unique_dir_str = str(uuid.uuid5(uuid.NMESPACE_X500, str(build_json)))
         unique_dir = "".join([a for a in unique_dir_str if a != "-"])
         return unique_dir
 
