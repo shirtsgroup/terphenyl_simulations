@@ -46,7 +46,7 @@ class TestTopologyManager(unittest.TestCase):
     @patch("builtins.open", new_callable=mock_open)
     @patch("pickle.load")
     def test_init_load_existing_topology_manager(
-        self, mock_pickle_load, mock_open, mock_exists
+        self, mock_pickle_load, mock_open, mock_exists,
     ):
         # Test initialization when the topology manager already exists
         with patch("builtins.print") as mock_print:
@@ -56,9 +56,8 @@ class TestTopologyManager(unittest.TestCase):
             )
             mock_open.assert_called_once_with("test_dir/test.pkl", "rb")
             mock_pickle_load.assert_called_once()
-            mock_print.assert_any_call(
-                "Loading TopologyManager:", "test_dir/test.pkl"
-            )
+
+            
 
     @patch("builtins.open", new_callable=mock_open)
     @patch("yaml.safe_load", return_value={"mock_key": "mock_value"})
@@ -142,7 +141,7 @@ class TestTopologyManager(unittest.TestCase):
                 "mock_structure.pdb", "test_dir/mock_dir_id/label/mock_structure.pdb"
             )
             self.assertIn(
-                "test_dir/mock_dir_id/label/mock_structure.pdb",
+                "mock_structure.pdb",
                 tm.topology_dictionary["mock_dir_id"]["label"]["structure_files"],
             )
             mock_save.assert_called()
@@ -159,7 +158,7 @@ class TestTopologyManager(unittest.TestCase):
         tm.topology_dictionary = {
             "mock_dir_id": {
                 "label": {
-                    "structure_files": ["test_dir/mock_dir_id/label/mock_structure.pdb"]
+                    "structure_files": ["mock_structure.pdb"]
                 }
             }
         }

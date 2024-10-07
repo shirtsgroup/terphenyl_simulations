@@ -1,0 +1,15 @@
+cap_smiles:
+  lower: CC(C)(C)OC=O
+  upper: CO
+ff_method: bespoke-foldamer
+foldamer_length: 3
+foldamer_smile: COc3ccc(c1cccc(C=O)c1)c(c2ccc([C@@H](C)N)cc2)c3
+lower_connect: 42
+residue_name: POM
+structure_file: pom_trimer
+system:
+  box_size: 55.4
+  n_solvent: 634
+  solvent: TCM
+  solvent_smile_str: ClC(Cl)Cl
+upper_connect: 33

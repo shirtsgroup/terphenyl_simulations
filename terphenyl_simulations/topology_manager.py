@@ -70,7 +70,7 @@ class TopologyManager:
 
     def get_entry_dir_id(self, build_file):
         build_json = self.get_build_json(build_file)
-        unique_dir_str = str(uuid.uuid5(uuid.NAMESPACE_X500, str(build_json)))
+        unique_dir_str = str(uuid.uuid5(uuid.NMESPACE_X500, str(build_json)))
         unique_dir = "".join([a for a in unique_dir_str if a != "-"])
         return unique_dir
 
@@ -201,8 +201,10 @@ class TopologyManager:
         shutil.copy(ff_file, stored_filename)
 
         # Add to internal dictionary
-        if not stored_filename.split("/")[-1] in self.topology_dictionary[build_file_id][label]["topology_files"]:
-            self.topology_dictionary[build_file_id][label]["topology_files"].append(
+        if not "force_field_files" in self.topology_dictionary[build_file_id][label].keys():
+            self.topology_dictionary[build_file_id][label]["force_field_files"] = []
+        if not stored_filename.split("/")[-1] in self.topology_dictionary[build_file_id][label]["force_field_files"]:
+            self.topology_dictionary[build_file_id][label]["force_field_files"].append(
                 stored_filename.split("/")[-1]
             )
         self.save()

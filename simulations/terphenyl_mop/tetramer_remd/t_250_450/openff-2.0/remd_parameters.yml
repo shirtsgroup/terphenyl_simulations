@@ -1,4 +1,4 @@
-simulation_id : mop_tetramer_bespoke_hmr
+simulation_id : mop_tetramer_hmr
 n_replicas : 64
 t_range : [250, 450]
 mdps : 

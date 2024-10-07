@@ -5,7 +5,7 @@ These objects are used to generate force field topology files using the
 output from the FoldamerBuilder/SystemBuilder objects
 """
 
-from terphenyl_simulations.force_fields import FoldamerOFFDefault, FoldamerOFFBespoke
+from terphenyl_simulations.assign_parameters import FoldamerOFFDefault, FoldamerOFFBespoke
 from terphenyl_simulations.build import (
     MoleculeTopologyGenerator,
     SystemTopologyGenerator,

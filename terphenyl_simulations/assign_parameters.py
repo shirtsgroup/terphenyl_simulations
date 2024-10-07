@@ -43,6 +43,7 @@ class FoldamerOFFBespoke(OFFMethod):
         self.name = output_file
         self.initial_ff = ff_str
         self.build_file_yml = build_file
+        self.label = "molecule"
         if output_file is None:
             self.name = mol_file.split("/")[-1].split(".mol")[0]
         self.path = path
