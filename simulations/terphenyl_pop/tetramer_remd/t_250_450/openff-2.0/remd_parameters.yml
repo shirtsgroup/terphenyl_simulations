@@ -1,4 +1,4 @@
-simulation_id : mop_tetramer_hmr
+simulation_id : pop_tetramer_hmr
 n_replicas : 64
 t_range : [250, 450]
 mdps : 
@@ -6,7 +6,7 @@ mdps :
        - berendsen_npt.mdp
        - production_npt.mdp
 sim_id : sim
-build_foldamer : mop_tetramer.build
-param_method : bespoke
+build_foldamer : pop_tetramer.build
+param_method : openff
 n_simulations : 3
 gromacs_exe : gmx
