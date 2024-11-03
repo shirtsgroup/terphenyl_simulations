@@ -7,8 +7,11 @@ import glob
 import signac
 import flow
 import sys
+import numpy as np
 from flow import FlowProject
+from MDAnalysis import Universe
 import terphenyl_simulations
+from natsort import natsorted
 from terphenyl_simulations.utils import replace_all_pattern
 
 # Initialize Signac Project
@@ -182,20 +185,116 @@ def setup_remd_simulations(job):
 # if slurm is an executable
 @FlowProject.pre.after(setup_remd_simulations)
 @FlowProject.pre(lambda job: shutil.which("sbatch"))
+@FlowProject.post(lambda job: os.path.exists(job.fn("sim0/production_npt.log")))
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def submit_simulations(job):
     subprocess.Popen(["bash", "submit_all.slurm"], shell = True)
     subprocess.wait()
-    
-
 
 # if slurm isn't an executable
 @FlowProject.pre.after(setup_remd_simulations)
 @FlowProject.pre(lambda job: shutil.which("gmx_mpi"))
 @FlowProject.operation(directives={"fork": True})
+@cd_to_job_dir
 def run_simulations(job):
     pass
+
+
+@FlowProject.pre(lambda job: os.path.exists(job.fn("sim0/production_npt.gro")))
+@FlowProject.pre(lambda job: os.path.exists(job.fn("sim0/production_npt.xtc")))
+@FlowProject.pre(lambda job: shutil.which("gmx"))
+@FlowProject.post(lambda job: os.path.exists(job.fn("sim0/production_npt.whole.xtc")))
+@FlowProject.operation(directives={"fork": True})
+@cd_to_job_dir
+def apply_pbcs(job):
+    gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(
+        job.sp["gromacs_exe"]
+    )
+    for replica_dir in natsorted(glob.glob(job.sp["sim_id"] + "*")):
+        for simulation_file in glob.glob(os.path.join(replica_dir, "*.xtc")):
+            if "whole.xtc" in simulation_file:
+                continue
+            output_filename = simulation_file.split(".xtc")[0] + ".whole.xtc"
+            tpr_file = simulation_file.split(".xtc")[0] + ".tpr"
+            gmx_wrapper.trjconv(
+                inputs = [0],
+                hide_outputs = False,
+                f = simulation_file,
+                o = output_filename,
+                s = tpr_file,
+                pbc = "whole"
+            )
+
+@FlowProject.pre(lambda job: os.path.exists(job.fn("sim0/production_npt.whole.xtc")))
+@FlowProject.pre(lambda job: shutil.which("gmx"))
+@FlowProject.post(lambda job: os.path.isdir(job.fn("clustering_output")))
+@FlowProject.operation(directives={"fork": True})
+@cd_to_job_dir
+def cluster_trajectory(job):
+    n_lowest_replicas = 10
+    production_sim = job.sp["mdps"][-1].split(".")[0]
+    top_file = os.path.join(job.sp["sim_id"] + "0", production_sim + ".gro")
+    simulation_trajectories = \
+        natsorted(glob.glob(os.path.join(job.sp["sim_id"] + "*", production_sim + ".whole.xtc")))
+
+    select_string = "not resname MOL1"
+    print(select_string)
+    terphenyl_simulations.clustering.clustering_grid_search(
+        simulation_trajectories[:n_lowest_replicas],
+        top_file,
+        select_string,
+        n_min_samples=40,
+        n_eps=40,
+        n_processes=32,
+        prefix="grid_search",
+        eps_limits=[0.01, 0.2],
+        min_sample_limits=[0.005, 0.1],
+        plot_filename="ss.png",
+        frame_stride=2,
+    )
+
+@FlowProject.pre(lambda job: os.path.exists(job.fn("sim0/production_npt.whole.xtc")))
+@FlowProject.operation(directives={"fork": True})
+@cd_to_job_dir
+def plot_remd_torsion_distributions(job):
+
+    # Load REMD simulations to file
+    production_sim = job.sp["mdps"][-1].split(".")[0]
+    structure_universe = Universe(job.sp["sim_id"] + "0/" + production_sim + ".tpr", job.sp["sim_id"] + "0/" + production_sim + ".gro")
+    remd_file_list = [job.sp["sim_id"] + str(i) + "/" + production_sim + ".whole.xtc" for i in range(job.sp["n_replicas"])]
+    print("Loading REMD trajectory files...")
+    remd_trajs = [
+        md.load(xtc_file, top="sim0/berendsen_npt.gro")
+        for xtc_file in tqdm(remd_file_list)
+    ]
+    
+    
+    # Torsion definitions for first residue
+    with open("torsions.yml", "r") as stream:
+        monomer_torsions = yaml.safe_load(stream)
+
+
+    # Torsion Analysis
+    hs.utils.make_path("torsion_plots")
+    for torsion_type in monomer_torsions["torsions"].keys():
+        print("Working on", torsion_type, "torsion...")
+        torsion_atom_id = get_torsion_atom_ids(monomer_torsion_atoms, offset, n_residues)
+        torsion_atom_ids = hs.utils.get_torsion_atom_ids(
+            monomer_torsions["torsions"][torsion_type],
+            monomer_torsions["offset"],
+            job.doc["build_parameters"]["foldamer_length"],
+        )
+
+        hs.plotting.plot_torsions_distributions(
+            remd_trajs,
+            torsion_atom_ids,
+            torsion_type + "Torsion (radians)",
+            torsion_type + "_remd",
+            torsion_type + " Torsion Plot",
+            figsize=[5, 5],
+            cbar_params=[250, 450, "Temperature (K)"],
+        )
 
 
 def main():

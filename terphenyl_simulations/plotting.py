@@ -174,19 +174,9 @@ def plot_torsions_distributions(
     plt.figure(figsize=figsize)
 
     for i, traj_obj in enumerate(traj_obj_list):
-        if type(torsion_atom_names[0]) is str:
-            torsions = get_torsions(
-                traj_obj, [torsion_atom_names], mirror_sym=mirror_sym
-            )
-        if type(torsion_atom_names[0]) is list:
-            if type(torsion_atom_names[0][0]) is str:
-                torsions = get_torsions(
-                    traj_obj, torsion_atom_names, mirror_sym=mirror_sym
-                )
-            if type(torsion_atom_names[0][0]) is list:
-                torsions = get_torsions(
-                    traj_obj, torsion_atom_names[i], mirror_sym=mirror_sym
-                )
+        torsions = get_torsions(
+            traj_obj, torsion_atom_names, mirror_sym=mirror_sym
+        )
         if offsets is not None:
             torsions += offsets[i]
         hist, bin_edges_out = np.histogram(

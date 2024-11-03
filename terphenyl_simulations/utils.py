@@ -133,7 +133,6 @@ def backoff_directory(dir_name):
     print("Backoff! Moving the old " + dir_name + " to " + old_path)
     sh.move(dir_name, old_path)
 
-
 def get_torsion_ids(universe, resname, torsion_id, template_residue_i=1):
     """
     Using an MDAnalysis universe file with proper residue definitions, this function
@@ -232,7 +231,6 @@ def get_torsion_ids(universe, resname, torsion_id, template_residue_i=1):
 
     return dihedral_ids
 
-
 def get_angle_ids(universe, resname, angle_id, template_residue_i=0):
     """
     Using an MDAnalysis universe with proper residue definitions, this function
@@ -326,6 +324,14 @@ def get_angle_ids(universe, resname, angle_id, template_residue_i=0):
         pass
     return angle_ids
 
+def get_torsion_atom_ids(torsion_base_index, offset, n_residues):
+    torsion_base_index = np.array(torsion_base_index)
+    torsion_atom_ids = []
+    for i in range(n_residues):
+        torsion_atom_ids.append(torsion_base_index + offset * i)
+
+    print(torsion_atom_ids)
+    return torsion_atom_ids
 
 def replace_all_pattern(pattern, replace, file):
     """
