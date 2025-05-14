@@ -12,7 +12,12 @@ from flow import FlowProject
 from MDAnalysis import Universe
 import terphenyl_simulations
 from natsort import natsorted
+from tqdm import tqdm
+import mdtraj
 from terphenyl_simulations.utils import replace_all_pattern
+from terphenyl_simulations.analysis_workflows.labels import *
+import warnings
+warnings.filterwarnings("ignore")
 
 # Initialize Signac Project
 
@@ -38,14 +43,20 @@ def signac_init():
         job = project.open_job(sp)
         if "init" in job.doc.keys():
             continue
+        
         job.doc["init"] = True
+
+        # Default file templates
+        if not "system" in job.sp.keys():
+            job.sp["system"] = "cu_alpine"
 
         # Setup job directory with template files
         remd_files = glob.glob(
             os.path.join(
                 terphenyl_simulations.utils.ROOT_DIR,
                 "data/simulation_templates",
-                "remd/*",
+                "remd/",
+                job.sp["system"] + "/*"                
             )
         )
 
@@ -74,7 +85,6 @@ def cd_to_job_dir(function):
         os.chdir(top_dir)
 
     return wrap_flow_operation
-
 
 # FlowProject Operations
 @FlowProject.post(lambda job: os.path.exists(job.fn(job.doc["foldamer_name"] + ".pdb")))
@@ -189,8 +199,8 @@ def setup_remd_simulations(job):
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def submit_simulations(job):
-    subprocess.Popen(["bash", "submit_all.slurm"], shell = True)
-    subprocess.wait()
+    p = subprocess.Popen(["bash", "submit_all.slurm"], shell = True)
+    p.wait()
 
 # if slurm isn't an executable
 @FlowProject.pre.after(setup_remd_simulations)
@@ -251,7 +261,7 @@ def cluster_trajectory(job):
         eps_limits=[0.01, 0.2],
         min_sample_limits=[0.005, 0.1],
         plot_filename="ss.png",
-        frame_stride=2,
+        frame_stride=5,
     )
 
 @FlowProject.pre(lambda job: os.path.exists(job.fn("sim0/production_npt.whole.xtc")))
@@ -265,7 +275,7 @@ def plot_remd_torsion_distributions(job):
     remd_file_list = [job.sp["sim_id"] + str(i) + "/" + production_sim + ".whole.xtc" for i in range(job.sp["n_replicas"])]
     print("Loading REMD trajectory files...")
     remd_trajs = [
-        md.load(xtc_file, top="sim0/berendsen_npt.gro")
+        mdtraj.load(xtc_file, top="sim0/berendsen_npt.gro")
         for xtc_file in tqdm(remd_file_list)
     ]
     
@@ -276,21 +286,21 @@ def plot_remd_torsion_distributions(job):
 
 
     # Torsion Analysis
-    hs.utils.make_path("torsion_plots")
+    output_dir = "torsion_plots"
+    terphenyl_simulations.utils.make_path(output_dir)
     for torsion_type in monomer_torsions["torsions"].keys():
         print("Working on", torsion_type, "torsion...")
-        torsion_atom_id = get_torsion_atom_ids(monomer_torsion_atoms, offset, n_residues)
-        torsion_atom_ids = hs.utils.get_torsion_atom_ids(
+        torsion_atom_ids = terphenyl_simulations.utils.get_torsion_atom_ids(
             monomer_torsions["torsions"][torsion_type],
             monomer_torsions["offset"],
             job.doc["build_parameters"]["foldamer_length"],
         )
 
-        hs.plotting.plot_torsions_distributions(
+        terphenyl_simulations.plotting.plot_torsions_distributions(
             remd_trajs,
             torsion_atom_ids,
             torsion_type + "Torsion (radians)",
-            torsion_type + "_remd",
+            os.path.join(output_dir, torsion_type + "_remd"),
             torsion_type + " Torsion Plot",
             figsize=[5, 5],
             cbar_params=[250, 450, "Temperature (K)"],

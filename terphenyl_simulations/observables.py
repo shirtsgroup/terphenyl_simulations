@@ -65,13 +65,12 @@ def get_edr_obs(edr_df, key):
 def get_torsions(traj_obj, torsion_atom_ids, mirror_sym=False):
     top = traj_obj.topology
     torsions_inds = []
-    if isinstance(typtorsion_atom_ids[0][0], str):
+    if isinstance(torsion_atom_ids[0][0], str):
         for torsion_atoms in torsion_atom_ids:
             torsion_i = [top.select("name " + atom)[0] for atom in torsion_atoms]
             torsions_inds.append(torsion_i)
-    elif isinstance(typtorsion_atom_ids[0][0], int):
+    elif isinstance(torsion_atom_ids[0][0], np.integer):
         torsions_inds = torsion_atom_ids
-
 
     # torsions_inds = np.array(torsions_inds)
     torsions = md.compute_dihedrals(traj_obj, torsions_inds, periodic=False)

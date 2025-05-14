@@ -10,3 +10,4 @@ build_foldamer : mop_tetramer.build
 param_method : bespoke
 n_simulations : 3
 gromacs_exe : gmx
+system : blackbird

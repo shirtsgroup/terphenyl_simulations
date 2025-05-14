@@ -52,6 +52,8 @@ class TopologyManager:
         with open(self.topology_object, "rb") as fr:
             tmp_dict = pickle.load(fr)
         self.__dict__.update(tmp_dict)
+        if self.topology_dir != os.path.join(ROOT_DIR, "data/topology_manager"):
+            self.topology_dir = os.path.join(ROOT_DIR, "data/topology_manager")
 
         topology_entries = os.listdir(self.topology_dir)
         topology_keys = list(self.topology_dictionary.keys())
@@ -70,7 +72,7 @@ class TopologyManager:
 
     def get_entry_dir_id(self, build_file):
         build_json = self.get_build_json(build_file)
-        unique_dir_str = str(uuid.uuid5(uuid.NMESPACE_X500, str(build_json)))
+        unique_dir_str = str(uuid.uuid5(uuid.NAMESPACE_X500, str(build_json)))
         unique_dir = "".join([a for a in unique_dir_str if a != "-"])
         return unique_dir
 

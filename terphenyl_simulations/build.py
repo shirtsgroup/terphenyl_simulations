@@ -59,6 +59,7 @@ class FoldamerBuilder:
         else:
             print("Building Foldamer from", self.build_file + "...")
             self.build_foldamer()
+            self.fix_peptide_bonds()
             self.write_pdb()
             self.write_mol()
 
@@ -110,6 +111,9 @@ class FoldamerBuilder:
             label.name = self.build_params["residue_name"]
         for label in self.chain.labels["Compound"]:
             label.name = "CAP"
+
+    def fix_peptide_bonds(self):
+        pass
 
     def write_pdb(self):
         filename = os.path.join(self.path, self.build_params["structure_file"] + ".pdb")

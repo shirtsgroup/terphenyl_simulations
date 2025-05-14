@@ -171,7 +171,7 @@ def plot_torsions_distributions(
     )
 
     # Get torsions, bin and plot
-    plt.figure(figsize=figsize)
+    fig = plt.figure(figsize=figsize)
 
     for i, traj_obj in enumerate(traj_obj_list):
         torsions = get_torsions(
@@ -190,7 +190,7 @@ def plot_torsions_distributions(
         colormap = plt.cm.get_cmap("plasma")
         sm = plt.cm.ScalarMappable(cmap=colormap)
         sm.set_clim(vmin=cbar_params[0], vmax=cbar_params[1])
-        cbar = plt.colorbar(sm)
+        cbar = fig.colorbar(sm, ax = fig.axes[0])
         cbar.set_label(cbar_params[2])
     plt.xlabel(x_axis)
     plt.ylabel("Density")
