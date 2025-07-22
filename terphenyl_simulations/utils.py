@@ -8,6 +8,7 @@ import numpy as np
 import re
 import shutil as sh
 import sys
+import shutil
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -468,6 +469,31 @@ class GromacsLogFile:
                     ex_probs.append([float(p) for p in ex_prob_str])
 
                 self.transition_matrix = np.array(ex_probs)
+
+
+def get_solvent_structure_file(solvent_str):
+    # Check current directory for solvent file
+    cur_dir_files = os.listdir(".")
+    if solvent_str in [cdfile.split(".")[0] for cdfile in cur_dir_files]:
+        solvent_i = [cdfile.split(".")[0] for cdfile in cur_dir_files].index(solvent_str)
+        return cur_dir_files[solvent_i]
+    
+    else:
+        # Otherwise check the solvents stored in repo
+        solvent_files = os.listdir(os.path.join(ROOT_DIR, "data", "solvents"))
+        print(solvent_files)
+        solvent_ids = [solvent_file.split(".")[0] for solvent_file in solvent_files]
+
+        if solvent_str in solvent_ids:
+            solvent_index = solvent_ids.index(solvent_str)
+            shutil.copy(os.path.join(ROOT_DIR, "data", "solvents", solvent_files[solvent_index]),
+                        os.path.join(os.getcwd(), solvent_files[solvent_index])
+            )
+
+            return solvent_files[solvent_index]
+        else:
+            print("Unable to find a solvent structure file for", solvent_str)
+            return sys.exit(1)
 
 
 def main():

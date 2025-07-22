@@ -1,12 +1,14 @@
 #!/bin/sh -l
-#SBATCH -N 1 -n 316
-#SBATCH --ntasks-per-node=316
+#SBATCH -N 1 -n 128
+#SBATCH --ntasks-per-node=128
 #SBATCH -t 4:00:00
 #SBATCH -p batch
-#SBATCH -J 'mop-octamer-npt-equilibration'
+#SBATCH -J 'SIMULATION_NAME'
+#SBATCH --hint=nomultithread
 
 
-module load gromacs/2023.4/openmpi-4.1.5-gcc-9
+module load openmpi/4.1.5/gcc-12
+source /wrk/tlf3/software/gromacs-2023.5/bin/GMXRC
 
 # Run grompp on all berendsen_nvt files
 for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi grompp -f berendsen_npt.mdp -c berendsen_nvt.gro -p TOPOLOGY_FILE -o berendsen_npt -maxwarn 2; cd ..; done

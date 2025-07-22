@@ -7,7 +7,7 @@ mdps :
        - production_npt.mdp
 sim_id : sim
 build_foldamer : mop_tetramer.build
-param_method : bespoke
-n_simulations : 3
+param_method : openff
+n_simulations : 1
 gromacs_exe : gmx
 system : blackbird
