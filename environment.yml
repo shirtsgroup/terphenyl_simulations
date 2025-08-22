@@ -4,7 +4,7 @@ channels:
   - omnia
   - openeye
 dependencies:
-  - python=3.11
+  - python
   - ca-certificates
   - openssl
   - ambertools
@@ -37,5 +37,7 @@ dependencies:
   - openff-toolkit
   - openff-bespokefit
   - openff-interchange
-  - qcportal[version='<0.50']
-prefix: /home/lenny/miniforge3/envs/ts_env
+  - qcportal
+  - natsort
+  - mbuild
+# prefix: /home/lenny/miniforge3/envs/ts_env

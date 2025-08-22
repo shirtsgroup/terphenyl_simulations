@@ -108,7 +108,7 @@ class FoldamerOFFBespoke(OFFMethod):
             self.topology_manager.get_structure(self.trimer_buildfile, "molecule", self.path, filetype="sdf")
 
     def run_bespoke_fit_workflow(self, 
-                                   n_fragmenter_workers = 4,
+                                   n_fragmenter_workers = 1,
                                    n_qc_compute_workers = 4,
                                    n_optimizer_workers = 4,
                             ):
@@ -121,7 +121,7 @@ class FoldamerOFFBespoke(OFFMethod):
             n_fragmenter_workers = n_fragmenter_workers,
             n_qc_compute_workers = n_qc_compute_workers,
             n_optimizer_workers = n_optimizer_workers,
-            launch_redis_if_unavailable = True
+            launch_redis_if_unavailable = False
         )
 
         # Setup Workflow
