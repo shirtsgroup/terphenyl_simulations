@@ -108,7 +108,7 @@ class FoldamerOFFBespoke(OFFMethod):
             self.topology_manager.get_structure(self.trimer_buildfile, "molecule", self.path, filetype="sdf")
 
     def run_bespoke_fit_workflow(self, 
-                                   n_fragmenter_workers = 4,
+                                   n_fragmenter_workers = 1,
                                    n_qc_compute_workers = 4,
                                    n_optimizer_workers = 4,
                             ):
@@ -121,7 +121,7 @@ class FoldamerOFFBespoke(OFFMethod):
             n_fragmenter_workers = n_fragmenter_workers,
             n_qc_compute_workers = n_qc_compute_workers,
             n_optimizer_workers = n_optimizer_workers,
-            launch_redis_if_unavailable = True
+            launch_redis_if_unavailable = False
         )
 
         # Setup Workflow
@@ -239,16 +239,19 @@ class SystemOFFDefault(OFFMethod):
         system_molecules_list,
         charge_files,
         system_pdb,
+        output_file,
         path="",
-        ff_str="openff-2.0.0",
+        force_field_strings=["openff-2.0.0"],
     ):
         if not os.path.isdir(path):
             make_path(path)
         self.path = path
         self.molecules = []
         self.charges = []
+        self.name = output_file
         for molecule, charge_file in zip(system_molecules_list, charge_files):
             off_molecule = Molecule.from_file(molecule)
+            off_molecule.name = molecule.split(".")[0]
             # If we have partial charges in a file use it
             if charge_file != None and os.path.exists(charge_file):
                 print("Getting charges for", molecule, "from", charge_file)
@@ -258,30 +261,40 @@ class SystemOFFDefault(OFFMethod):
             self.molecules.append(off_molecule)
             self.charges.append(off_molecule.partial_charges != None)
         self.pdb_file = app.PDBFile(system_pdb)
-        print([mol.name for mol in self.molecules])
-        print(self.pdb_file.topology)
         self.off_topology = Topology.from_openmm(
             self.pdb_file.topology, unique_molecules=self.molecules
         )
-        self.force_field = ForceField(ff_str + ".offxml")
+        
+        self.force_fields = [ForceField(ff_str + ".offxml") for ff_str in force_field_strings]
 
     def _generate_ff_topology(self):
-        interchange = Interchange.from_smirnoff(
-            force_fild=self.force_field,
-            topology=self.off_topology,
-            charge_from_molecules=[
-                mol for mol, charge in zip(self.molecules, self.charges) if charge
-            ],
-        )
-        interchange.positions = self.pdb_file.getPositions()
+        
+        if len(self.force_fields) == 1:
+            self.force_fields *= len(self.molecules)
+        
+        interchange = None
+        os.environ["INTERCHANGE_EXPERIMENTAL"] = "1"
+        for mol in self.off_topology.molecules:
+            ff_index = self.molecules.index(mol)
+            ff =  self.force_fields[ff_index]
+            # print("Parameterizing", mol.name, "with", ff.author,  ff.date, "release.")
+            if interchange is None:
+                interchange = ff.create_interchange(
+                    mol.to_topology(),
+                    charge_from_molecules = [mol])
+            else:
+                add_interchange = ff.create_interchange(mol.to_topology())
+                interchange = interchange.combine(add_interchange)
 
-        top_file = os.path.join(self.path, self.name + "_openff-2.0.0.top")
-        gro_file = os.path.join(self.path, self.name + "_openff-2.0.0.gro")
+        interchange.positions = self.pdb_file.getPositions()
+        top_file = os.path.join(self.path, self.name + "_openff.top")
+        gro_file = os.path.join(self.path, self.name + "_openff.gro")
+        
         interchange.to_top(top_file)
         interchange.to_gro(gro_file)
 
         return top_file, gro_file
 
     def assign_parameters(self):
-        top_file, gro_file = self._generate_ff_topologies()
+        top_file, gro_file = self._generate_ff_topology()
         return top_file, gro_file
