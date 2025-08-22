@@ -1,11 +1,13 @@
 #!/bin/sh -l
-#SBATCH -N 1 -n 316
-#SBATCH --ntasks-per-node=316
+#SBATCH -N 1 -n 128
+#SBATCH --ntasks-per-node=128
 #SBATCH -t 48:00:00
 #SBATCH -p batch
-#SBATCH -J 'mop-octamer-remd-continue'
+#SBATCH -J 'SIMULATION_NAME'
+#SBATCH --hint=nomultithread
 
-module load gromacs/2023.4/openmpi-4.1.5-gcc-9
+module load openmpi/4.1.5/gcc-12
+source /wrk/tlf3/software/gromacs-2023.5/bin/GMXRC
 
 # Extend npt_new.tpr file using convert-tpr
 for dir in sim{0..63}; do cd $dir; mpirun -np 1 gmx_mpi convert-tpr -s production_npt.tpr -extend 100000 -o production_npt.tpr; cd ..; done

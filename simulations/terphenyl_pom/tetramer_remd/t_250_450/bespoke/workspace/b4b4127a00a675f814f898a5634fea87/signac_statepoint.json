@@ -1,1 +1,0 @@
-{"simulation_id": "pom_tetramer_bespoke", "n_replicas": 64, "t_range": [250, 450], "mdps": ["berendsen_nvt.mdp", "berendsen_npt.mdp", "production_npt.mdp"], "sim_id": "sim", "build_foldamer": "pom_tetramer.build", "param_method": "bespoke", "gromacs_exe": "gmx", "replica": 2}
