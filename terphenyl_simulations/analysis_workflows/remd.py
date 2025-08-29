@@ -8,6 +8,8 @@ import signac
 import flow
 import sys
 import numpy as np
+import MDAnalysis as md
+from tqdm import tqdm
 from flow import FlowProject
 from MDAnalysis import Universe
 import terphenyl_simulations
