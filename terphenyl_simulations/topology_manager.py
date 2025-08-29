@@ -78,10 +78,15 @@ class TopologyManager:
 
     def check_file_type(self, build_file, label, filetype):
         build_file_id = self.get_entry_dir_id(build_file)
-        files = glob.glob(
-            os.path.join(self.topology_dir, build_file_id, label, "*." + filetype)
-        )
-        return len(files) > 0
+        if build_file_id in self.topology_dictionary.keys():
+            if label in self.topology_dictionary[build_file_id].keys():
+            # Aggregate all files from dictionary entry
+                files = []
+                for ftype in ["structure_files", "topology_files", "force_field_files"]:
+                    files += self.topology_dictionary[build_file_id][label][ftype]
+                return filetype in [f.split(".")[-1] for f in files]
+        
+        return False
 
     def add_buildfile_entry(self, build_file):
         print("Adding", build_file, "to TopologyManager...")
@@ -126,12 +131,6 @@ class TopologyManager:
         if label not in self.topology_dictionary[build_file_id].keys():
             self.add_entry_label(build_file, label)
 
-        print("Current files in database:")
-
-        print(self.topology_dictionary[build_file_id][label]["structure_files"])
-        print(self.topology_dictionary[build_file_id].keys())
-        print(self.topology_dictionary.keys())
-
         # Save files internally
         label_directory = os.path.join(self.topology_dir, build_file_id, label)
         if os.path.exists(os.path.join(label_directory, filename)):
@@ -161,7 +160,6 @@ class TopologyManager:
                     "structure_files"
                 ]
             ]
-            print(stored_file_types)
             index = stored_file_types.index(filetype)
             database_file = self.topology_dictionary[build_file_id][label][
                 "structure_files"

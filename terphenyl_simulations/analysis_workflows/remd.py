@@ -150,6 +150,10 @@ def minimize_foldamer(job):
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def build_system(job):
+    ff_names = ["openff-2.0.0", "openff-1.0.0"]
+    if job.doc["build_parameters"]["ff_method"] == "bespoke":
+        ff_names = glob.glob("*bespoke*.offxml") + ["openff-1.0.0"]
+        ff_names = [f.split(".offxml")[0] for f in ff_names]
     openff_builder = terphenyl_simulations.build.SystemBuilderOpenFF(
         job.doc["foldamer_pdb"],
         job.doc["build_parameters"]["system"]["solvent"],
@@ -167,7 +171,7 @@ def build_system(job):
         job.doc["system_name"],
         job.doc["build_parameters"]["ff_method"],
         job.sp["build_foldamer"],
-        ff_names = ["openff-2.0.0", "openff-1.0.0"],
+        ff_names = ff_names,
         topology_manager = openff_builder.topology_manager
     )
     gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(

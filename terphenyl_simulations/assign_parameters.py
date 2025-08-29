@@ -6,6 +6,7 @@ from openff.toolkit.typing.engines.smirnoff import ForceField
 from openff.interchange.components.interchange import Interchange
 from openff.bespokefit.executor import BespokeExecutor, BespokeWorkerConfig, wait_until_complete
 from openff.bespokefit.workflows import BespokeWorkflowFactory
+from openff.bespokefit.executor.utilities.redis import is_redis_available
 from openff.fragmenter.fragment import WBOFragmenter
 from openff.bespokefit.schema.targets import TorsionProfileTargetSchema
 from openff.qcsubmit.common_structures import QCSpec
@@ -40,6 +41,7 @@ class FoldamerOFFBespoke(OFFMethod):
         if not os.path.isdir(path):
             make_path(path)
         self.molecule = Molecule.from_file(mol_file)
+        print(self.molecule)
         self.name = output_file
         self.initial_ff = ff_str
         self.build_file_yml = build_file
@@ -51,6 +53,7 @@ class FoldamerOFFBespoke(OFFMethod):
         renumber_pdb_atoms(pdb_file, os.path.join(path, pdb_path + "_renum.pdb"))
         self.pdb_file = app.PDBFile(os.path.join(path, pdb_path + "_renum.pdb"))
         self.omm_topology = self.pdb_file.topology
+        print(self.molecule)
         self.off_topology = Topology.from_openmm(
             self.omm_topology, unique_molecules=[self.molecule]
         )
@@ -66,6 +69,7 @@ class FoldamerOFFBespoke(OFFMethod):
         else:
             self.force_field = self.topology_manager.get_force_field(self.build_file_yml, "molecule", self.path)
             self.sdf_file = self.topology_manager.get_structure(self.build_file_yml, "molecule", self.path, filetype="sdf")
+        
         top_file, gro_file = self.generate_ff_topologies()
         return top_file, gro_file, self.sdf_file
 
@@ -110,18 +114,18 @@ class FoldamerOFFBespoke(OFFMethod):
     def run_bespoke_fit_workflow(self, 
                                    n_fragmenter_workers = 1,
                                    n_qc_compute_workers = 4,
-                                   n_optimizer_workers = 4,
+                                   n_optimizer_workers = 8,
                             ):
 
         # Keep Bespoke Executor Files
-        subprocess.run(["BEFLOW_KEEP_TMP_FILES=True"], shell=True)
+        os.environ["BEFLOW_KEEP_TMP_FILES"] = "True"
 
         # Setup Executor object
         self.bespoke_fit_executor = BespokeExecutor(
             n_fragmenter_workers = n_fragmenter_workers,
             n_qc_compute_workers = n_qc_compute_workers,
             n_optimizer_workers = n_optimizer_workers,
-            launch_redis_if_unavailable = False
+            launch_redis_if_unavailable = True,
         )
 
         # Setup Workflow
@@ -147,7 +151,7 @@ class FoldamerOFFBespoke(OFFMethod):
         self.factory.parameter_hyperparameters = [ProperTorsionHyperparameters()]
         self.factory.to_file('bespoke_flow.json')
 
-#     def run_bespoke_fit_executor(self):
+        # Run Bespoke Fit Workflow
         trimer_molecule = Molecule.from_file(self.trimer_sdf_file)
         bespoke_workflow_schema = self.factory.optimization_schema_from_molecule(trimer_molecule)
 
@@ -159,7 +163,6 @@ class FoldamerOFFBespoke(OFFMethod):
         ff_file_name = self.build_params["structure_file"] + "_bespoke_" + self.initial_ff + ".offxml"
         self.force_field.to_file(ff_file_name)
         self.topology_manager.add_force_field(ff_file_name, self.build_file_yml, self.label)
-
 
 
     def generate_ff_topologies(self):
@@ -277,7 +280,7 @@ class SystemOFFDefault(OFFMethod):
         for mol in self.off_topology.molecules:
             ff_index = self.molecules.index(mol)
             ff =  self.force_fields[ff_index]
-            # print("Parameterizing", mol.name, "with", ff.author,  ff.date, "release.")
+            print("Parameterizing", mol.name, "with", ff.author,  ff.date, "release.")
             if interchange is None:
                 interchange = ff.create_interchange(
                     mol.to_topology(),

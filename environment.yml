@@ -35,7 +35,9 @@ dependencies:
   - cachetools
   - xmltodict
   - openff-toolkit
-  - openff-bespokefit
+  - openff-bespokefit=0.4.0
+  - openff-qcsubmit=0.50
+  - qcelemental=0.28
   - openff-interchange
   - qcportal
   - natsort
