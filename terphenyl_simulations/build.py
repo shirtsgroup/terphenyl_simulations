@@ -49,7 +49,10 @@ class FoldamerBuilder:
 
     def get_foldamer(self):
         # Check DB of entries first
-        if self.topology_manager.check_file_type(self.build_file, self.label, "pdb"):
+        print(self.topology_manager.check_file_type(self.build_file, self.label, "pdb"))
+        print(self.topology_manager.check_file_type(self.build_file, self.label, "mol"))
+        if self.topology_manager.check_file_type(self.build_file, self.label, "pdb") \
+             and self.topology_manager.check_file_type(self.build_file, self.label, "mol"):
             print("Using database structure_file...")
             self.topology_manager.get_structure(
                 self.build_file, self.label, self.path, filetype="pdb"
@@ -101,8 +104,6 @@ class FoldamerBuilder:
 
             if (atom_1.name == "C" and atom_2.name == "N") or (atom_2.name == "C" and atom_1.name == "N"):
                 if atom_1.n_direct_bonds == 3 and atom_2.n_direct_bonds == 3:
-                    print("Adjusting peptide bond:")
-                    print(bond)
                     bonded_1 = list(atom_1.direct_bonds())
                     n_bonded_1 = [atom.n_direct_bonds for atom in bonded_1]
                     bonded_2 = list(atom_2.direct_bonds())
@@ -116,11 +117,7 @@ class FoldamerBuilder:
                     dihe = calc_dihedral(hydro.pos, atom_1.pos, atom_2.pos, carboxyl.pos)
                     adjust = np.pi - dihe
 
-                    print("Original Dihedral:", dihe)
-                    print("Adjusted by", adjust)
-
                     # This corrects dihedrals to be trans
-                    print(hydro.name, atom_1.name, atom_2.name, carboxyl.name)
                     self.chain.rotate_dihedral(bond[0:2], adjust)
 
         self.chain.save("test.pdb", overwrite=True)
@@ -273,7 +270,7 @@ class MoleculeTopologyGenerator:
                 + "force field parameter generation methods. Please pick from:\n"
                 + " ".join(self._ff_generation_methods.keys())
             )
-            sys.exit()
+            sys.exit(1)
 
         # Define other attributes populated by other functions
         self.md_engine = None
@@ -346,6 +343,7 @@ class SystemTopologyGenerator:
 
         self._ff_generation_methods = {
             "openff": SystemOFFDefault,
+            "bespoke" : SystemOFFDefault,
         }
 
         if ff_method in self._ff_generation_methods.keys():
