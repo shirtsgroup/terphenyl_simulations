@@ -270,22 +270,22 @@ def cluster_trajectory(job):
     simulation_trajectories = \
         natsorted(glob.glob(os.path.join(job.sp["sim_id"] + "*", production_sim + ".whole.xtc")))
 
-    select_string = "not resname MOL1"
+    select_string = "not resname TCM"
     print(select_string)
-    terphenyl_simulations.clustering.clustering_grid_search(
-        simulation_trajectories[:n_lowest_replicas],
-        top_file,
-        select_string,
-        n_min_samples=20,
-        n_eps=20,
-        n_processes=32,
-        prefix="grid_search",
-        eps_limits=[0.05, 0.3],
-        min_sample_limits=[0.001, 0.1],
-        plot_filename="ss.png",
-        frame_start = 2000,
-        frame_stride=8
-    )
+    # terphenyl_simulations.clustering.clustering_grid_search(
+    #     simulation_trajectories[:n_lowest_replicas],
+    #     top_file,
+    #     select_string,
+    #     n_min_samples=30,
+    #     n_eps=30,
+    #     n_processes=32,
+    #     prefix="grid_search",
+    #     eps_limits=[0.05, 0.2],
+    #     min_sample_limits=[0.01, 0.5],
+    #     plot_filename="ss.png",
+    #     frame_start = 2000,
+    #     frame_stride=3
+    # )
 
     terphenyl_simulations.clustering.HDBSCAN_clustering(
         simulation_trajectories[:n_lowest_replicas],
