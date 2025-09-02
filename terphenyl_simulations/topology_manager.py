@@ -61,6 +61,18 @@ class TopologyManager:
         # That are not present in filesystem
         for key in topology_keys:
             if key not in topology_entries:
+                print("Removing", key, "from TopologyManager...")
+                del self.topology_dictionary[key]
+                continue
+            # Check if labels are present too
+            label_entries = os.listdir(os.path.join(self.topology_dir, key))
+            for label in list(self.topology_dictionary[key].keys()):
+                if label not in label_entries:
+                    print("Removing label", label, "from", key, "TopologyManager entry...")
+                    del self.topology_dictionary[key][label]
+            # If no labels are under build_id, remove it
+            if len(self.topology_dictionary[key].keys()) == 0:
+                print("Removing", key, "from TopologyManager...")
                 del self.topology_dictionary[key]
 
     def get_build_json(self, build_file):
@@ -78,14 +90,22 @@ class TopologyManager:
 
     def check_file_type(self, build_file, label, filetype):
         build_file_id = self.get_entry_dir_id(build_file)
-        if build_file_id in self.topology_dictionary.keys():
-            if label in self.topology_dictionary[build_file_id].keys():
-            # Aggregate all files from dictionary entry
-                files = []
-                for ftype in ["structure_files", "topology_files", "force_field_files"]:
-                    files += self.topology_dictionary[build_file_id][label][ftype]
-                return filetype in [f.split(".")[-1] for f in files]
-        
+        # See if build_file_id exists
+        if build_file_id in self.topology_dictionary.keys() and \
+            os.path.isdir(os.path.join(self.topology_dir, build_file_id)):
+                # See if label exists
+                if label in self.topology_dictionary[build_file_id].keys() and \
+                    os.path.isdir(os.path.join(self.topology_dir, build_file_id, label)):
+
+                    # Aggregate all files from dictionary entry
+                    files = []
+                    for ftype in ["structure_files", "topology_files", "force_field_files"]:
+                        files += self.topology_dictionary[build_file_id][label][ftype]
+                    
+                    # Check if files are present in filesystem
+                    files = [file for file in files if os.path.isfile(os.path.join(self.topology_dir, build_file_id, label, file))]
+                    return filetype in [f.split(".")[-1] for f in files] 
+        # If file id or label or filetype is not present return false
         return False
 
     def add_buildfile_entry(self, build_file):

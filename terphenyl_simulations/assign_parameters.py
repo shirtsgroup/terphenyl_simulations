@@ -61,13 +61,14 @@ class FoldamerOFFBespoke(OFFMethod):
         self.topology_manager = TopologyManager()
 
     def assign_parameters(self):
+        
         if not self.topology_manager.check_file_type(self.build_file_yml, "molecule", "offxml"):
             self.generate_trimer_molecule(self.build_file_yml)
             self.assign_trimer_partial_charges()
             self.run_bespoke_fit_workflow()
             self._get_partial_charges()
         else:
-            self.force_field = self.topology_manager.get_force_field(self.build_file_yml, "molecule", self.path)
+            self.force_field = self.topology_manager.get_force_field(self.build_file_yml, "molecule", self.path, filetype="offxml")
             self.sdf_file = self.topology_manager.get_structure(self.build_file_yml, "molecule", self.path, filetype="sdf")
         
         top_file, gro_file = self.generate_ff_topologies()
@@ -86,11 +87,12 @@ class FoldamerOFFBespoke(OFFMethod):
 
         with open(build_file_yml, "r") as f:
             self.build_params = yaml.safe_load(f)
-        self.build_params["foldamer_length"] = 3
+        trimer_build_params = self.build_params.copy()
+        trimer_build_params["foldamer_length"] = 3
+        trimer_build_params["structure_file"] = self.build_params["structure_file"].split("_")[0] + "_trimer"
         self.trimer_buildfile = self.build_params["structure_file"].split("_")[0] + "_trimer.build"
-        self.build_params["structure_file"] = self.build_params["structure_file"].split("_")[0] + "_trimer"
         with open(self.trimer_buildfile, "w") as wf:
-            yaml.dump(self.build_params, wf)
+            yaml.dump(trimer_build_params, wf)
         foldamer_builder = FoldamerBuilder(self.trimer_buildfile)
         foldamer_builder.get_foldamer()
 
@@ -163,6 +165,7 @@ class FoldamerOFFBespoke(OFFMethod):
         ff_file_name = self.build_params["structure_file"] + "_bespoke_" + self.initial_ff + ".offxml"
         self.force_field.to_file(ff_file_name)
         self.topology_manager.add_force_field(ff_file_name, self.build_file_yml, self.label)
+        self.topology_manager.add_force_field(ff_file_name, self.trimer_buildfile, self.label)
 
 
     def generate_ff_topologies(self):
@@ -245,6 +248,7 @@ class SystemOFFDefault(OFFMethod):
         output_file,
         path="",
         force_field_strings=["openff-2.0.0"],
+        ff_id = "openff"
     ):
         if not os.path.isdir(path):
             make_path(path)
@@ -252,6 +256,7 @@ class SystemOFFDefault(OFFMethod):
         self.molecules = []
         self.charges = []
         self.name = output_file
+        self.ff_id = ff_id
         for molecule, charge_file in zip(system_molecules_list, charge_files):
             off_molecule = Molecule.from_file(molecule)
             off_molecule.name = molecule.split(".")[0]
@@ -290,8 +295,8 @@ class SystemOFFDefault(OFFMethod):
                 interchange = interchange.combine(add_interchange)
 
         interchange.positions = self.pdb_file.getPositions()
-        top_file = os.path.join(self.path, self.name + "_openff.top")
-        gro_file = os.path.join(self.path, self.name + "_openff.gro")
+        top_file = os.path.join(self.path, self.name + "_" + self.ff_id + ".top")
+        gro_file = os.path.join(self.path, self.name + "_" + self.ff_id + "openff.gro")
         
         interchange.to_top(top_file)
         interchange.to_gro(gro_file)

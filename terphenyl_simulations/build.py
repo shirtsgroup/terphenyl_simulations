@@ -204,7 +204,6 @@ class SystemBuilderOpenFF:
             * UNIT_CUBE
             * unit.angstrom,
         )
-        print(self.system)
 
     def write_pdb(self):
         self.pdb_file = self.label + ".pdb"
@@ -250,6 +249,7 @@ class MoleculeTopologyGenerator:
         self.build_file = build_file
         self.topology_manager = topology_manager
         self.topology_label = topology_label
+        self.ff_method = ff_method
         if not os.path.isdir(self.path):
             make_path(path)
 
@@ -290,6 +290,9 @@ class MoleculeTopologyGenerator:
             self.sdf_file = self.topology_manager.get_structure(
                 self.build_file, self.topology_label, self.path, filetype="sdf"
             )
+            if self.ff_method == "bespoke":
+                print("Bespoke parameters detected, re-generating force-field offxml...")
+                self.assign_parameters()
         else:
             self.assign_parameters()
 
@@ -348,7 +351,12 @@ class SystemTopologyGenerator:
 
         if ff_method in self._ff_generation_methods.keys():
             self.ff_generator = self._ff_generation_methods[ff_method](
-                system_molecule_files, system_charge_files, system_pdb, self.name, path=self.path, force_field_strings = ff_names
+                system_molecule_files,
+                system_charge_files,
+                system_pdb, self.name,
+                path=self.path,
+                force_field_strings = ff_names,
+                ff_id=ff_method,
             )
         else:
             print(
