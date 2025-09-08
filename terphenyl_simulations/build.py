@@ -296,7 +296,7 @@ class MoleculeTopologyGenerator:
             )
             if self.ff_method == "bespoke":
                 print("Bespoke parameters detected, re-generating force-field offxml...")
-                self.assign_parameters()
+                self.topology_manager.get_force_field(self.build_file, self.topology_label, self.path)
         else:
             self.assign_parameters()
 
@@ -395,7 +395,6 @@ class SystemTopologyGenerator:
         else:
             self.assign_parameters() 
             self.minimize()
-            print(self.top_file, self.build_file, self.label)
             self.topology_manager.add_structure(self.gro_file, self.build_file, label = self.label)
             self.topology_manager.add_topology(self.top_file, self.build_file, label = self.label)
 
