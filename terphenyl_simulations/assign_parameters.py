@@ -41,7 +41,6 @@ class FoldamerOFFBespoke(OFFMethod):
         if not os.path.isdir(path):
             make_path(path)
         self.molecule = Molecule.from_file(mol_file)
-        print(self.molecule)
         self.name = output_file
         self.initial_ff = ff_str
         self.build_file_yml = build_file
@@ -53,7 +52,6 @@ class FoldamerOFFBespoke(OFFMethod):
         renumber_pdb_atoms(pdb_file, os.path.join(path, pdb_path + "_renum.pdb"))
         self.pdb_file = app.PDBFile(os.path.join(path, pdb_path + "_renum.pdb"))
         self.omm_topology = self.pdb_file.topology
-        print(self.molecule)
         self.off_topology = Topology.from_openmm(
             self.omm_topology, unique_molecules=[self.molecule]
         )
@@ -68,9 +66,9 @@ class FoldamerOFFBespoke(OFFMethod):
             self.run_bespoke_fit_workflow()
             self._get_partial_charges()
         else:
-            self.force_field = self.topology_manager.get_force_field(self.build_file_yml, "molecule", self.path, filetype="offxml")
+            self.force_field = ForceField(self.topology_manager.get_force_field(self.build_file_yml, "molecule", self.path, filetype="offxml"))
             self.sdf_file = self.topology_manager.get_structure(self.build_file_yml, "molecule", self.path, filetype="sdf")
-        
+            self.molecule = Molecule.from_file(self.sdf_file)
         top_file, gro_file = self.generate_ff_topologies()
         return top_file, gro_file, self.sdf_file
 
@@ -295,8 +293,8 @@ class SystemOFFDefault(OFFMethod):
                 interchange = interchange.combine(add_interchange)
 
         interchange.positions = self.pdb_file.getPositions()
-        top_file = os.path.join(self.path, self.name + "_" + self.ff_id + ".top")
-        gro_file = os.path.join(self.path, self.name + "_" + self.ff_id + "openff.gro")
+        top_file = os.path.join(self.path, self.name + ".top")
+        gro_file = os.path.join(self.path, self.name + ".gro")
         
         interchange.to_top(top_file)
         interchange.to_gro(gro_file)

@@ -147,11 +147,12 @@ def minimize_foldamer(job):
 
 @FlowProject.pre.after(minimize_foldamer)
 @FlowProject.post(
-    lambda job: os.path.exists(job.fn(job.doc["system_name"] + "_" + job.doc["build_parameters"]["ff_method"] + ".top"))
+    lambda job: os.path.exists(job.fn(job.doc["foldamer_name"] + "_" + job.doc["system_name"] + "_" + job.doc["build_parameters"]["ff_method"] + ".top"))
 )
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def build_system(job):
+    print(job.fn(job.doc["foldamer_name"] + "_" + job.doc["system_name"] + "_" + job.doc["build_parameters"]["ff_method"] + ".top"))
     ff_names = ["openff-2.0.0", "openff-1.0.0"]
     if job.doc["build_parameters"]["ff_method"] == "bespoke":
         ff_names = glob.glob("*bespoke*.offxml") + ["openff-1.0.0"]
@@ -170,7 +171,7 @@ def build_system(job):
         job.doc["system_pdb"],
         [job.doc["foldamer_pdb"], get_solvent_structure_file(job.doc["build_parameters"]["system"]["solvent"])],
         [job.doc["foldamer_name"] + "_charges.sdf", None],
-        job.doc["system_name"],
+        job.doc["foldamer_name"] + "_" + job.doc["system_name"] + "_" + job.doc["build_parameters"]["ff_method"],
         job.doc["build_parameters"]["ff_method"],
         job.sp["build_foldamer"],
         ff_names = ff_names,
@@ -187,7 +188,7 @@ def build_system(job):
 
 @FlowProject.pre.after(build_system)
 @FlowProject.post(
-    lambda job: os.path.exists(job.fn(job.doc["system_name"] + "_" + job.doc["build_parameters"]["ff_method"] + "_hmr.top"))
+    lambda job: os.path.exists(job.fn(job.doc["foldamer_name"] + "_" + job.doc["system_name"] + "_" + job.doc["build_parameters"]["ff_method"] + "_hmr.top"))
 )
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
@@ -277,7 +278,6 @@ def cluster_trajectory(job):
         natsorted(glob.glob(os.path.join(job.sp["sim_id"] + "*", production_sim + ".whole.xtc")))
 
     select_string = "not resname TCM"
-    print(select_string)
     # terphenyl_simulations.clustering.clustering_grid_search(
     #     simulation_trajectories[:n_lowest_replicas],
     #     top_file,

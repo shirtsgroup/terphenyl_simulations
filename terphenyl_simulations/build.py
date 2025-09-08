@@ -49,8 +49,6 @@ class FoldamerBuilder:
 
     def get_foldamer(self):
         # Check DB of entries first
-        print(self.topology_manager.check_file_type(self.build_file, self.label, "pdb"))
-        print(self.topology_manager.check_file_type(self.build_file, self.label, "mol"))
         if self.topology_manager.check_file_type(self.build_file, self.label, "pdb") \
              and self.topology_manager.check_file_type(self.build_file, self.label, "mol"):
             print("Using database structure_file...")
@@ -120,6 +118,10 @@ class FoldamerBuilder:
                     # This corrects dihedrals to be trans
                     self.chain.rotate_dihedral(bond[0:2], adjust)
 
+                    # Minimize after each adjustment
+                    # self.chain.energy_minimize(forcefield="MMFF94")
+
+
         self.chain.save("test.pdb", overwrite=True)
         self.chain.energy_minimize(forcefield="MMFF94")
 
@@ -174,6 +176,8 @@ class SystemBuilderOpenFF:
         with open(build_file_yml, "r") as f:
             self.build_params = yaml.safe_load(f)
 
+        self.filename = self.build_params["structure_file"] + "_" + self.label
+
         self.solute = Molecule.from_file(solute_pdb)
         self.solvent = Molecule.from_file(get_solvent_structure_file(solvent_id))
         self.md_engine = GromacsWrapper()
@@ -206,16 +210,16 @@ class SystemBuilderOpenFF:
         )
 
     def write_pdb(self):
-        self.pdb_file = self.label + ".pdb"
+        self.pdb_file = self.filename + ".pdb"
         self.system.to_file(self.pdb_file)
         self.topology_manager.add_structure(
             self.pdb_file, self.build_file, label = self.label
         )
 
     def write_gro(self):
-        self.gro_file = self.label + ".gro"
+        self.gro_file = self.filename + ".gro"
         gmx = GromacsWrapper()
-        gmx.edit_conf(f = self.label + ".pdb", o = self.label + ".gro")
+        gmx.edit_conf(f = self.filename + ".pdb", o = self.filename + ".gro")
         self.topology_manager.add_structure(
             self.gro_file, self.build_file, label = self.label
         )
