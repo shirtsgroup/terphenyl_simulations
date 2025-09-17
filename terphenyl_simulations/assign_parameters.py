@@ -30,7 +30,7 @@ class OFFMethod(ABC):
 
 class FoldamerOFFBespoke(OFFMethod):
     def __init__(
-        self, mol_file, pdb_file, build_file = None, output_file=None, path="", ff_str="openff-2.0.0"
+        self, mol_file, pdb_file, build_file = None, output_file=None, path="", ff_str="openff-2.0.0", topology_manager = TopologyManager(),
     ):
         if type(mol_file) is not str:
             print(
@@ -56,7 +56,7 @@ class FoldamerOFFBespoke(OFFMethod):
             self.omm_topology, unique_molecules=[self.molecule]
         )
         self.force_field = None
-        self.topology_manager = TopologyManager()
+        self.topology_manager = topology_manager
 
     def assign_parameters(self):
         
@@ -91,7 +91,7 @@ class FoldamerOFFBespoke(OFFMethod):
         self.trimer_buildfile = self.build_params["structure_file"].split("_")[0] + "_trimer.build"
         with open(self.trimer_buildfile, "w") as wf:
             yaml.dump(trimer_build_params, wf)
-        foldamer_builder = FoldamerBuilder(self.trimer_buildfile)
+        foldamer_builder = FoldamerBuilder(self.trimer_buildfile, topology_manager=self.topology_manager)
         foldamer_builder.get_foldamer()
 
     def assign_trimer_partial_charges(self):
@@ -114,7 +114,7 @@ class FoldamerOFFBespoke(OFFMethod):
     def run_bespoke_fit_workflow(self, 
                                    n_fragmenter_workers = 1,
                                    n_qc_compute_workers = 4,
-                                   n_optimizer_workers = 8,
+                                   n_optimizer_workers = 4,
                             ):
 
         # Keep Bespoke Executor Files
@@ -150,11 +150,11 @@ class FoldamerOFFBespoke(OFFMethod):
         self.factory.optimizer = ForceBalanceSchema()
         self.factory.parameter_hyperparameters = [ProperTorsionHyperparameters()]
         self.factory.to_file('bespoke_flow.json')
-
+        
         # Run Bespoke Fit Workflow
         trimer_molecule = Molecule.from_file(self.trimer_sdf_file)
         bespoke_workflow_schema = self.factory.optimization_schema_from_molecule(trimer_molecule)
-
+        
         with self.bespoke_fit_executor:
             task_id = self.bespoke_fit_executor.submit(bespoke_workflow_schema)
             output = wait_until_complete(task_id)
@@ -164,7 +164,6 @@ class FoldamerOFFBespoke(OFFMethod):
         self.force_field.to_file(ff_file_name)
         self.topology_manager.add_force_field(ff_file_name, self.build_file_yml, self.label)
         self.topology_manager.add_force_field(ff_file_name, self.trimer_buildfile, self.label)
-
 
     def generate_ff_topologies(self):
         interchange = self.force_field.create_interchange(
@@ -183,7 +182,7 @@ class FoldamerOFFBespoke(OFFMethod):
 
 class FoldamerOFFDefault(OFFMethod):
     def __init__(
-        self, mol_file, pdb_file, output_file=None, path="", ff_str="openff-2.0.0", build_file = None
+        self, mol_file, pdb_file, output_file=None, path="", ff_str="openff-2.0.0", build_file = None, topology_manager = TopologyManager()
     ):
         if type(mol_file) is not str:
             print(
@@ -206,6 +205,8 @@ class FoldamerOFFDefault(OFFMethod):
             self.omm_topology, unique_molecules=[self.molecule]
         )
         self.force_field = ForceField(ff_str + ".offxml")
+        self.topology_manager = topology_manager
+        self.build_file = build_file
 
     def assign_parameters(self, charge_method="am1bcc"):
         self._get_partial_charges(charge_method)
@@ -246,7 +247,8 @@ class SystemOFFDefault(OFFMethod):
         output_file,
         path="",
         force_field_strings=["openff-2.0.0"],
-        ff_id = "openff"
+        ff_id = "openff",
+        topology_manager = TopologyManager(),
     ):
         if not os.path.isdir(path):
             make_path(path)
@@ -272,6 +274,7 @@ class SystemOFFDefault(OFFMethod):
         )
         
         self.force_fields = [ForceField(ff_str + ".offxml") for ff_str in force_field_strings]
+        self.topology_manager = topology_manager
 
     def _generate_ff_topology(self):
         

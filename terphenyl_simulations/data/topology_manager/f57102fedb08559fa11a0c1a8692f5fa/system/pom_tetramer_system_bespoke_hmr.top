@@ -2,7 +2,7 @@
 ;   File pom_tetramer_system_bespoke_hmr.top  was generated
 ;   By user: tlf3 (1000)
 ;   On host:647TRCJM3 
-;   At date:Fri. September  5 20:25:46 2025 
+;   At date:Fri. September  5 17:50:26 2025 
 ;
 ;   This is a standalone topology file
 ;
@@ -234,196 +234,196 @@ system1          3
     1 em_pom_tetramer_0      1    POM     C1      1 0.10828000   5.963098   ; qtot 0.108280
     2 em_pom_tetramer_1      1    POM     O2      2 -0.31891999  15.999430   ; qtot -0.210640
     3 em_pom_tetramer_2      1    POM     C3      3 0.12251000  12.010780   ; qtot -0.088130
-    4 em_pom_tetramer_3      1    POM     C4      4 -0.20254000   9.994886   ; qtot -0.290670
-    5 em_pom_tetramer_4      1    POM     C5      5 -0.08344000   9.994886   ; qtot -0.374110
+    4 em_pom_tetramer_3      1    POM     C4      4 -0.20253000   9.994886   ; qtot -0.290660
+    5 em_pom_tetramer_4      1    POM     C5      5 -0.08345000   9.994886   ; qtot -0.374110
     6 em_pom_tetramer_5      1    POM     C6      6 -0.07017000  12.010780   ; qtot -0.444280
     7 em_pom_tetramer_6      1    POM     C7      7 -0.05111000  12.010780   ; qtot -0.495390
     8 em_pom_tetramer_7      1    POM     C8      8 -0.08421000   9.994886   ; qtot -0.579600
     9 em_pom_tetramer_8      1    POM     C9      9 -0.15024000   9.994886   ; qtot -0.729840
-   10 em_pom_tetramer_9      1    POM    C10     10 -0.07204000   9.994886   ; qtot -0.801880
-   11 em_pom_tetramer_10      1    POM    C11     11 -0.13514000  12.010780   ; qtot -0.937020
-   12 em_pom_tetramer_11      1    POM    C12     12 0.64482999  12.010780   ; qtot -0.292190
+   10 em_pom_tetramer_9      1    POM    C10     10 -0.07205000   9.994886   ; qtot -0.801890
+   11 em_pom_tetramer_10      1    POM    C11     11 -0.13514000  12.010780   ; qtot -0.937030
+   12 em_pom_tetramer_11      1    POM    C12     12 0.64484000  12.010780   ; qtot -0.292190
    13 em_pom_tetramer_12      1    POM    O13     13 -0.53964001  15.999430   ; qtot -0.831830
-   14 em_pom_tetramer_13      1    POM    C14     14 -0.05702000   9.994886   ; qtot -0.888850
-   15 em_pom_tetramer_14      1    POM    C15     15 0.00757000  12.010780   ; qtot -0.881280
+   14 em_pom_tetramer_13      1    POM    C14     14 -0.05701000   9.994886   ; qtot -0.888840
+   15 em_pom_tetramer_14      1    POM    C15     15 0.00756000  12.010780   ; qtot -0.881280
    16 em_pom_tetramer_15      1    POM    C16     16 -0.03948000  12.010780   ; qtot -0.920760
    17 em_pom_tetramer_16      1    POM    C17     17 -0.11129000   9.994886   ; qtot -1.032050
    18 em_pom_tetramer_17      1    POM    C18     18 -0.12131000   9.994886   ; qtot -1.153360
    19 em_pom_tetramer_18      1    POM    C19     19 -0.09385000  12.010780   ; qtot -1.247210
    20 em_pom_tetramer_19      1    POM    C20     20 0.15251000   9.994886   ; qtot -1.094700
-   21 em_pom_tetramer_20      1    POM    C21     21 -0.11235000   5.963098   ; qtot -1.207050
-   22 em_pom_tetramer_21      1    POM    N22     22 -0.56999999  11.990826   ; qtot -1.777050
-   23 em_pom_tetramer_22      1    POM    C23     23 -0.12131000   9.994886   ; qtot -1.898360
-   24 em_pom_tetramer_23      1    POM    C24     24 -0.11129000   9.994886   ; qtot -2.009650
-   25 em_pom_tetramer_24      1    POM    C25     25 -0.14507000   9.994886   ; qtot -2.154720
-   26 em_pom_tetramer_25      1    POM    H26     26 0.04508000   3.023841   ; qtot -2.109640
-   27 em_pom_tetramer_26      1    POM    H27     27 0.04508000   3.023841   ; qtot -2.064560
-   28 em_pom_tetramer_27      1    POM    H28     28 0.04508000   3.023841   ; qtot -2.019480
-   29 em_pom_tetramer_28      1    POM    H29     29 0.14162000   3.023841   ; qtot -1.877860
-   30 em_pom_tetramer_29      1    POM    H30     30 0.14094999   3.023841   ; qtot -1.736910
-   31 em_pom_tetramer_30      1    POM    H31     31 0.14011000   3.023841   ; qtot -1.596800
-   32 em_pom_tetramer_31      1    POM    H32     32 0.14105000   3.023841   ; qtot -1.455750
-   33 em_pom_tetramer_32      1    POM    H33     33 0.15571000   3.023841   ; qtot -1.300040
-   34 em_pom_tetramer_33      1    POM    H34     34 0.16078000   3.023841   ; qtot -1.139260
-   35 em_pom_tetramer_34      1    POM    H35     35 0.13876000   3.023841   ; qtot -1.000500
-   36 em_pom_tetramer_35      1    POM    H36     36 0.13591000   3.023841   ; qtot -0.864590
-   37 em_pom_tetramer_36      1    POM    H37     37 0.08773000   3.023841   ; qtot -0.776860
-   38 em_pom_tetramer_37      1    POM    H38     38 0.04445000   3.023841   ; qtot -0.732410
-   39 em_pom_tetramer_38      1    POM    H39     39 0.04445000   3.023841   ; qtot -0.687960
-   40 em_pom_tetramer_39      1    POM    H40     40 0.04445000   3.023841   ; qtot -0.643510
-   41 em_pom_tetramer_40      1    POM    H41     41 0.31088001   3.023841   ; qtot -0.332630
-   42 em_pom_tetramer_41      1    POM    H42     42 0.13591000   3.023841   ; qtot -0.196720
-   43 em_pom_tetramer_42      1    POM    H43     43 0.13876000   3.023841   ; qtot -0.057960
-   44 em_pom_tetramer_43      1    POM    H44     44 0.15719000   3.023841   ; qtot 0.099230
+   21 em_pom_tetramer_20      1    POM    C21     21 -0.11236000   5.963098   ; qtot -1.207060
+   22 em_pom_tetramer_21      1    POM    N22     22 -0.56998003  11.990826   ; qtot -1.777040
+   23 em_pom_tetramer_22      1    POM    C23     23 -0.12131000   9.994886   ; qtot -1.898350
+   24 em_pom_tetramer_23      1    POM    C24     24 -0.11129000   9.994886   ; qtot -2.009640
+   25 em_pom_tetramer_24      1    POM    C25     25 -0.14507000   9.994886   ; qtot -2.154710
+   26 em_pom_tetramer_25      1    POM    H26     26 0.04508000   3.023841   ; qtot -2.109630
+   27 em_pom_tetramer_26      1    POM    H27     27 0.04508000   3.023841   ; qtot -2.064550
+   28 em_pom_tetramer_27      1    POM    H28     28 0.04508000   3.023841   ; qtot -2.019470
+   29 em_pom_tetramer_28      1    POM    H29     29 0.14162000   3.023841   ; qtot -1.877850
+   30 em_pom_tetramer_29      1    POM    H30     30 0.14094999   3.023841   ; qtot -1.736900
+   31 em_pom_tetramer_30      1    POM    H31     31 0.14011000   3.023841   ; qtot -1.596790
+   32 em_pom_tetramer_31      1    POM    H32     32 0.14105000   3.023841   ; qtot -1.455740
+   33 em_pom_tetramer_32      1    POM    H33     33 0.15572000   3.023841   ; qtot -1.300020
+   34 em_pom_tetramer_33      1    POM    H34     34 0.16078000   3.023841   ; qtot -1.139240
+   35 em_pom_tetramer_34      1    POM    H35     35 0.13876000   3.023841   ; qtot -1.000480
+   36 em_pom_tetramer_35      1    POM    H36     36 0.13591000   3.023841   ; qtot -0.864570
+   37 em_pom_tetramer_36      1    POM    H37     37 0.08774000   3.023841   ; qtot -0.776830
+   38 em_pom_tetramer_37      1    POM    H38     38 0.04445000   3.023841   ; qtot -0.732380
+   39 em_pom_tetramer_38      1    POM    H39     39 0.04445000   3.023841   ; qtot -0.687930
+   40 em_pom_tetramer_39      1    POM    H40     40 0.04445000   3.023841   ; qtot -0.643480
+   41 em_pom_tetramer_40      1    POM    H41     41 0.31088001   3.023841   ; qtot -0.332600
+   42 em_pom_tetramer_41      1    POM    H42     42 0.13591000   3.023841   ; qtot -0.196690
+   43 em_pom_tetramer_42      1    POM    H43     43 0.13876000   3.023841   ; qtot -0.057930
+   44 em_pom_tetramer_43      1    POM    H44     44 0.15719000   3.023841   ; qtot 0.099260
 ; residue    2 POM rtp POM q 0.0
-   45 em_pom_tetramer_44      2    POM    C45     45 0.10887000   5.963098   ; qtot 0.208100
-   46 em_pom_tetramer_45      2    POM    O46     46 -0.33023000  15.999430   ; qtot -0.122130
-   47 em_pom_tetramer_46      2    POM    C47     47 0.12224000  12.010780   ; qtot 0.000110
-   48 em_pom_tetramer_47      2    POM    C48     48 -0.15919000   9.994886   ; qtot -0.159080
-   49 em_pom_tetramer_48      2    POM    C49     49 -0.08888000   9.994886   ; qtot -0.247960
-   50 em_pom_tetramer_49      2    POM    C50     50 -0.07264000  12.010780   ; qtot -0.320600
-   51 em_pom_tetramer_50      2    POM    C51     51 -0.03807000  12.010780   ; qtot -0.358670
-   52 em_pom_tetramer_51      2    POM    C52     52 -0.09268000   9.994886   ; qtot -0.451350
-   53 em_pom_tetramer_52      2    POM    C53     53 -0.14627001   9.994886   ; qtot -0.597620
-   54 em_pom_tetramer_53      2    POM    C54     54 -0.07496000   9.994886   ; qtot -0.672580
-   55 em_pom_tetramer_54      2    POM    C55     55 -0.14148000  12.010780   ; qtot -0.814060
-   56 em_pom_tetramer_55      2    POM    C56     56 0.67650998  12.010780   ; qtot -0.137550
-   57 em_pom_tetramer_56      2    POM    O57     57 -0.60913998  15.999430   ; qtot -0.746690
-   58 em_pom_tetramer_57      2    POM    C58     58 -0.09007000   9.994886   ; qtot -0.836760
-   59 em_pom_tetramer_58      2    POM    C59     59 0.01215000  12.010780   ; qtot -0.824610
-   60 em_pom_tetramer_59      2    POM    C60     60 -0.04105000  12.010780   ; qtot -0.865660
-   61 em_pom_tetramer_60      2    POM    C61     61 -0.10737000   9.994886   ; qtot -0.973030
-   62 em_pom_tetramer_61      2    POM    C62     62 -0.11795000   9.994886   ; qtot -1.090980
-   63 em_pom_tetramer_62      2    POM    C63     63 -0.10365000  12.010780   ; qtot -1.194630
-   64 em_pom_tetramer_63      2    POM    C64     64 0.14224000   9.994886   ; qtot -1.052390
-   65 em_pom_tetramer_64      2    POM    C65     65 -0.10128000   5.963098   ; qtot -1.153670
-   66 em_pom_tetramer_65      2    POM    N66     66 -0.56295002  11.990826   ; qtot -1.716620
-   67 em_pom_tetramer_66      2    POM    C67     67 -0.11795000   9.994886   ; qtot -1.834570
-   68 em_pom_tetramer_67      2    POM    C68     68 -0.10737000   9.994886   ; qtot -1.941940
-   69 em_pom_tetramer_68      2    POM    C69     69 -0.19580001   9.994886   ; qtot -2.137740
-   70 em_pom_tetramer_69      2    POM    H70     70 0.04835000   3.023841   ; qtot -2.089390
-   71 em_pom_tetramer_70      2    POM    H71     71 0.04835000   3.023841   ; qtot -2.041040
-   72 em_pom_tetramer_71      2    POM    H72     72 0.04835000   3.023841   ; qtot -1.992690
-   73 em_pom_tetramer_72      2    POM    H73     73 0.14957000   3.023841   ; qtot -1.843120
-   74 em_pom_tetramer_73      2    POM    H74     74 0.13862000   3.023841   ; qtot -1.704500
-   75 em_pom_tetramer_74      2    POM    H75     75 0.13975000   3.023841   ; qtot -1.564750
+   45 em_pom_tetramer_44      2    POM    C45     45 0.10886000   5.963098   ; qtot 0.208120
+   46 em_pom_tetramer_45      2    POM    O46     46 -0.33022001  15.999430   ; qtot -0.122100
+   47 em_pom_tetramer_46      2    POM    C47     47 0.12224000  12.010780   ; qtot 0.000140
+   48 em_pom_tetramer_47      2    POM    C48     48 -0.15919000   9.994886   ; qtot -0.159050
+   49 em_pom_tetramer_48      2    POM    C49     49 -0.08888000   9.994886   ; qtot -0.247930
+   50 em_pom_tetramer_49      2    POM    C50     50 -0.07265000  12.010780   ; qtot -0.320580
+   51 em_pom_tetramer_50      2    POM    C51     51 -0.03808000  12.010780   ; qtot -0.358660
+   52 em_pom_tetramer_51      2    POM    C52     52 -0.09268000   9.994886   ; qtot -0.451340
+   53 em_pom_tetramer_52      2    POM    C53     53 -0.14627001   9.994886   ; qtot -0.597610
+   54 em_pom_tetramer_53      2    POM    C54     54 -0.07496000   9.994886   ; qtot -0.672570
+   55 em_pom_tetramer_54      2    POM    C55     55 -0.14148000  12.010780   ; qtot -0.814050
+   56 em_pom_tetramer_55      2    POM    C56     56 0.67650998  12.010780   ; qtot -0.137540
+   57 em_pom_tetramer_56      2    POM    O57     57 -0.60913998  15.999430   ; qtot -0.746680
+   58 em_pom_tetramer_57      2    POM    C58     58 -0.09007000   9.994886   ; qtot -0.836750
+   59 em_pom_tetramer_58      2    POM    C59     59 0.01216000  12.010780   ; qtot -0.824590
+   60 em_pom_tetramer_59      2    POM    C60     60 -0.04105000  12.010780   ; qtot -0.865640
+   61 em_pom_tetramer_60      2    POM    C61     61 -0.10737000   9.994886   ; qtot -0.973010
+   62 em_pom_tetramer_61      2    POM    C62     62 -0.11795000   9.994886   ; qtot -1.090960
+   63 em_pom_tetramer_62      2    POM    C63     63 -0.10365000  12.010780   ; qtot -1.194610
+   64 em_pom_tetramer_63      2    POM    C64     64 0.14224000   9.994886   ; qtot -1.052370
+   65 em_pom_tetramer_64      2    POM    C65     65 -0.10128000   5.963098   ; qtot -1.153650
+   66 em_pom_tetramer_65      2    POM    N66     66 -0.56296003  11.990826   ; qtot -1.716610
+   67 em_pom_tetramer_66      2    POM    C67     67 -0.11795000   9.994886   ; qtot -1.834560
+   68 em_pom_tetramer_67      2    POM    C68     68 -0.10737000   9.994886   ; qtot -1.941930
+   69 em_pom_tetramer_68      2    POM    C69     69 -0.19580001   9.994886   ; qtot -2.137730
+   70 em_pom_tetramer_69      2    POM    H70     70 0.04835000   3.023841   ; qtot -2.089380
+   71 em_pom_tetramer_70      2    POM    H71     71 0.04835000   3.023841   ; qtot -2.041030
+   72 em_pom_tetramer_71      2    POM    H72     72 0.04835000   3.023841   ; qtot -1.992680
+   73 em_pom_tetramer_72      2    POM    H73     73 0.14956000   3.023841   ; qtot -1.843120
+   74 em_pom_tetramer_73      2    POM    H74     74 0.13863000   3.023841   ; qtot -1.704490
+   75 em_pom_tetramer_74      2    POM    H75     75 0.13974001   3.023841   ; qtot -1.564750
    76 em_pom_tetramer_75      2    POM    H76     76 0.13145000   3.023841   ; qtot -1.433300
    77 em_pom_tetramer_76      2    POM    H77     77 0.15563001   3.023841   ; qtot -1.277670
    78 em_pom_tetramer_77      2    POM    H78     78 0.14239000   3.023841   ; qtot -1.135280
-   79 em_pom_tetramer_78      2    POM    H79     79 0.13830000   3.023841   ; qtot -0.996980
-   80 em_pom_tetramer_79      2    POM    H80     80 0.13407999   3.023841   ; qtot -0.862900
+   79 em_pom_tetramer_78      2    POM    H79     79 0.13829000   3.023841   ; qtot -0.996990
+   80 em_pom_tetramer_79      2    POM    H80     80 0.13409001   3.023841   ; qtot -0.862900
    81 em_pom_tetramer_80      2    POM    H81     81 0.09373000   3.023841   ; qtot -0.769170
-   82 em_pom_tetramer_81      2    POM    H82     82 0.04341000   3.023841   ; qtot -0.725760
-   83 em_pom_tetramer_82      2    POM    H83     83 0.04341000   3.023841   ; qtot -0.682350
-   84 em_pom_tetramer_83      2    POM    H84     84 0.04341000   3.023841   ; qtot -0.638940
-   85 em_pom_tetramer_84      2    POM    H85     85 0.31020999   3.023841   ; qtot -0.328730
-   86 em_pom_tetramer_85      2    POM    H86     86 0.13407999   3.023841   ; qtot -0.194650
-   87 em_pom_tetramer_86      2    POM    H87     87 0.13830000   3.023841   ; qtot -0.056350
-   88 em_pom_tetramer_87      2    POM    H88     88 0.16056000   3.023841   ; qtot 0.104210
+   82 em_pom_tetramer_81      2    POM    H82     82 0.04340000   3.023841   ; qtot -0.725770
+   83 em_pom_tetramer_82      2    POM    H83     83 0.04340000   3.023841   ; qtot -0.682370
+   84 em_pom_tetramer_83      2    POM    H84     84 0.04340000   3.023841   ; qtot -0.638970
+   85 em_pom_tetramer_84      2    POM    H85     85 0.31020001   3.023841   ; qtot -0.328770
+   86 em_pom_tetramer_85      2    POM    H86     86 0.13409001   3.023841   ; qtot -0.194680
+   87 em_pom_tetramer_86      2    POM    H87     87 0.13829000   3.023841   ; qtot -0.056390
+   88 em_pom_tetramer_87      2    POM    H88     88 0.16057000   3.023841   ; qtot 0.104180
 ; residue    3 POM rtp POM q -0.0
-   89 em_pom_tetramer_88      3    POM    C89     89 0.11300000   5.963098   ; qtot 0.217210
-   90 em_pom_tetramer_89      3    POM    O90     90 -0.32630000  15.999430   ; qtot -0.109090
-   91 em_pom_tetramer_90      3    POM    C91     91 0.12739000  12.010780   ; qtot 0.018300
-   92 em_pom_tetramer_91      3    POM    C92     92 -0.20225000   9.994886   ; qtot -0.183950
-   93 em_pom_tetramer_92      3    POM    C93     93 -0.08053000   9.994886   ; qtot -0.264480
+   89 em_pom_tetramer_88      3    POM    C89     89 0.11300000   5.963098   ; qtot 0.217180
+   90 em_pom_tetramer_89      3    POM    O90     90 -0.32627001  15.999430   ; qtot -0.109090
+   91 em_pom_tetramer_90      3    POM    C91     91 0.12740000  12.010780   ; qtot 0.018310
+   92 em_pom_tetramer_91      3    POM    C92     92 -0.20227000   9.994886   ; qtot -0.183960
+   93 em_pom_tetramer_92      3    POM    C93     93 -0.08052000   9.994886   ; qtot -0.264480
    94 em_pom_tetramer_93      3    POM    C94     94 -0.06936000  12.010780   ; qtot -0.333840
-   95 em_pom_tetramer_94      3    POM    C95     95 -0.04237000  12.010780   ; qtot -0.376210
-   96 em_pom_tetramer_95      3    POM    C96     96 -0.09458000   9.994886   ; qtot -0.470790
-   97 em_pom_tetramer_96      3    POM    C97     97 -0.14294000   9.994886   ; qtot -0.613730
-   98 em_pom_tetramer_97      3    POM    C98     98 -0.10032000   9.994886   ; qtot -0.714050
-   99 em_pom_tetramer_98      3    POM    C99     99 -0.14087000  12.010780   ; qtot -0.854920
-  100 em_pom_tetramer_99      3    POM   C100    100 0.67615002  12.010780   ; qtot -0.178770
-  101 em_pom_tetramer_100      3    POM   O101    101 -0.61170000  15.999430   ; qtot -0.790470
-  102 em_pom_tetramer_101      3    POM   C102    102 -0.06050000   9.994886   ; qtot -0.850970
-  103 em_pom_tetramer_102      3    POM   C103    103 0.00306000  12.010780   ; qtot -0.847910
-  104 em_pom_tetramer_103      3    POM   C104    104 -0.03728000  12.010780   ; qtot -0.885190
-  105 em_pom_tetramer_104      3    POM   C105    105 -0.11224000   9.994886   ; qtot -0.997430
-  106 em_pom_tetramer_105      3    POM   C106    106 -0.11675000   9.994886   ; qtot -1.114180
-  107 em_pom_tetramer_106      3    POM   C107    107 -0.10801000  12.010780   ; qtot -1.222190
-  108 em_pom_tetramer_107      3    POM   C108    108 0.14879000   9.994886   ; qtot -1.073400
-  109 em_pom_tetramer_108      3    POM   C109    109 -0.10214000   5.963098   ; qtot -1.175540
-  110 em_pom_tetramer_109      3    POM   N110    110 -0.56378001  11.990826   ; qtot -1.739320
-  111 em_pom_tetramer_110      3    POM   C111    111 -0.11675000   9.994886   ; qtot -1.856070
-  112 em_pom_tetramer_111      3    POM   C112    112 -0.11224000   9.994886   ; qtot -1.968310
-  113 em_pom_tetramer_112      3    POM   C113    113 -0.14665000   9.994886   ; qtot -2.114960
+   95 em_pom_tetramer_94      3    POM    C95     95 -0.04238000  12.010780   ; qtot -0.376220
+   96 em_pom_tetramer_95      3    POM    C96     96 -0.09457000   9.994886   ; qtot -0.470790
+   97 em_pom_tetramer_96      3    POM    C97     97 -0.14295000   9.994886   ; qtot -0.613740
+   98 em_pom_tetramer_97      3    POM    C98     98 -0.10030000   9.994886   ; qtot -0.714040
+   99 em_pom_tetramer_98      3    POM    C99     99 -0.14088000  12.010780   ; qtot -0.854920
+  100 em_pom_tetramer_99      3    POM   C100    100 0.67615998  12.010780   ; qtot -0.178760
+  101 em_pom_tetramer_100      3    POM   O101    101 -0.61168998  15.999430   ; qtot -0.790450
+  102 em_pom_tetramer_101      3    POM   C102    102 -0.06050000   9.994886   ; qtot -0.850950
+  103 em_pom_tetramer_102      3    POM   C103    103 0.00307000  12.010780   ; qtot -0.847880
+  104 em_pom_tetramer_103      3    POM   C104    104 -0.03729000  12.010780   ; qtot -0.885170
+  105 em_pom_tetramer_104      3    POM   C105    105 -0.11224000   9.994886   ; qtot -0.997410
+  106 em_pom_tetramer_105      3    POM   C106    106 -0.11675000   9.994886   ; qtot -1.114160
+  107 em_pom_tetramer_106      3    POM   C107    107 -0.10801000  12.010780   ; qtot -1.222170
+  108 em_pom_tetramer_107      3    POM   C108    108 0.14878000   9.994886   ; qtot -1.073390
+  109 em_pom_tetramer_108      3    POM   C109    109 -0.10213000   5.963098   ; qtot -1.175520
+  110 em_pom_tetramer_109      3    POM   N110    110 -0.56378001  11.990826   ; qtot -1.739300
+  111 em_pom_tetramer_110      3    POM   C111    111 -0.11675000   9.994886   ; qtot -1.856050
+  112 em_pom_tetramer_111      3    POM   C112    112 -0.11224000   9.994886   ; qtot -1.968290
+  113 em_pom_tetramer_112      3    POM   C113    113 -0.14667000   9.994886   ; qtot -2.114960
   114 em_pom_tetramer_113      3    POM   H114    114 0.04567000   3.023841   ; qtot -2.069290
   115 em_pom_tetramer_114      3    POM   H115    115 0.04567000   3.023841   ; qtot -2.023620
   116 em_pom_tetramer_115      3    POM   H116    116 0.04567000   3.023841   ; qtot -1.977950
   117 em_pom_tetramer_116      3    POM   H117    117 0.14077000   3.023841   ; qtot -1.837180
   118 em_pom_tetramer_117      3    POM   H118    118 0.14178000   3.023841   ; qtot -1.695400
-  119 em_pom_tetramer_118      3    POM   H119    119 0.13741000   3.023841   ; qtot -1.557990
-  120 em_pom_tetramer_119      3    POM   H120    120 0.13485999   3.023841   ; qtot -1.423130
-  121 em_pom_tetramer_120      3    POM   H121    121 0.13502000   3.023841   ; qtot -1.288110
-  122 em_pom_tetramer_121      3    POM   H122    122 0.16023999   3.023841   ; qtot -1.127870
-  123 em_pom_tetramer_122      3    POM   H123    123 0.13841000   3.023841   ; qtot -0.989460
-  124 em_pom_tetramer_123      3    POM   H124    124 0.13282000   3.023841   ; qtot -0.856640
-  125 em_pom_tetramer_124      3    POM   H125    125 0.08342000   3.023841   ; qtot -0.773220
-  126 em_pom_tetramer_125      3    POM   H126    126 0.04530000   3.023841   ; qtot -0.727920
-  127 em_pom_tetramer_126      3    POM   H127    127 0.04530000   3.023841   ; qtot -0.682620
-  128 em_pom_tetramer_127      3    POM   H128    128 0.04530000   3.023841   ; qtot -0.637320
-  129 em_pom_tetramer_128      3    POM   H129    129 0.30533999   3.023841   ; qtot -0.331980
-  130 em_pom_tetramer_129      3    POM   H130    130 0.13282000   3.023841   ; qtot -0.199160
-  131 em_pom_tetramer_130      3    POM   H131    131 0.13841000   3.023841   ; qtot -0.060750
-  132 em_pom_tetramer_131      3    POM   H132    132 0.15536000   3.023841   ; qtot 0.094610
+  119 em_pom_tetramer_118      3    POM   H119    119 0.13740000   3.023841   ; qtot -1.558000
+  120 em_pom_tetramer_119      3    POM   H120    120 0.13485999   3.023841   ; qtot -1.423140
+  121 em_pom_tetramer_120      3    POM   H121    121 0.13501000   3.023841   ; qtot -1.288130
+  122 em_pom_tetramer_121      3    POM   H122    122 0.16023000   3.023841   ; qtot -1.127900
+  123 em_pom_tetramer_122      3    POM   H123    123 0.13841000   3.023841   ; qtot -0.989490
+  124 em_pom_tetramer_123      3    POM   H124    124 0.13282000   3.023841   ; qtot -0.856670
+  125 em_pom_tetramer_124      3    POM   H125    125 0.08343000   3.023841   ; qtot -0.773240
+  126 em_pom_tetramer_125      3    POM   H126    126 0.04530000   3.023841   ; qtot -0.727940
+  127 em_pom_tetramer_126      3    POM   H127    127 0.04530000   3.023841   ; qtot -0.682640
+  128 em_pom_tetramer_127      3    POM   H128    128 0.04530000   3.023841   ; qtot -0.637340
+  129 em_pom_tetramer_128      3    POM   H129    129 0.30533999   3.023841   ; qtot -0.332000
+  130 em_pom_tetramer_129      3    POM   H130    130 0.13282000   3.023841   ; qtot -0.199180
+  131 em_pom_tetramer_130      3    POM   H131    131 0.13841000   3.023841   ; qtot -0.060770
+  132 em_pom_tetramer_131      3    POM   H132    132 0.15535000   3.023841   ; qtot 0.094580
 ; residue    4 POM rtp POM q 0.1
-  133 em_pom_tetramer_132      4    POM   C133    133 0.11229000   5.963098   ; qtot 0.206900
-  134 em_pom_tetramer_133      4    POM   O134    134 -0.32387000  15.999430   ; qtot -0.116970
-  135 em_pom_tetramer_134      4    POM   C135    135 0.12696999  12.010780   ; qtot 0.010000
-  136 em_pom_tetramer_135      4    POM   C136    136 -0.20586000   9.994886   ; qtot -0.195860
-  137 em_pom_tetramer_136      4    POM   C137    137 -0.08502000   9.994886   ; qtot -0.280880
-  138 em_pom_tetramer_137      4    POM   C138    138 -0.07061000  12.010780   ; qtot -0.351490
-  139 em_pom_tetramer_138      4    POM   C139    139 -0.04048000  12.010780   ; qtot -0.391970
-  140 em_pom_tetramer_139      4    POM   C140    140 -0.09179000   9.994886   ; qtot -0.483760
-  141 em_pom_tetramer_140      4    POM   C141    141 -0.13847999   9.994886   ; qtot -0.622240
-  142 em_pom_tetramer_141      4    POM   C142    142 -0.10344000   9.994886   ; qtot -0.725680
-  143 em_pom_tetramer_142      4    POM   C143    143 -0.14308999  12.010780   ; qtot -0.868770
-  144 em_pom_tetramer_143      4    POM   C144    144 0.67850000  12.010780   ; qtot -0.190270
-  145 em_pom_tetramer_144      4    POM   O145    145 -0.60867000  15.999430   ; qtot -0.798940
-  146 em_pom_tetramer_145      4    POM   C146    146 -0.06451000   9.994886   ; qtot -0.863450
-  147 em_pom_tetramer_146      4    POM   C147    147 0.00789000  12.010780   ; qtot -0.855560
-  148 em_pom_tetramer_147      4    POM   C148    148 -0.03871000  12.010780   ; qtot -0.894270
-  149 em_pom_tetramer_148      4    POM   C149    149 -0.11269000   9.994886   ; qtot -1.006960
-  150 em_pom_tetramer_149      4    POM   C150    150 -0.11567000   9.994886   ; qtot -1.122630
-  151 em_pom_tetramer_150      4    POM   C151    151 -0.11436000  12.010780   ; qtot -1.236990
-  152 em_pom_tetramer_151      4    POM   C152    152 0.15200999   9.994886   ; qtot -1.084980
-  153 em_pom_tetramer_152      4    POM   C153    153 -0.09958000   5.963098   ; qtot -1.184560
-  154 em_pom_tetramer_153      4    POM   N154    154 -0.54161000  11.990826   ; qtot -1.726170
-  155 em_pom_tetramer_154      4    POM   C155    155 -0.11567000   9.994886   ; qtot -1.841840
-  156 em_pom_tetramer_155      4    POM   C156    156 -0.11269000   9.994886   ; qtot -1.954530
-  157 em_pom_tetramer_156      4    POM   C157    157 -0.14319000   9.994886   ; qtot -2.097720
-  158 em_pom_tetramer_157      4    POM   H158    158 0.04568000   3.023841   ; qtot -2.052040
-  159 em_pom_tetramer_158      4    POM   H159    159 0.04568000   3.023841   ; qtot -2.006360
-  160 em_pom_tetramer_159      4    POM   H160    160 0.04568000   3.023841   ; qtot -1.960680
-  161 em_pom_tetramer_160      4    POM   H161    161 0.14122000   3.023841   ; qtot -1.819460
-  162 em_pom_tetramer_161      4    POM   H162    162 0.13815001   3.023841   ; qtot -1.681310
-  163 em_pom_tetramer_162      4    POM   H163    163 0.14094999   3.023841   ; qtot -1.540360
-  164 em_pom_tetramer_163      4    POM   H164    164 0.13826001   3.023841   ; qtot -1.402100
-  165 em_pom_tetramer_164      4    POM   H165    165 0.12981001   3.023841   ; qtot -1.272290
+  133 em_pom_tetramer_132      4    POM   C133    133 0.11229000   5.963098   ; qtot 0.206870
+  134 em_pom_tetramer_133      4    POM   O134    134 -0.32387000  15.999430   ; qtot -0.117000
+  135 em_pom_tetramer_134      4    POM   C135    135 0.12696999  12.010780   ; qtot 0.009970
+  136 em_pom_tetramer_135      4    POM   C136    136 -0.20585001   9.994886   ; qtot -0.195880
+  137 em_pom_tetramer_136      4    POM   C137    137 -0.08502000   9.994886   ; qtot -0.280900
+  138 em_pom_tetramer_137      4    POM   C138    138 -0.07061000  12.010780   ; qtot -0.351510
+  139 em_pom_tetramer_138      4    POM   C139    139 -0.04048000  12.010780   ; qtot -0.391990
+  140 em_pom_tetramer_139      4    POM   C140    140 -0.09179000   9.994886   ; qtot -0.483780
+  141 em_pom_tetramer_140      4    POM   C141    141 -0.13847999   9.994886   ; qtot -0.622260
+  142 em_pom_tetramer_141      4    POM   C142    142 -0.10344000   9.994886   ; qtot -0.725700
+  143 em_pom_tetramer_142      4    POM   C143    143 -0.14307000  12.010780   ; qtot -0.868770
+  144 em_pom_tetramer_143      4    POM   C144    144 0.67848998  12.010780   ; qtot -0.190280
+  145 em_pom_tetramer_144      4    POM   O145    145 -0.60868001  15.999430   ; qtot -0.798960
+  146 em_pom_tetramer_145      4    POM   C146    146 -0.06451000   9.994886   ; qtot -0.863470
+  147 em_pom_tetramer_146      4    POM   C147    147 0.00789000  12.010780   ; qtot -0.855580
+  148 em_pom_tetramer_147      4    POM   C148    148 -0.03872000  12.010780   ; qtot -0.894300
+  149 em_pom_tetramer_148      4    POM   C149    149 -0.11269000   9.994886   ; qtot -1.006990
+  150 em_pom_tetramer_149      4    POM   C150    150 -0.11567000   9.994886   ; qtot -1.122660
+  151 em_pom_tetramer_150      4    POM   C151    151 -0.11437000  12.010780   ; qtot -1.237030
+  152 em_pom_tetramer_151      4    POM   C152    152 0.15200999   9.994886   ; qtot -1.085020
+  153 em_pom_tetramer_152      4    POM   C153    153 -0.09958000   5.963098   ; qtot -1.184600
+  154 em_pom_tetramer_153      4    POM   N154    154 -0.54161000  11.990826   ; qtot -1.726210
+  155 em_pom_tetramer_154      4    POM   C155    155 -0.11567000   9.994886   ; qtot -1.841880
+  156 em_pom_tetramer_155      4    POM   C156    156 -0.11269000   9.994886   ; qtot -1.954570
+  157 em_pom_tetramer_156      4    POM   C157    157 -0.14319000   9.994886   ; qtot -2.097760
+  158 em_pom_tetramer_157      4    POM   H158    158 0.04569000   3.023841   ; qtot -2.052070
+  159 em_pom_tetramer_158      4    POM   H159    159 0.04569000   3.023841   ; qtot -2.006380
+  160 em_pom_tetramer_159      4    POM   H160    160 0.04569000   3.023841   ; qtot -1.960690
+  161 em_pom_tetramer_160      4    POM   H161    161 0.14122000   3.023841   ; qtot -1.819470
+  162 em_pom_tetramer_161      4    POM   H162    162 0.13815001   3.023841   ; qtot -1.681320
+  163 em_pom_tetramer_162      4    POM   H163    163 0.14094999   3.023841   ; qtot -1.540370
+  164 em_pom_tetramer_163      4    POM   H164    164 0.13826001   3.023841   ; qtot -1.402110
+  165 em_pom_tetramer_164      4    POM   H165    165 0.12982000   3.023841   ; qtot -1.272290
   166 em_pom_tetramer_165      4    POM   H166    166 0.16037001   3.023841   ; qtot -1.111920
   167 em_pom_tetramer_166      4    POM   H167    167 0.13984001   3.023841   ; qtot -0.972080
   168 em_pom_tetramer_167      4    POM   H168    168 0.13640000   3.023841   ; qtot -0.835680
-  169 em_pom_tetramer_168      4    POM   H169    169 0.08949000   3.023841   ; qtot -0.746190
-  170 em_pom_tetramer_169      4    POM   H170    170 0.04716000   3.023841   ; qtot -0.699030
-  171 em_pom_tetramer_170      4    POM   H171    171 0.04716000   3.023841   ; qtot -0.651870
-  172 em_pom_tetramer_171      4    POM   H172    172 0.04716000   3.023841   ; qtot -0.604710
-  173 em_pom_tetramer_172      4    POM   H173    173 0.32060999   3.023841   ; qtot -0.284100
-  174 em_pom_tetramer_173      4    POM   H174    174 0.13640000   3.023841   ; qtot -0.147700
-  175 em_pom_tetramer_174      4    POM   H175    175 0.13984001   3.023841   ; qtot -0.007860
-  176 em_pom_tetramer_175      4    POM   H176    176 0.15770000   3.023841   ; qtot 0.149840
+  169 em_pom_tetramer_168      4    POM   H169    169 0.08950000   3.023841   ; qtot -0.746180
+  170 em_pom_tetramer_169      4    POM   H170    170 0.04716000   3.023841   ; qtot -0.699020
+  171 em_pom_tetramer_170      4    POM   H171    171 0.04716000   3.023841   ; qtot -0.651860
+  172 em_pom_tetramer_171      4    POM   H172    172 0.04716000   3.023841   ; qtot -0.604700
+  173 em_pom_tetramer_172      4    POM   H173    173 0.32060999   3.023841   ; qtot -0.284090
+  174 em_pom_tetramer_173      4    POM   H174    174 0.13640000   3.023841   ; qtot -0.147690
+  175 em_pom_tetramer_174      4    POM   H175    175 0.13984001   3.023841   ; qtot -0.007850
+  176 em_pom_tetramer_175      4    POM   H176    176 0.15771000   3.023841   ; qtot 0.149860
 ; residue    5 CAP rtp CAP q -0.2
-  177 em_pom_tetramer_176      5    CAP   C177    177 0.12733001   5.963098   ; qtot 0.277170
-  178 em_pom_tetramer_177      5    CAP   O178    178 -0.44573000  15.999430   ; qtot -0.168560
-  179 em_pom_tetramer_178      5    CAP   H179    179 0.05438000   3.023841   ; qtot -0.114180
-  180 em_pom_tetramer_179      5    CAP   H180    180 0.05438000   3.023841   ; qtot -0.059800
-  181 em_pom_tetramer_180      5    CAP   H181    181 0.05438000   3.023841   ; qtot -0.005420
+  177 em_pom_tetramer_176      5    CAP   C177    177 0.12733001   5.963098   ; qtot 0.277190
+  178 em_pom_tetramer_177      5    CAP   O178    178 -0.44571999  15.999430   ; qtot -0.168530
+  179 em_pom_tetramer_178      5    CAP   H179    179 0.05438000   3.023841   ; qtot -0.114150
+  180 em_pom_tetramer_179      5    CAP   H180    180 0.05438000   3.023841   ; qtot -0.059770
+  181 em_pom_tetramer_180      5    CAP   H181    181 0.05438000   3.023841   ; qtot -0.005390
 ; residue    6 CAP rtp CAP q 0.0
-  182 em_pom_tetramer_181      6    CAP   C182    182 -0.11351000   5.963098   ; qtot -0.118930
-  183 em_pom_tetramer_182      6    CAP   C183    183 0.18741000  12.010780   ; qtot 0.068480
-  184 em_pom_tetramer_183      6    CAP   C184    184 -0.11351000   5.963098   ; qtot -0.045030
-  185 em_pom_tetramer_184      6    CAP   C185    185 -0.11351000   5.963098   ; qtot -0.158540
-  186 em_pom_tetramer_185      6    CAP   O186    186 -0.44843999  15.999430   ; qtot -0.606980
-  187 em_pom_tetramer_186      6    CAP   C187    187 0.74748999  12.010780   ; qtot 0.140510
-  188 em_pom_tetramer_187      6    CAP   O188    188 -0.59915000  15.999430   ; qtot -0.458640
+  182 em_pom_tetramer_181      6    CAP   C182    182 -0.11353000   5.963098   ; qtot -0.118920
+  183 em_pom_tetramer_182      6    CAP   C183    183 0.18743999  12.010780   ; qtot 0.068520
+  184 em_pom_tetramer_183      6    CAP   C184    184 -0.11353000   5.963098   ; qtot -0.045010
+  185 em_pom_tetramer_184      6    CAP   C185    185 -0.11353000   5.963098   ; qtot -0.158540
+  186 em_pom_tetramer_185      6    CAP   O186    186 -0.44843000  15.999430   ; qtot -0.606970
+  187 em_pom_tetramer_186      6    CAP   C187    187 0.74748999  12.010780   ; qtot 0.140520
+  188 em_pom_tetramer_187      6    CAP   O188    188 -0.59916002  15.999430   ; qtot -0.458640
   189 em_pom_tetramer_188      6    CAP   H189    189 0.05096000   3.023841   ; qtot -0.407680
   190 em_pom_tetramer_189      6    CAP   H190    190 0.05096000   3.023841   ; qtot -0.356720
   191 em_pom_tetramer_190      6    CAP   H191    191 0.05096000   3.023841   ; qtot -0.305760
@@ -647,463 +647,463 @@ system1          3
 
 [ pairs ]
 ;    ai     aj funct         c0         c1         c2         c3
-     68     79     1
-      5     16     1
-     47     70     1
-     94    112     1
-    129    145     1
-    134    147     1
-     45     48     1
-     15     30     1
-     51     69     1
-    151    187     1
-    155    169     1
-     10     34     1
-    106    130     1
-     96    121     1
-    108    124     1
-    185    194     1
-     95    113     1
-    136    176     1
-    154    155     1
-      1     25     1
-    140    166     1
-    150    153     1
-     91    104     1
-    125    129     1
-    169    170     1
-     65     85     1
-     89     92     1
-     96    122     1
-    184    189     1
-    182    187     1
-    140    147     1
-      6     44     1
-      8     15     1
-    185    193     1
-    104    132     1
-     94    122     1
-     18     42     1
-     51     60     1
-     22     23     1
-     65    100     1
-    153    187     1
-     46     88     1
-     61     87     1
-    152    174     1
-     35     36     1
-     18     37     1
-      8     11     1
-     64     86     1
-    182    196     1
-     50     73     1
-      3     27     1
-    153    155     1
-     86     87     1
-    173    186     1
-      4     15     1
-     94    119     1
-     63     84     1
-      3     26     1
-    125    128     1
-    149    175     1
-    138    149     1
-    110    128     1
-    182    192     1
-      3     30     1
-     13     14     1
-     65     67     1
-    186    196     1
-     66     67     1
-     66     84     1
-    151    175     1
-     12    181     1
-    111    124     1
-     97    100     1
-     20     24     1
-     93    113     1
-      2     44     1
-    157    161     1
-     51     76     1
-     19     38     1
-     48     59     1
-     47     74     1
-     95    100     1
-     54     78     1
-     60     88     1
-    106    110     1
-    123    124     1
-     98    122     1
-     67     80     1
-      4     44     1
-     46     49     1
-     61     64     1
-    137    146     1
-    105    111     1
-     62     86     1
-     81     84     1
-    152    168     1
-    146    165     1
-    156    167     1
-    120    121     1
-     60     86     1
-    104    107     1
-     98    119     1
-    125    127     1
-    110    127     1
-    148    151     1
-     41     55     1
-     91     94     1
-    142    145     1
-     49     58     1
-     19     39     1
-     18     22     1
-     61     67     1
-     32     33     1
-     17     23     1
-     48     51     1
-    139    157     1
-    117    118     1
-     47     71     1
-     59     74     1
-     10     31     1
-    138    143     1
-    169    187     1
-     20     42     1
-     10    178     1
-     41     57     1
-      5     14     1
-     31     32     1
-    138    166     1
-    185    191     1
-    109    144     1
-     90    117     1
-     62     66     1
-      6     24     1
-    185    189     1
-     24     25     1
-    100    122     1
-    151    171     1
-    154    171     1
-     16     44     1
-     59     79     1
-     63     83     1
-     96    103     1
-     76     77     1
-    150    156     1
-      6     29     1
-    102    121     1
-    136    139     1
-     79     80     1
-     19     41     1
-     94     97     1
-     66     83     1
-    129    143     1
-    103    111     1
-    149    155     1
-     56     77     1
-     91    118     1
-    150    154     1
-     68     69     1
-     62     65     1
-    184    195     1
-     46     59     1
-      7     12     1
-     25     29     1
-     20     36     1
-    134    161     1
-     10     13     1
-     46     73     1
-    140    143     1
-     52     77     1
-     14     33     1
-    146    163     1
-    156    157     1
-    184    191     1
-    140    165     1
-    135    162     1
-    137    157     1
-     50     68     1
-     19     43     1
-    138    176     1
-     62     81     1
-     64     80     1
-    149    157     1
-      4      7     1
-     64    101     1
-      6     17     1
-     19     40     1
-     81     83     1
-     91    116     1
-     89    113     1
-      5      8     1
-     64     99     1
-    186    189     1
-    149    152     1
-    107    129     1
-    135    148     1
-     21     23     1
-    134    176     1
-    130    131     1
-      2     29     1
-    103    106     1
-     66     98     1
-      7     25     1
-     15     35     1
-     56     78     1
-    182    194     1
-     19     56     1
-     59     62     1
-    112    123     1
-     93    104     1
-     92    103     1
-      2      5     1
-    152    156     1
-    138    163     1
-     18     21     1
-     63     79     1
-    184    187     1
-    119    120     1
-    161    162     1
-    125    126     1
-    151    172     1
-    110    126     1
-    154    172     1
-     50     53     1
-     85    101     1
-    107    131     1
-     57     58     1
-    182    193     1
-     47     72     1
-    186    194     1
-    174    175     1
-    107    128     1
-      6     34     1
-     54     75     1
-     90     93     1
-     51     54     1
-    184    196     1
-      1      4     1
-    135    160     1
-    125    144     1
-     58     59     1
-      9     12     1
-     91    114     1
-     59     87     1
-    186    193     1
-     47     50     1
-     54     57     1
-    113    117     1
-    105    108     1
-     12     33     1
-     60     80     1
-     95     98     1
-    138    141     1
-     21     41     1
-    147    162     1
-    108    145     1
-     15     18     1
-     22     58     1
-     60     63     1
-    145    146     1
-     15     23     1
-     49     52     1
-    184    190     1
-     23     37     1
-    103    118     1
-    150    169     1
-      7     16     1
-    104    124     1
-     92    132     1
-    169    171     1
-    163    164     1
-    155    168     1
-     66    102     1
-     69     73     1
-    107    123     1
-    142    166     1
-     17     25     1
-    135    158     1
-     37     41     1
-     64     68     1
-     23     36     1
-    151    173     1
-     50     78     1
-    110    146     1
-     58     75     1
-     21     56     1
-     98    101     1
-     51     56     1
-    184    197     1
-    148    176     1
-     95    104     1
-    110    111     1
-     91    115     1
-     11     32     1
-    139    162     1
-     20     55     1
-     42     43     1
-     97    102     1
-    103    123     1
-    154    183     1
-     63     87     1
-    110    142     1
-    136    147     1
-    138    161     1
-     47     60     1
-     16     42     1
-     59     67     1
-     50     61     1
-    147    150     1
-    139    148     1
-     22     38     1
-     94    105     1
-    153    173     1
-     37     40     1
-     20     57     1
-    164    165     1
-    185    187     1
-    147    167     1
-      6     11     1
-    186    195     1
-    105    131     1
-     63     82     1
-     15     43     1
-    102    119     1
-     99    120     1
-      8     33     1
-     37     56     1
-    183    188     1
-     12     34     1
-    152    188     1
-     62     68     1
-    169    172     1
-    186    191     1
-     49     69     1
-    167    168     1
-      6     31     1
-     63     85     1
-     66     82     1
-     16     36     1
-    141    144     1
-     17     43     1
-     22     39     1
-     52     55     1
-    144    166     1
-    109    111     1
-    142    163     1
-    144    165     1
-     14     15     1
-    185    192     1
-     63    100     1
-    135    138     1
-      3     28     1
-     37     38     1
-      6      9     1
-     52     78     1
-     94    132     1
-      2     15     1
-     13    177     1
-      3      6     1
-     29     30     1
-     90    103     1
-    185    190     1
-     53     58     1
-    137    148     1
-    134    137     1
-     67     81     1
-     22     54     1
-    148    174     1
-    147    155     1
-    104    130     1
-     85     99     1
-     49     60     1
-     93    102     1
-    112    113     1
-     81     82     1
-     14     31     1
-      3     16     1
-    139    142     1
-     19     35     1
-     14    178     1
-     75     76     1
-    151    170     1
-    107    126     1
-    154    170     1
-     96     99     1
-    108    112     1
-      7     32     1
-     81     85     1
-    101    102     1
-     94     99     1
-     37     39     1
-    103    131     1
-    143    164     1
-     81    100     1
-     50     88     1
-    107    144     1
-    106    125     1
-    108    143     1
-    152    186     1
-     94    117     1
-     53     56     1
-    141    146     1
-     17     20     1
-    186    192     1
-    105    113     1
-    135    159     1
-    109    129     1
-    169    173     1
-    139    164     1
-     24     35     1
     111    125     1
-      5     25     1
-     55     76     1
-    147    175     1
-      8     34     1
-    186    190     1
-    138    156     1
-      7     30     1
-     90    132     1
-     22     40     1
-    148    168     1
-    106    112     1
-     92     95     1
-    107    127     1
-     50     55     1
-     50     75     1
-    102    103     1
+      7     25     1
+     56     77     1
+     10     13     1
+     81    100     1
+     65     67     1
+    150    154     1
+    185    191     1
+     46     49     1
+      5     14     1
+     98    122     1
+     92    132     1
+    135    162     1
     146    147     1
-     95    118     1
-     12    179     1
-     48     88     1
-    137    140     1
-     58     77     1
-    133    157     1
-     45     69     1
-    182    197     1
-    106    109     1
-     51     74     1
-     52     59     1
-     93     96     1
-      7     10     1
-     95    120     1
+    151    171     1
+     54     75     1
+      6     44     1
+    148    151     1
      73     74     1
-     16     19     1
-    108    130     1
-    151    167     1
-     61     69     1
+     51     76     1
+     12     34     1
+     59     79     1
+     94    117     1
+    139    157     1
      12    180     1
-    133    136     1
-    186    197     1
+     18     42     1
+    151    170     1
+      2     29     1
+     22     40     1
+     63     84     1
+    108    112     1
+    169    172     1
+    154    171     1
+    169    173     1
+     57     58     1
+    186    195     1
+     96     99     1
+    140    147     1
+    182    197     1
+    135    158     1
+     92     95     1
+    112    123     1
+     10     34     1
+    136    147     1
+     52     55     1
+    109    144     1
      11    177     1
-    100    121     1
-    173    188     1
-     18     24     1
-    182    195     1
-    139    144     1
+    141    144     1
+    154    170     1
+    106    110     1
+     91    116     1
+    130    131     1
+      3     28     1
+     41     57     1
+     97    100     1
+    150    156     1
+     51     74     1
+     19     39     1
+      3     27     1
+    148    168     1
+    184    191     1
+     66     82     1
+    141    146     1
+    150    153     1
+     49     69     1
       9     14     1
+     21     23     1
+    138    161     1
+     14    178     1
+     85    101     1
+    149    155     1
+     96    103     1
+    182    195     1
+    136    139     1
+     15     23     1
+    133    157     1
+    184    196     1
+    134    147     1
+    182    187     1
+     13     14     1
+     86     87     1
+    139    142     1
+     79     80     1
+    169    171     1
+    182    192     1
+    143    164     1
+     59     67     1
+     19     40     1
+    102    121     1
+     50     75     1
+    100    122     1
+      3     16     1
+    139    144     1
+     94     97     1
+    104    124     1
+    169    170     1
+     90    103     1
+    105    108     1
+     18     21     1
+     52     78     1
+    157    161     1
+     66     84     1
+     47     74     1
+     63     87     1
+    107    123     1
+    185    194     1
+     91     94     1
+    109    111     1
+     60     63     1
+    135    138     1
+     16     19     1
+    138    176     1
+     95    113     1
+     64     99     1
+     66     67     1
+     51     54     1
+     15     43     1
+    119    120     1
+    144    166     1
+     54     78     1
+      3     30     1
+    135    160     1
+     61     69     1
+     20     36     1
+     97    102     1
+     93    102     1
+    136    176     1
+     45     69     1
+    164    165     1
+    146    165     1
+     60     86     1
+    134    161     1
+    138    141     1
+    101    102     1
+     81     83     1
+     16     44     1
+     53     58     1
+      9     12     1
+    117    118     1
+     95     98     1
+      8     15     1
+     92    103     1
+    186    191     1
+     59     87     1
+      2      5     1
+     90     93     1
+     67     80     1
+      8     33     1
+     94    105     1
+      8     34     1
+     10     31     1
+     22     39     1
+    137    140     1
+    103    118     1
+    133    136     1
+     37     38     1
+    137    157     1
+    186    196     1
+     95    118     1
+    173    188     1
+     94     99     1
+     19     35     1
+      6     24     1
+    138    166     1
+     96    121     1
+     67     81     1
+     59     74     1
+     65    100     1
+    134    176     1
+    135    148     1
+     89     92     1
+    125    144     1
+    107    144     1
+     91    118     1
+     20     57     1
+     31     32     1
+     68     79     1
+    140    166     1
+     21     56     1
+     49     58     1
+     98    119     1
+    105    111     1
+    107    131     1
+     16     36     1
+      7     30     1
+    105    113     1
+     60     80     1
+     64     68     1
+    107    128     1
+     46     88     1
+    186    192     1
+    110    142     1
+     75     76     1
+    104    130     1
+     50     78     1
+     22     54     1
+     41     55     1
+     93    113     1
+     64     80     1
+     52     59     1
+      7     12     1
+     51     60     1
+     12    179     1
+     91    114     1
+     22     38     1
+     63    100     1
+    111    124     1
+    182    196     1
+      3      6     1
+     95    104     1
+      5     25     1
+     49     52     1
+    152    188     1
+     46     73     1
+      6     34     1
+    120    121     1
+    108    145     1
+      8     11     1
+     17     20     1
+    103    131     1
+    153    155     1
+    156    167     1
+     91    104     1
+      4     15     1
+     23     36     1
+    145    146     1
+     95    120     1
+     29     30     1
+     14     15     1
+     51     56     1
+     60     88     1
+     18     37     1
+     20     24     1
+    149    175     1
+    125    127     1
+    107    127     1
+     58     75     1
+     14     33     1
+      7     32     1
+    144    165     1
+      1      4     1
+    186    194     1
+     15     18     1
+    113    117     1
+     47     60     1
+    129    145     1
+     54     57     1
+      2     44     1
+    185    189     1
+     48     59     1
+     61     67     1
+    137    146     1
+    138    149     1
+     37     56     1
+     19     38     1
+    110    127     1
+    147    150     1
+     68     69     1
+      3     26     1
+     53     56     1
+     94    122     1
+     18     22     1
+    125    129     1
+    107    129     1
+     49     60     1
+     21     41     1
+     17     23     1
+     96    122     1
+     99    120     1
+    108    143     1
+     94    112     1
+    182    194     1
+    151    172     1
+    123    124     1
+     50     53     1
+    185    193     1
+     58     59     1
+    139    162     1
+    125    126     1
+    107    126     1
+    103    123     1
+    140    165     1
+    142    166     1
+     42     43     1
+     64     86     1
+     81     85     1
+    152    174     1
+    185    190     1
+     95    100     1
+      7     10     1
+     63     79     1
+    146    163     1
+    106    130     1
+    184    189     1
+    147    155     1
+     62     65     1
+    149    152     1
+    138    163     1
+    167    168     1
+      6     17     1
+     24     35     1
+     59     62     1
+    155    169     1
+     55     76     1
+     15     30     1
+     62     86     1
+     20     55     1
+    140    143     1
+    110    126     1
+     61     87     1
+    154    155     1
+     17     43     1
+     64    101     1
+    134    137     1
+      4      7     1
+     50     61     1
+    112    113     1
+    106    125     1
+    154    183     1
+     45     48     1
+     22     58     1
+    106    109     1
+     23     37     1
+     17     25     1
+      6     31     1
+     63     83     1
+    125    128     1
+    151    187     1
+     35     36     1
+     50     68     1
+     11     32     1
+     63     85     1
+     12     33     1
+     85     99     1
+     22     23     1
+    149    157     1
+    108    124     1
+     66    102     1
+     10    178     1
+    153    173     1
+     20     42     1
+     62     68     1
+     14     31     1
+    184    190     1
+      5     16     1
+     56     78     1
+    155    168     1
+     37     41     1
+      4     44     1
+    148    176     1
+     13    177     1
+    106    112     1
+    110    128     1
+     19     56     1
+    102    119     1
+      6      9     1
+     93     96     1
+     48     88     1
+    142    145     1
+    152    156     1
+    174    175     1
+    104    132     1
+    150    169     1
+     52     77     1
+    147    162     1
+    110    146     1
+    185    187     1
+     89    113     1
+     61     64     1
+    185    192     1
+     90    117     1
+    184    197     1
+     18     24     1
+    104    107     1
+     62     81     1
+    186    189     1
+    147    167     1
+    139    164     1
+    151    167     1
+     46     59     1
+    173    186     1
+    153    187     1
+     91    115     1
+     16     42     1
+     50     88     1
+    152    168     1
+     69     73     1
+     66     83     1
+     94    132     1
+    138    156     1
+    169    187     1
+    156    157     1
+      1     25     1
+     12    181     1
+     25     29     1
+    135    159     1
+    110    111     1
+     47     71     1
+    186    193     1
+      6     29     1
+     81     82     1
+    184    195     1
+    184    187     1
+     94    119     1
+     50     73     1
+      6     11     1
+    103    111     1
+     37     39     1
+     47     70     1
+     76     77     1
+    148    174     1
+    186    190     1
+    142    163     1
+    137    148     1
+     47     72     1
+    151    173     1
+      2     15     1
+     93    104     1
+     47     50     1
+     90    132     1
+    105    131     1
+     98    101     1
+     32     33     1
+     66     98     1
+     19     43     1
+    108    130     1
+     24     25     1
+    154    172     1
+    139    148     1
+    152    186     1
+    100    121     1
+    103    106     1
+     50     55     1
+    138    143     1
+     37     40     1
+    163    164     1
+     81     84     1
+     65     85     1
+     62     66     1
+     19     41     1
+    129    143     1
+    186    197     1
+    109    129     1
     150    174     1
+     58     77     1
+    147    175     1
+    151    175     1
+     63     82     1
+     15     35     1
+    102    103     1
+      5      8     1
+    182    193     1
+    161    162     1
+     51     69     1
+      7     16     1
+    183    188     1
+     48     51     1
 
 [ angles ]
 ;    ai     aj     ak funct         c0         c1         c2         c3
@@ -1461,14 +1461,14 @@ system1          3
 
 [ dihedrals ]
 ;    ai     aj     ak     al funct         c0         c1         c2         c3         c4         c5
-      1      2      3      4     1  0.0000000  0.2364518  1
-      1      2      3      4     1  180.0000000  9.7407146  2
-      1      2      3      4     1  0.0000000  1.1710878  3
-      1      2      3      4     1  180.0000000  0.6733575  4
-      1      2      3     25     1  0.0000000  0.2364518  1
-      1      2      3     25     1  180.0000000  9.7407146  2
-      1      2      3     25     1  0.0000000  1.1710878  3
-      1      2      3     25     1  180.0000000  0.6733575  4
+      1      2      3      4     1  0.0000000  0.2365008  1
+      1      2      3      4     1  180.0000000  9.7407125  2
+      1      2      3      4     1  0.0000000  1.1711912  3
+      1      2      3      4     1  180.0000000  0.6733614  4
+      1      2      3     25     1  0.0000000  0.2365008  1
+      1      2      3     25     1  180.0000000  9.7407125  2
+      1      2      3     25     1  0.0000000  1.1711912  3
+      1      2      3     25     1  180.0000000  0.6733614  4
       2      3      4      5     1  180.0000000  13.6752988  2
       2      3      4     29     1  180.0000000  13.6752988  2
       2      3     25     15     1  180.0000000  13.6752988  2
@@ -1494,14 +1494,14 @@ system1          3
       6      7      8     31     1  180.0000000  13.6752988  2
       6      7     14     11     1  180.0000000  13.6752988  2
       6      7     14     34     1  180.0000000  13.6752988  2
-      6     15     16     17     1  0.0000000  -0.3048652  1
-      6     15     16     17     1  180.0000000  5.6342692  2
-      6     15     16     17     1  0.0000000  -0.3380011  3
-      6     15     16     17     1  180.0000000  -0.3063586  4
-      6     15     16     24     1  0.0000000  -0.3048652  1
-      6     15     16     24     1  180.0000000  5.6342692  2
-      6     15     16     24     1  0.0000000  -0.3380011  3
-      6     15     16     24     1  180.0000000  -0.3063586  4
+      6     15     16     17     1  0.0000000  -0.3040697  1
+      6     15     16     17     1  180.0000000  5.6361336  2
+      6     15     16     17     1  0.0000000  -0.3382255  3
+      6     15     16     17     1  180.0000000  -0.3083986  4
+      6     15     16     24     1  0.0000000  -0.3040697  1
+      6     15     16     24     1  180.0000000  5.6361336  2
+      6     15     16     24     1  0.0000000  -0.3382255  3
+      6     15     16     24     1  180.0000000  -0.3083986  4
       6     15     25     44     1  180.0000000  13.6752988  2
       7      6      5     30     1  180.0000000  13.6752988  2
       7      6     15     16     1  180.0000000  13.6752988  2
@@ -1519,40 +1519,40 @@ system1          3
       9     10     11     12     1  180.0000000  13.6752988  2
       9     10     11     14     1  180.0000000  13.6752988  2
      10      9      8     31     1  180.0000000  13.6752988  2
-     10     11     12     13     1  0.0000000  0.1049448  1
-     10     11     12     13     1  180.0000000  1.8251096  2
-     10     11     12     13     1  0.0000000  0.1628911  3
-     10     11     12     13     1  180.0000000  0.2471827  4
-     10     11     12    178     1  0.0000000  -0.1027319  1
-     10     11     12    178     1  180.0000000  2.0645302  2
-     10     11     12    178     1  0.0000000  -0.1857909  3
-     10     11     12    178     1  180.0000000  -0.0832355  4
+     10     11     12     13     1  0.0000000  0.1071903  1
+     10     11     12     13     1  180.0000000  1.8297976  2
+     10     11     12     13     1  0.0000000  0.1632544  3
+     10     11     12     13     1  180.0000000  0.2448490  4
+     10     11     12    178     1  0.0000000  -0.1011862  1
+     10     11     12    178     1  180.0000000  2.0617481  2
+     10     11     12    178     1  0.0000000  -0.1863885  3
+     10     11     12    178     1  180.0000000  -0.0825072  4
      10     11     14     34     1  180.0000000  13.6752988  2
      11     10      9     32     1  180.0000000  13.6752988  2
-     11     12    178    177     1  0.0000000  1.4832729  1
-     11     12    178    177     1  180.0000000  16.3587106  2
-     11     12    178    177     1  0.0000000  3.2085287  3
-     11     12    178    177     1  180.0000000  2.3784809  4
+     11     12    178    177     1  0.0000000  1.4835295  1
+     11     12    178    177     1  180.0000000  16.3534222  2
+     11     12    178    177     1  0.0000000  3.2076309  3
+     11     12    178    177     1  180.0000000  2.3836659  4
      12     11     10     33     1  180.0000000  13.6752988  2
      12     11     14     34     1  180.0000000  13.6752988  2
      12    178    177    179     1  0.0000000  1.1008580  3
      12    178    177    180     1  0.0000000  1.1008580  3
      12    178    177    181     1  0.0000000  1.1008580  3
-     13     12     11     14     1  0.0000000  0.1049448  1
-     13     12     11     14     1  180.0000000  1.8251096  2
-     13     12     11     14     1  0.0000000  0.1628911  3
-     13     12     11     14     1  180.0000000  0.2471827  4
-     13     12    178    177     1  0.0000000  4.0212210  1
-     13     12    178    177     1  180.0000000  3.1932849  2
-     13     12    178    177     1  0.0000000  -2.4777085  3
-     13     12    178    177     1  180.0000000  0.4543151  4
+     13     12     11     14     1  0.0000000  0.1071903  1
+     13     12     11     14     1  180.0000000  1.8297976  2
+     13     12     11     14     1  0.0000000  0.1632544  3
+     13     12     11     14     1  180.0000000  0.2448490  4
+     13     12    178    177     1  0.0000000  4.0210807  1
+     13     12    178    177     1  180.0000000  3.1931449  2
+     13     12    178    177     1  0.0000000  -2.4759786  3
+     13     12    178    177     1  180.0000000  0.4540514  4
      14      7      6     15     1  180.0000000  5.1777217  2
      14      7      8     31     1  180.0000000  13.6752988  2
      14     11     10     33     1  180.0000000  13.6752988  2
-     14     11     12    178     1  0.0000000  -0.1027319  1
-     14     11     12    178     1  180.0000000  2.0645302  2
-     14     11     12    178     1  0.0000000  -0.1857909  3
-     14     11     12    178     1  180.0000000  -0.0832355  4
+     14     11     12    178     1  0.0000000  -0.1011862  1
+     14     11     12    178     1  180.0000000  2.0617481  2
+     14     11     12    178     1  0.0000000  -0.1863885  3
+     14     11     12    178     1  180.0000000  -0.0825072  4
      15      6      5     30     1  180.0000000  13.6752988  2
      15     16     17     18     1  180.0000000  13.6752988  2
      15     16     17     35     1  180.0000000  13.6752988  2
@@ -1563,89 +1563,89 @@ system1          3
      16     17     18     36     1  180.0000000  13.6752988  2
      16     24     23     19     1  180.0000000  13.6752988  2
      16     24     23     42     1  180.0000000  13.6752988  2
-     17     16     15     25     1  0.0000000  0.3290863  1
-     17     16     15     25     1  180.0000000  6.2203539  2
-     17     16     15     25     1  0.0000000  0.3479749  3
-     17     16     15     25     1  180.0000000  2.0579757  4
+     17     16     15     25     1  0.0000000  0.3282282  1
+     17     16     15     25     1  180.0000000  6.2178581  2
+     17     16     15     25     1  0.0000000  0.3479820  3
+     17     16     15     25     1  180.0000000  2.0601563  4
      17     16     24     23     1  180.0000000  13.6752988  2
      17     16     24     43     1  180.0000000  13.6752988  2
      17     18     19     20     1  180.0000000  13.6752988  2
      17     18     19     23     1  180.0000000  13.6752988  2
      18     17     16     24     1  180.0000000  13.6752988  2
-     18     19     20     21     1  0.0000000  -0.1018306  1
-     18     19     20     21     1  180.0000000  -0.2443028  2
-     18     19     20     21     1  0.0000000  0.1343286  3
-     18     19     20     21     1  180.0000000  0.0104559  4
-     18     19     20     22     1  0.0000000  0.2140032  1
-     18     19     20     22     1  180.0000000  1.2924946  2
-     18     19     20     22     1  0.0000000  0.1220781  3
-     18     19     20     22     1  180.0000000  0.0333277  4
-     18     19     20     37     1  0.0000000  -0.1195616  1
-     18     19     20     37     1  180.0000000  -0.9732136  2
-     18     19     20     37     1  0.0000000  0.1317690  3
-     18     19     20     37     1  180.0000000  0.1710040  4
+     18     19     20     21     1  0.0000000  -0.0952746  1
+     18     19     20     21     1  180.0000000  -0.2475557  2
+     18     19     20     21     1  0.0000000  0.1300835  3
+     18     19     20     21     1  180.0000000  0.0134586  4
+     18     19     20     22     1  0.0000000  0.2095763  1
+     18     19     20     22     1  180.0000000  1.2892280  2
+     18     19     20     22     1  0.0000000  0.1159404  3
+     18     19     20     22     1  180.0000000  0.0388452  4
+     18     19     20     37     1  0.0000000  -0.1197238  1
+     18     19     20     37     1  180.0000000  -0.9763733  2
+     18     19     20     37     1  0.0000000  0.1357494  3
+     18     19     20     37     1  180.0000000  0.1751395  4
      18     19     23     24     1  180.0000000  13.6752988  2
      18     19     23     42     1  180.0000000  13.6752988  2
      19     18     17     35     1  180.0000000  13.6752988  2
      19     20     21     38     1  0.0000000  0.6020980  3
      19     20     21     39     1  0.0000000  0.6020980  3
      19     20     21     40     1  0.0000000  0.6020980  3
-     19     20     22     41     1  0.0000000  3.7794798  1
-     19     20     22     41     1  180.0000000  2.7273118  2
-     19     20     22     41     1  0.0000000  1.1623747  3
-     19     20     22     41     1  180.0000000  0.6926046  4
-     19     20     22     56     1  0.0000000  -5.2806683  1
-     19     20     22     56     1  180.0000000  1.9473968  2
-     19     20     22     56     1  0.0000000  -0.6901681  3
-     19     20     22     56     1  180.0000000  -0.6932813  4
+     19     20     22     41     1  0.0000000  3.7679952  1
+     19     20     22     41     1  180.0000000  2.7442548  2
+     19     20     22     41     1  0.0000000  1.1575077  3
+     19     20     22     41     1  180.0000000  0.7135212  4
+     19     20     22     56     1  0.0000000  -5.2848366  1
+     19     20     22     56     1  180.0000000  1.9397851  2
+     19     20     22     56     1  0.0000000  -0.6946720  3
+     19     20     22     56     1  180.0000000  -0.7061109  4
      19     23     24     43     1  180.0000000  13.6752988  2
      20     19     18     36     1  180.0000000  13.6752988  2
      20     19     23     24     1  180.0000000  13.6752988  2
      20     19     23     42     1  180.0000000  13.6752988  2
-     20     22     56     55     1  0.0000000  0.9749821  1
-     20     22     56     55     1  180.0000000  8.6854776  2
-     20     22     56     55     1  0.0000000  1.6928108  3
-     20     22     56     55     1  180.0000000  2.2440722  4
-     20     22     56     57     1  0.0000000  -2.0518420  1
-     20     22     56     57     1  180.0000000  9.2826307  2
-     20     22     56     57     1  0.0000000  0.8560985  3
-     20     22     56     57     1  180.0000000  -0.9970075  4
-     21     20     19     23     1  0.0000000  -0.1018306  1
-     21     20     19     23     1  180.0000000  -0.2443028  2
-     21     20     19     23     1  0.0000000  0.1343286  3
-     21     20     19     23     1  180.0000000  0.0104559  4
-     21     20     22     41     1  0.0000000  -1.8763071  1
-     21     20     22     41     1  180.0000000  0.8221521  2
-     21     20     22     41     1  0.0000000  0.7249370  3
-     21     20     22     41     1  180.0000000  -0.4399285  4
-     21     20     22     56     1  0.0000000  -0.1587895  1
-     21     20     22     56     1  180.0000000  0.3637611  2
-     21     20     22     56     1  0.0000000  -1.2086038  3
-     21     20     22     56     1  180.0000000  0.1488848  4
-     22     20     19     23     1  0.0000000  0.2140032  1
-     22     20     19     23     1  180.0000000  1.2924946  2
-     22     20     19     23     1  0.0000000  0.1220781  3
-     22     20     19     23     1  180.0000000  0.0333277  4
+     20     22     56     55     1  0.0000000  0.9884131  1
+     20     22     56     55     1  180.0000000  8.6909410  2
+     20     22     56     55     1  0.0000000  1.6942575  3
+     20     22     56     55     1  180.0000000  2.2088855  4
+     20     22     56     57     1  0.0000000  -2.0666132  1
+     20     22     56     57     1  180.0000000  9.3244553  2
+     20     22     56     57     1  0.0000000  0.8451639  3
+     20     22     56     57     1  180.0000000  -0.9787805  4
+     21     20     19     23     1  0.0000000  -0.0952746  1
+     21     20     19     23     1  180.0000000  -0.2475557  2
+     21     20     19     23     1  0.0000000  0.1300835  3
+     21     20     19     23     1  180.0000000  0.0134586  4
+     21     20     22     41     1  0.0000000  -1.8601814  1
+     21     20     22     41     1  180.0000000  0.7874913  2
+     21     20     22     41     1  0.0000000  0.7169726  3
+     21     20     22     41     1  180.0000000  -0.4617072  4
+     21     20     22     56     1  0.0000000  -0.1577758  1
+     21     20     22     56     1  180.0000000  0.3951239  2
+     21     20     22     56     1  0.0000000  -1.2188921  3
+     21     20     22     56     1  180.0000000  0.1635845  4
+     22     20     19     23     1  0.0000000  0.2095763  1
+     22     20     19     23     1  180.0000000  1.2892280  2
+     22     20     19     23     1  0.0000000  0.1159404  3
+     22     20     19     23     1  180.0000000  0.0388452  4
      22     20     21     38     1  0.0000000  0.6020980  3
      22     20     21     39     1  0.0000000  0.6020980  3
      22     20     21     40     1  0.0000000  0.6020980  3
-     22     56     55     54     1  0.0000000  -0.0421084  1
-     22     56     55     54     1  180.0000000  4.2711344  2
-     22     56     55     54     1  0.0000000  -0.1478997  3
-     22     56     55     54     1  180.0000000  0.0849399  4
-     22     56     55     58     1  0.0000000  -0.0421084  1
-     22     56     55     58     1  180.0000000  4.2711344  2
-     22     56     55     58     1  0.0000000  -0.1478997  3
-     22     56     55     58     1  180.0000000  0.0849399  4
+     22     56     55     54     1  0.0000000  -0.0498969  1
+     22     56     55     54     1  180.0000000  4.2610456  2
+     22     56     55     54     1  0.0000000  -0.1530168  3
+     22     56     55     54     1  180.0000000  0.1139200  4
+     22     56     55     58     1  0.0000000  -0.0498969  1
+     22     56     55     58     1  180.0000000  4.2610456  2
+     22     56     55     58     1  0.0000000  -0.1530168  3
+     22     56     55     58     1  180.0000000  0.1139200  4
      23     19     18     36     1  180.0000000  13.6752988  2
-     23     19     20     37     1  0.0000000  -0.1195616  1
-     23     19     20     37     1  180.0000000  -0.9732136  2
-     23     19     20     37     1  0.0000000  0.1317690  3
-     23     19     20     37     1  180.0000000  0.1710040  4
-     24     16     15     25     1  0.0000000  0.3290863  1
-     24     16     15     25     1  180.0000000  6.2203539  2
-     24     16     15     25     1  0.0000000  0.3479749  3
-     24     16     15     25     1  180.0000000  2.0579757  4
+     23     19     20     37     1  0.0000000  -0.1197238  1
+     23     19     20     37     1  180.0000000  -0.9763733  2
+     23     19     20     37     1  0.0000000  0.1357494  3
+     23     19     20     37     1  180.0000000  0.1751395  4
+     24     16     15     25     1  0.0000000  0.3282282  1
+     24     16     15     25     1  180.0000000  6.2178581  2
+     24     16     15     25     1  0.0000000  0.3479820  3
+     24     16     15     25     1  180.0000000  2.0601563  4
      24     16     17     35     1  180.0000000  13.6752988  2
      25      3      4     29     1  180.0000000  13.6752988  2
      29      4      5     30     1  180.0000000  13.6752988  2
@@ -1655,31 +1655,31 @@ system1          3
      37     20     21     38     1  0.0000000  0.9539296  3
      37     20     21     39     1  0.0000000  0.9539296  3
      37     20     21     40     1  0.0000000  0.9539296  3
-     37     20     22     41     1  0.0000000  -2.0843156  1
-     37     20     22     41     1  180.0000000  0.7777961  2
-     37     20     22     41     1  0.0000000  1.0009795  3
-     37     20     22     41     1  180.0000000  -0.0620940  4
-     37     20     22     56     1  0.0000000  2.5937495  1
-     37     20     22     56     1  180.0000000  0.3830213  2
-     37     20     22     56     1  0.0000000  0.5231495  3
-     37     20     22     56     1  180.0000000  0.3006750  4
-     41     22     56     55     1  0.0000000  2.3071383  1
-     41     22     56     55     1  180.0000000  9.2105395  2
-     41     22     56     55     1  0.0000000  -0.1086010  3
-     41     22     56     55     1  180.0000000  1.1462118  4
-     41     22     56     57     1  0.0000000  4.1165315  1
-     41     22     56     57     1  180.0000000  5.0745013  2
-     41     22     56     57     1  0.0000000  -0.4063100  3
-     41     22     56     57     1  180.0000000  -0.9067235  4
+     37     20     22     41     1  0.0000000  -2.0912149  1
+     37     20     22     41     1  180.0000000  0.7933217  2
+     37     20     22     41     1  0.0000000  0.9979426  3
+     37     20     22     41     1  180.0000000  -0.0477706  4
+     37     20     22     56     1  0.0000000  2.5938838  1
+     37     20     22     56     1  180.0000000  0.3736491  2
+     37     20     22     56     1  0.0000000  0.5128650  3
+     37     20     22     56     1  180.0000000  0.2895779  4
+     41     22     56     55     1  0.0000000  2.2922022  1
+     41     22     56     55     1  180.0000000  9.2082023  2
+     41     22     56     55     1  0.0000000  -0.0890469  3
+     41     22     56     55     1  180.0000000  1.1430210  4
+     41     22     56     57     1  0.0000000  4.1234588  1
+     41     22     56     57     1  180.0000000  5.0438319  2
+     41     22     56     57     1  0.0000000  -0.4608143  3
+     41     22     56     57     1  180.0000000  -0.9228799  4
      42     23     24     43     1  180.0000000  13.6752988  2
-     45     46     47     48     1  0.0000000  0.2364518  1
-     45     46     47     48     1  180.0000000  9.7407146  2
-     45     46     47     48     1  0.0000000  1.1710878  3
-     45     46     47     48     1  180.0000000  0.6733575  4
-     45     46     47     69     1  0.0000000  0.2364518  1
-     45     46     47     69     1  180.0000000  9.7407146  2
-     45     46     47     69     1  0.0000000  1.1710878  3
-     45     46     47     69     1  180.0000000  0.6733575  4
+     45     46     47     48     1  0.0000000  0.2365008  1
+     45     46     47     48     1  180.0000000  9.7407125  2
+     45     46     47     48     1  0.0000000  1.1711912  3
+     45     46     47     48     1  180.0000000  0.6733614  4
+     45     46     47     69     1  0.0000000  0.2365008  1
+     45     46     47     69     1  180.0000000  9.7407125  2
+     45     46     47     69     1  0.0000000  1.1711912  3
+     45     46     47     69     1  180.0000000  0.6733614  4
      46     47     48     49     1  180.0000000  13.6752988  2
      46     47     48     73     1  180.0000000  13.6752988  2
      46     47     69     59     1  180.0000000  13.6752988  2
@@ -1705,14 +1705,14 @@ system1          3
      50     51     52     75     1  180.0000000  13.6752988  2
      50     51     58     55     1  180.0000000  13.6752988  2
      50     51     58     78     1  180.0000000  13.6752988  2
-     50     59     60     61     1  0.0000000  -0.3048652  1
-     50     59     60     61     1  180.0000000  5.6342692  2
-     50     59     60     61     1  0.0000000  -0.3380011  3
-     50     59     60     61     1  180.0000000  -0.3063586  4
-     50     59     60     68     1  0.0000000  -0.3048652  1
-     50     59     60     68     1  180.0000000  5.6342692  2
-     50     59     60     68     1  0.0000000  -0.3380011  3
-     50     59     60     68     1  180.0000000  -0.3063586  4
+     50     59     60     61     1  0.0000000  -0.3040697  1
+     50     59     60     61     1  180.0000000  5.6361336  2
+     50     59     60     61     1  0.0000000  -0.3382255  3
+     50     59     60     61     1  180.0000000  -0.3083986  4
+     50     59     60     68     1  0.0000000  -0.3040697  1
+     50     59     60     68     1  180.0000000  5.6361336  2
+     50     59     60     68     1  0.0000000  -0.3382255  3
+     50     59     60     68     1  180.0000000  -0.3083986  4
      50     59     69     88     1  180.0000000  13.6752988  2
      51     50     49     74     1  180.0000000  13.6752988  2
      51     50     59     60     1  180.0000000  13.6752988  2
@@ -1730,18 +1730,18 @@ system1          3
      53     54     55     56     1  180.0000000  13.6752988  2
      53     54     55     58     1  180.0000000  13.6752988  2
      54     53     52     75     1  180.0000000  13.6752988  2
-     54     55     56     57     1  0.0000000  0.0349257  1
-     54     55     56     57     1  180.0000000  -0.2704555  2
-     54     55     56     57     1  0.0000000  0.1577093  3
-     54     55     56     57     1  180.0000000  0.3658574  4
+     54     55     56     57     1  0.0000000  0.0343119  1
+     54     55     56     57     1  180.0000000  -0.2688773  2
+     54     55     56     57     1  0.0000000  0.1642221  3
+     54     55     56     57     1  180.0000000  0.3393634  4
      54     55     58     78     1  180.0000000  13.6752988  2
      55     54     53     76     1  180.0000000  13.6752988  2
      56     55     54     77     1  180.0000000  13.6752988  2
      56     55     58     78     1  180.0000000  13.6752988  2
-     57     56     55     58     1  0.0000000  0.0349257  1
-     57     56     55     58     1  180.0000000  -0.2704555  2
-     57     56     55     58     1  0.0000000  0.1577093  3
-     57     56     55     58     1  180.0000000  0.3658574  4
+     57     56     55     58     1  0.0000000  0.0343119  1
+     57     56     55     58     1  180.0000000  -0.2688773  2
+     57     56     55     58     1  0.0000000  0.1642221  3
+     57     56     55     58     1  180.0000000  0.3393634  4
      58     51     50     59     1  180.0000000  5.1777217  2
      58     51     52     75     1  180.0000000  13.6752988  2
      58     55     54     77     1  180.0000000  13.6752988  2
@@ -1755,89 +1755,89 @@ system1          3
      60     61     62     80     1  180.0000000  13.6752988  2
      60     68     67     63     1  180.0000000  13.6752988  2
      60     68     67     86     1  180.0000000  13.6752988  2
-     61     60     59     69     1  0.0000000  0.3290863  1
-     61     60     59     69     1  180.0000000  6.2203539  2
-     61     60     59     69     1  0.0000000  0.3479749  3
-     61     60     59     69     1  180.0000000  2.0579757  4
+     61     60     59     69     1  0.0000000  0.3282282  1
+     61     60     59     69     1  180.0000000  6.2178581  2
+     61     60     59     69     1  0.0000000  0.3479820  3
+     61     60     59     69     1  180.0000000  2.0601563  4
      61     60     68     67     1  180.0000000  13.6752988  2
      61     60     68     87     1  180.0000000  13.6752988  2
      61     62     63     64     1  180.0000000  13.6752988  2
      61     62     63     67     1  180.0000000  13.6752988  2
      62     61     60     68     1  180.0000000  13.6752988  2
-     62     63     64     65     1  0.0000000  -0.1018306  1
-     62     63     64     65     1  180.0000000  -0.2443028  2
-     62     63     64     65     1  0.0000000  0.1343286  3
-     62     63     64     65     1  180.0000000  0.0104559  4
-     62     63     64     66     1  0.0000000  0.2140032  1
-     62     63     64     66     1  180.0000000  1.2924946  2
-     62     63     64     66     1  0.0000000  0.1220781  3
-     62     63     64     66     1  180.0000000  0.0333277  4
-     62     63     64     81     1  0.0000000  -0.1195616  1
-     62     63     64     81     1  180.0000000  -0.9732136  2
-     62     63     64     81     1  0.0000000  0.1317690  3
-     62     63     64     81     1  180.0000000  0.1710040  4
+     62     63     64     65     1  0.0000000  -0.0952746  1
+     62     63     64     65     1  180.0000000  -0.2475557  2
+     62     63     64     65     1  0.0000000  0.1300835  3
+     62     63     64     65     1  180.0000000  0.0134586  4
+     62     63     64     66     1  0.0000000  0.2095763  1
+     62     63     64     66     1  180.0000000  1.2892280  2
+     62     63     64     66     1  0.0000000  0.1159404  3
+     62     63     64     66     1  180.0000000  0.0388452  4
+     62     63     64     81     1  0.0000000  -0.1197238  1
+     62     63     64     81     1  180.0000000  -0.9763733  2
+     62     63     64     81     1  0.0000000  0.1357494  3
+     62     63     64     81     1  180.0000000  0.1751395  4
      62     63     67     68     1  180.0000000  13.6752988  2
      62     63     67     86     1  180.0000000  13.6752988  2
      63     62     61     79     1  180.0000000  13.6752988  2
      63     64     65     82     1  0.0000000  0.6020980  3
      63     64     65     83     1  0.0000000  0.6020980  3
      63     64     65     84     1  0.0000000  0.6020980  3
-     63     64     66     85     1  0.0000000  3.7794798  1
-     63     64     66     85     1  180.0000000  2.7273118  2
-     63     64     66     85     1  0.0000000  1.1623747  3
-     63     64     66     85     1  180.0000000  0.6926046  4
-     63     64     66    100     1  0.0000000  -5.2806683  1
-     63     64     66    100     1  180.0000000  1.9473968  2
-     63     64     66    100     1  0.0000000  -0.6901681  3
-     63     64     66    100     1  180.0000000  -0.6932813  4
+     63     64     66     85     1  0.0000000  3.7679952  1
+     63     64     66     85     1  180.0000000  2.7442548  2
+     63     64     66     85     1  0.0000000  1.1575077  3
+     63     64     66     85     1  180.0000000  0.7135212  4
+     63     64     66    100     1  0.0000000  -5.2848366  1
+     63     64     66    100     1  180.0000000  1.9397851  2
+     63     64     66    100     1  0.0000000  -0.6946720  3
+     63     64     66    100     1  180.0000000  -0.7061109  4
      63     67     68     87     1  180.0000000  13.6752988  2
      64     63     62     80     1  180.0000000  13.6752988  2
      64     63     67     68     1  180.0000000  13.6752988  2
      64     63     67     86     1  180.0000000  13.6752988  2
-     64     66    100     99     1  0.0000000  0.9749821  1
-     64     66    100     99     1  180.0000000  8.6854776  2
-     64     66    100     99     1  0.0000000  1.6928108  3
-     64     66    100     99     1  180.0000000  2.2440722  4
-     64     66    100    101     1  0.0000000  -2.0518420  1
-     64     66    100    101     1  180.0000000  9.2826307  2
-     64     66    100    101     1  0.0000000  0.8560985  3
-     64     66    100    101     1  180.0000000  -0.9970075  4
-     65     64     63     67     1  0.0000000  -0.1018306  1
-     65     64     63     67     1  180.0000000  -0.2443028  2
-     65     64     63     67     1  0.0000000  0.1343286  3
-     65     64     63     67     1  180.0000000  0.0104559  4
-     65     64     66     85     1  0.0000000  -1.8763071  1
-     65     64     66     85     1  180.0000000  0.8221521  2
-     65     64     66     85     1  0.0000000  0.7249370  3
-     65     64     66     85     1  180.0000000  -0.4399285  4
-     65     64     66    100     1  0.0000000  -0.1587895  1
-     65     64     66    100     1  180.0000000  0.3637611  2
-     65     64     66    100     1  0.0000000  -1.2086038  3
-     65     64     66    100     1  180.0000000  0.1488848  4
-     66     64     63     67     1  0.0000000  0.2140032  1
-     66     64     63     67     1  180.0000000  1.2924946  2
-     66     64     63     67     1  0.0000000  0.1220781  3
-     66     64     63     67     1  180.0000000  0.0333277  4
+     64     66    100     99     1  0.0000000  0.9884131  1
+     64     66    100     99     1  180.0000000  8.6909410  2
+     64     66    100     99     1  0.0000000  1.6942575  3
+     64     66    100     99     1  180.0000000  2.2088855  4
+     64     66    100    101     1  0.0000000  -2.0666132  1
+     64     66    100    101     1  180.0000000  9.3244553  2
+     64     66    100    101     1  0.0000000  0.8451639  3
+     64     66    100    101     1  180.0000000  -0.9787805  4
+     65     64     63     67     1  0.0000000  -0.0952746  1
+     65     64     63     67     1  180.0000000  -0.2475557  2
+     65     64     63     67     1  0.0000000  0.1300835  3
+     65     64     63     67     1  180.0000000  0.0134586  4
+     65     64     66     85     1  0.0000000  -1.8601814  1
+     65     64     66     85     1  180.0000000  0.7874913  2
+     65     64     66     85     1  0.0000000  0.7169726  3
+     65     64     66     85     1  180.0000000  -0.4617072  4
+     65     64     66    100     1  0.0000000  -0.1577758  1
+     65     64     66    100     1  180.0000000  0.3951239  2
+     65     64     66    100     1  0.0000000  -1.2188921  3
+     65     64     66    100     1  180.0000000  0.1635845  4
+     66     64     63     67     1  0.0000000  0.2095763  1
+     66     64     63     67     1  180.0000000  1.2892280  2
+     66     64     63     67     1  0.0000000  0.1159404  3
+     66     64     63     67     1  180.0000000  0.0388452  4
      66     64     65     82     1  0.0000000  0.6020980  3
      66     64     65     83     1  0.0000000  0.6020980  3
      66     64     65     84     1  0.0000000  0.6020980  3
-     66    100     99     98     1  0.0000000  -0.0421084  1
-     66    100     99     98     1  180.0000000  4.2711344  2
-     66    100     99     98     1  0.0000000  -0.1478997  3
-     66    100     99     98     1  180.0000000  0.0849399  4
-     66    100     99    102     1  0.0000000  -0.0421084  1
-     66    100     99    102     1  180.0000000  4.2711344  2
-     66    100     99    102     1  0.0000000  -0.1478997  3
-     66    100     99    102     1  180.0000000  0.0849399  4
+     66    100     99     98     1  0.0000000  -0.0498969  1
+     66    100     99     98     1  180.0000000  4.2610456  2
+     66    100     99     98     1  0.0000000  -0.1530168  3
+     66    100     99     98     1  180.0000000  0.1139200  4
+     66    100     99    102     1  0.0000000  -0.0498969  1
+     66    100     99    102     1  180.0000000  4.2610456  2
+     66    100     99    102     1  0.0000000  -0.1530168  3
+     66    100     99    102     1  180.0000000  0.1139200  4
      67     63     62     80     1  180.0000000  13.6752988  2
-     67     63     64     81     1  0.0000000  -0.1195616  1
-     67     63     64     81     1  180.0000000  -0.9732136  2
-     67     63     64     81     1  0.0000000  0.1317690  3
-     67     63     64     81     1  180.0000000  0.1710040  4
-     68     60     59     69     1  0.0000000  0.3290863  1
-     68     60     59     69     1  180.0000000  6.2203539  2
-     68     60     59     69     1  0.0000000  0.3479749  3
-     68     60     59     69     1  180.0000000  2.0579757  4
+     67     63     64     81     1  0.0000000  -0.1197238  1
+     67     63     64     81     1  180.0000000  -0.9763733  2
+     67     63     64     81     1  0.0000000  0.1357494  3
+     67     63     64     81     1  180.0000000  0.1751395  4
+     68     60     59     69     1  0.0000000  0.3282282  1
+     68     60     59     69     1  180.0000000  6.2178581  2
+     68     60     59     69     1  0.0000000  0.3479820  3
+     68     60     59     69     1  180.0000000  2.0601563  4
      68     60     61     79     1  180.0000000  13.6752988  2
      69     47     48     73     1  180.0000000  13.6752988  2
      73     48     49     74     1  180.0000000  13.6752988  2
@@ -1847,31 +1847,31 @@ system1          3
      81     64     65     82     1  0.0000000  0.9539296  3
      81     64     65     83     1  0.0000000  0.9539296  3
      81     64     65     84     1  0.0000000  0.9539296  3
-     81     64     66     85     1  0.0000000  -2.0843156  1
-     81     64     66     85     1  180.0000000  0.7777961  2
-     81     64     66     85     1  0.0000000  1.0009795  3
-     81     64     66     85     1  180.0000000  -0.0620940  4
-     81     64     66    100     1  0.0000000  2.5937495  1
-     81     64     66    100     1  180.0000000  0.3830213  2
-     81     64     66    100     1  0.0000000  0.5231495  3
-     81     64     66    100     1  180.0000000  0.3006750  4
-     85     66    100     99     1  0.0000000  2.3071383  1
-     85     66    100     99     1  180.0000000  9.2105395  2
-     85     66    100     99     1  0.0000000  -0.1086010  3
-     85     66    100     99     1  180.0000000  1.1462118  4
-     85     66    100    101     1  0.0000000  4.1165315  1
-     85     66    100    101     1  180.0000000  5.0745013  2
-     85     66    100    101     1  0.0000000  -0.4063100  3
-     85     66    100    101     1  180.0000000  -0.9067235  4
+     81     64     66     85     1  0.0000000  -2.0912149  1
+     81     64     66     85     1  180.0000000  0.7933217  2
+     81     64     66     85     1  0.0000000  0.9979426  3
+     81     64     66     85     1  180.0000000  -0.0477706  4
+     81     64     66    100     1  0.0000000  2.5938838  1
+     81     64     66    100     1  180.0000000  0.3736491  2
+     81     64     66    100     1  0.0000000  0.5128650  3
+     81     64     66    100     1  180.0000000  0.2895779  4
+     85     66    100     99     1  0.0000000  2.2922022  1
+     85     66    100     99     1  180.0000000  9.2082023  2
+     85     66    100     99     1  0.0000000  -0.0890469  3
+     85     66    100     99     1  180.0000000  1.1430210  4
+     85     66    100    101     1  0.0000000  4.1234588  1
+     85     66    100    101     1  180.0000000  5.0438319  2
+     85     66    100    101     1  0.0000000  -0.4608143  3
+     85     66    100    101     1  180.0000000  -0.9228799  4
      86     67     68     87     1  180.0000000  13.6752988  2
-     89     90     91     92     1  0.0000000  0.2364518  1
-     89     90     91     92     1  180.0000000  9.7407146  2
-     89     90     91     92     1  0.0000000  1.1710878  3
-     89     90     91     92     1  180.0000000  0.6733575  4
-     89     90     91    113     1  0.0000000  0.2364518  1
-     89     90     91    113     1  180.0000000  9.7407146  2
-     89     90     91    113     1  0.0000000  1.1710878  3
-     89     90     91    113     1  180.0000000  0.6733575  4
+     89     90     91     92     1  0.0000000  0.2365008  1
+     89     90     91     92     1  180.0000000  9.7407125  2
+     89     90     91     92     1  0.0000000  1.1711912  3
+     89     90     91     92     1  180.0000000  0.6733614  4
+     89     90     91    113     1  0.0000000  0.2365008  1
+     89     90     91    113     1  180.0000000  9.7407125  2
+     89     90     91    113     1  0.0000000  1.1711912  3
+     89     90     91    113     1  180.0000000  0.6733614  4
      90     91     92     93     1  180.0000000  13.6752988  2
      90     91     92    117     1  180.0000000  13.6752988  2
      90     91    113    103     1  180.0000000  13.6752988  2
@@ -1897,14 +1897,14 @@ system1          3
      94     95     96    119     1  180.0000000  13.6752988  2
      94     95    102     99     1  180.0000000  13.6752988  2
      94     95    102    122     1  180.0000000  13.6752988  2
-     94    103    104    105     1  0.0000000  -0.3048652  1
-     94    103    104    105     1  180.0000000  5.6342692  2
-     94    103    104    105     1  0.0000000  -0.3380011  3
-     94    103    104    105     1  180.0000000  -0.3063586  4
-     94    103    104    112     1  0.0000000  -0.3048652  1
-     94    103    104    112     1  180.0000000  5.6342692  2
-     94    103    104    112     1  0.0000000  -0.3380011  3
-     94    103    104    112     1  180.0000000  -0.3063586  4
+     94    103    104    105     1  0.0000000  -0.3040697  1
+     94    103    104    105     1  180.0000000  5.6361336  2
+     94    103    104    105     1  0.0000000  -0.3382255  3
+     94    103    104    105     1  180.0000000  -0.3083986  4
+     94    103    104    112     1  0.0000000  -0.3040697  1
+     94    103    104    112     1  180.0000000  5.6361336  2
+     94    103    104    112     1  0.0000000  -0.3382255  3
+     94    103    104    112     1  180.0000000  -0.3083986  4
      94    103    113    132     1  180.0000000  13.6752988  2
      95     94     93    118     1  180.0000000  13.6752988  2
      95     94    103    104     1  180.0000000  13.6752988  2
@@ -1922,18 +1922,18 @@ system1          3
      97     98     99    100     1  180.0000000  13.6752988  2
      97     98     99    102     1  180.0000000  13.6752988  2
      98     97     96    119     1  180.0000000  13.6752988  2
-     98     99    100    101     1  0.0000000  0.0349257  1
-     98     99    100    101     1  180.0000000  -0.2704555  2
-     98     99    100    101     1  0.0000000  0.1577093  3
-     98     99    100    101     1  180.0000000  0.3658574  4
+     98     99    100    101     1  0.0000000  0.0343119  1
+     98     99    100    101     1  180.0000000  -0.2688773  2
+     98     99    100    101     1  0.0000000  0.1642221  3
+     98     99    100    101     1  180.0000000  0.3393634  4
      98     99    102    122     1  180.0000000  13.6752988  2
      99     98     97    120     1  180.0000000  13.6752988  2
     100     99     98    121     1  180.0000000  13.6752988  2
     100     99    102    122     1  180.0000000  13.6752988  2
-    101    100     99    102     1  0.0000000  0.0349257  1
-    101    100     99    102     1  180.0000000  -0.2704555  2
-    101    100     99    102     1  0.0000000  0.1577093  3
-    101    100     99    102     1  180.0000000  0.3658574  4
+    101    100     99    102     1  0.0000000  0.0343119  1
+    101    100     99    102     1  180.0000000  -0.2688773  2
+    101    100     99    102     1  0.0000000  0.1642221  3
+    101    100     99    102     1  180.0000000  0.3393634  4
     102     95     94    103     1  180.0000000  5.1777217  2
     102     95     96    119     1  180.0000000  13.6752988  2
     102     99     98    121     1  180.0000000  13.6752988  2
@@ -1947,89 +1947,89 @@ system1          3
     104    105    106    124     1  180.0000000  13.6752988  2
     104    112    111    107     1  180.0000000  13.6752988  2
     104    112    111    130     1  180.0000000  13.6752988  2
-    105    104    103    113     1  0.0000000  0.3290863  1
-    105    104    103    113     1  180.0000000  6.2203539  2
-    105    104    103    113     1  0.0000000  0.3479749  3
-    105    104    103    113     1  180.0000000  2.0579757  4
+    105    104    103    113     1  0.0000000  0.3282282  1
+    105    104    103    113     1  180.0000000  6.2178581  2
+    105    104    103    113     1  0.0000000  0.3479820  3
+    105    104    103    113     1  180.0000000  2.0601563  4
     105    104    112    111     1  180.0000000  13.6752988  2
     105    104    112    131     1  180.0000000  13.6752988  2
     105    106    107    108     1  180.0000000  13.6752988  2
     105    106    107    111     1  180.0000000  13.6752988  2
     106    105    104    112     1  180.0000000  13.6752988  2
-    106    107    108    109     1  0.0000000  -0.1018306  1
-    106    107    108    109     1  180.0000000  -0.2443028  2
-    106    107    108    109     1  0.0000000  0.1343286  3
-    106    107    108    109     1  180.0000000  0.0104559  4
-    106    107    108    110     1  0.0000000  0.2140032  1
-    106    107    108    110     1  180.0000000  1.2924946  2
-    106    107    108    110     1  0.0000000  0.1220781  3
-    106    107    108    110     1  180.0000000  0.0333277  4
-    106    107    108    125     1  0.0000000  -0.1195616  1
-    106    107    108    125     1  180.0000000  -0.9732136  2
-    106    107    108    125     1  0.0000000  0.1317690  3
-    106    107    108    125     1  180.0000000  0.1710040  4
+    106    107    108    109     1  0.0000000  -0.0952746  1
+    106    107    108    109     1  180.0000000  -0.2475557  2
+    106    107    108    109     1  0.0000000  0.1300835  3
+    106    107    108    109     1  180.0000000  0.0134586  4
+    106    107    108    110     1  0.0000000  0.2095763  1
+    106    107    108    110     1  180.0000000  1.2892280  2
+    106    107    108    110     1  0.0000000  0.1159404  3
+    106    107    108    110     1  180.0000000  0.0388452  4
+    106    107    108    125     1  0.0000000  -0.1197238  1
+    106    107    108    125     1  180.0000000  -0.9763733  2
+    106    107    108    125     1  0.0000000  0.1357494  3
+    106    107    108    125     1  180.0000000  0.1751395  4
     106    107    111    112     1  180.0000000  13.6752988  2
     106    107    111    130     1  180.0000000  13.6752988  2
     107    106    105    123     1  180.0000000  13.6752988  2
     107    108    109    126     1  0.0000000  0.6020980  3
     107    108    109    127     1  0.0000000  0.6020980  3
     107    108    109    128     1  0.0000000  0.6020980  3
-    107    108    110    129     1  0.0000000  3.7794798  1
-    107    108    110    129     1  180.0000000  2.7273118  2
-    107    108    110    129     1  0.0000000  1.1623747  3
-    107    108    110    129     1  180.0000000  0.6926046  4
-    107    108    110    144     1  0.0000000  -5.2806683  1
-    107    108    110    144     1  180.0000000  1.9473968  2
-    107    108    110    144     1  0.0000000  -0.6901681  3
-    107    108    110    144     1  180.0000000  -0.6932813  4
+    107    108    110    129     1  0.0000000  3.7679952  1
+    107    108    110    129     1  180.0000000  2.7442548  2
+    107    108    110    129     1  0.0000000  1.1575077  3
+    107    108    110    129     1  180.0000000  0.7135212  4
+    107    108    110    144     1  0.0000000  -5.2848366  1
+    107    108    110    144     1  180.0000000  1.9397851  2
+    107    108    110    144     1  0.0000000  -0.6946720  3
+    107    108    110    144     1  180.0000000  -0.7061109  4
     107    111    112    131     1  180.0000000  13.6752988  2
     108    107    106    124     1  180.0000000  13.6752988  2
     108    107    111    112     1  180.0000000  13.6752988  2
     108    107    111    130     1  180.0000000  13.6752988  2
-    108    110    144    143     1  0.0000000  0.9749821  1
-    108    110    144    143     1  180.0000000  8.6854776  2
-    108    110    144    143     1  0.0000000  1.6928108  3
-    108    110    144    143     1  180.0000000  2.2440722  4
-    108    110    144    145     1  0.0000000  -2.0518420  1
-    108    110    144    145     1  180.0000000  9.2826307  2
-    108    110    144    145     1  0.0000000  0.8560985  3
-    108    110    144    145     1  180.0000000  -0.9970075  4
-    109    108    107    111     1  0.0000000  -0.1018306  1
-    109    108    107    111     1  180.0000000  -0.2443028  2
-    109    108    107    111     1  0.0000000  0.1343286  3
-    109    108    107    111     1  180.0000000  0.0104559  4
-    109    108    110    129     1  0.0000000  -1.8763071  1
-    109    108    110    129     1  180.0000000  0.8221521  2
-    109    108    110    129     1  0.0000000  0.7249370  3
-    109    108    110    129     1  180.0000000  -0.4399285  4
-    109    108    110    144     1  0.0000000  -0.1587895  1
-    109    108    110    144     1  180.0000000  0.3637611  2
-    109    108    110    144     1  0.0000000  -1.2086038  3
-    109    108    110    144     1  180.0000000  0.1488848  4
-    110    108    107    111     1  0.0000000  0.2140032  1
-    110    108    107    111     1  180.0000000  1.2924946  2
-    110    108    107    111     1  0.0000000  0.1220781  3
-    110    108    107    111     1  180.0000000  0.0333277  4
+    108    110    144    143     1  0.0000000  0.9884131  1
+    108    110    144    143     1  180.0000000  8.6909410  2
+    108    110    144    143     1  0.0000000  1.6942575  3
+    108    110    144    143     1  180.0000000  2.2088855  4
+    108    110    144    145     1  0.0000000  -2.0666132  1
+    108    110    144    145     1  180.0000000  9.3244553  2
+    108    110    144    145     1  0.0000000  0.8451639  3
+    108    110    144    145     1  180.0000000  -0.9787805  4
+    109    108    107    111     1  0.0000000  -0.0952746  1
+    109    108    107    111     1  180.0000000  -0.2475557  2
+    109    108    107    111     1  0.0000000  0.1300835  3
+    109    108    107    111     1  180.0000000  0.0134586  4
+    109    108    110    129     1  0.0000000  -1.8601814  1
+    109    108    110    129     1  180.0000000  0.7874913  2
+    109    108    110    129     1  0.0000000  0.7169726  3
+    109    108    110    129     1  180.0000000  -0.4617072  4
+    109    108    110    144     1  0.0000000  -0.1577758  1
+    109    108    110    144     1  180.0000000  0.3951239  2
+    109    108    110    144     1  0.0000000  -1.2188921  3
+    109    108    110    144     1  180.0000000  0.1635845  4
+    110    108    107    111     1  0.0000000  0.2095763  1
+    110    108    107    111     1  180.0000000  1.2892280  2
+    110    108    107    111     1  0.0000000  0.1159404  3
+    110    108    107    111     1  180.0000000  0.0388452  4
     110    108    109    126     1  0.0000000  0.6020980  3
     110    108    109    127     1  0.0000000  0.6020980  3
     110    108    109    128     1  0.0000000  0.6020980  3
-    110    144    143    142     1  0.0000000  -0.0421084  1
-    110    144    143    142     1  180.0000000  4.2711344  2
-    110    144    143    142     1  0.0000000  -0.1478997  3
-    110    144    143    142     1  180.0000000  0.0849399  4
-    110    144    143    146     1  0.0000000  -0.0421084  1
-    110    144    143    146     1  180.0000000  4.2711344  2
-    110    144    143    146     1  0.0000000  -0.1478997  3
-    110    144    143    146     1  180.0000000  0.0849399  4
+    110    144    143    142     1  0.0000000  -0.0498969  1
+    110    144    143    142     1  180.0000000  4.2610456  2
+    110    144    143    142     1  0.0000000  -0.1530168  3
+    110    144    143    142     1  180.0000000  0.1139200  4
+    110    144    143    146     1  0.0000000  -0.0498969  1
+    110    144    143    146     1  180.0000000  4.2610456  2
+    110    144    143    146     1  0.0000000  -0.1530168  3
+    110    144    143    146     1  180.0000000  0.1139200  4
     111    107    106    124     1  180.0000000  13.6752988  2
-    111    107    108    125     1  0.0000000  -0.1195616  1
-    111    107    108    125     1  180.0000000  -0.9732136  2
-    111    107    108    125     1  0.0000000  0.1317690  3
-    111    107    108    125     1  180.0000000  0.1710040  4
-    112    104    103    113     1  0.0000000  0.3290863  1
-    112    104    103    113     1  180.0000000  6.2203539  2
-    112    104    103    113     1  0.0000000  0.3479749  3
-    112    104    103    113     1  180.0000000  2.0579757  4
+    111    107    108    125     1  0.0000000  -0.1197238  1
+    111    107    108    125     1  180.0000000  -0.9763733  2
+    111    107    108    125     1  0.0000000  0.1357494  3
+    111    107    108    125     1  180.0000000  0.1751395  4
+    112    104    103    113     1  0.0000000  0.3282282  1
+    112    104    103    113     1  180.0000000  6.2178581  2
+    112    104    103    113     1  0.0000000  0.3479820  3
+    112    104    103    113     1  180.0000000  2.0601563  4
     112    104    105    123     1  180.0000000  13.6752988  2
     113     91     92    117     1  180.0000000  13.6752988  2
     117     92     93    118     1  180.0000000  13.6752988  2
@@ -2039,31 +2039,31 @@ system1          3
     125    108    109    126     1  0.0000000  0.9539296  3
     125    108    109    127     1  0.0000000  0.9539296  3
     125    108    109    128     1  0.0000000  0.9539296  3
-    125    108    110    129     1  0.0000000  -2.0843156  1
-    125    108    110    129     1  180.0000000  0.7777961  2
-    125    108    110    129     1  0.0000000  1.0009795  3
-    125    108    110    129     1  180.0000000  -0.0620940  4
-    125    108    110    144     1  0.0000000  2.5937495  1
-    125    108    110    144     1  180.0000000  0.3830213  2
-    125    108    110    144     1  0.0000000  0.5231495  3
-    125    108    110    144     1  180.0000000  0.3006750  4
-    129    110    144    143     1  0.0000000  2.3071383  1
-    129    110    144    143     1  180.0000000  9.2105395  2
-    129    110    144    143     1  0.0000000  -0.1086010  3
-    129    110    144    143     1  180.0000000  1.1462118  4
-    129    110    144    145     1  0.0000000  4.1165315  1
-    129    110    144    145     1  180.0000000  5.0745013  2
-    129    110    144    145     1  0.0000000  -0.4063100  3
-    129    110    144    145     1  180.0000000  -0.9067235  4
+    125    108    110    129     1  0.0000000  -2.0912149  1
+    125    108    110    129     1  180.0000000  0.7933217  2
+    125    108    110    129     1  0.0000000  0.9979426  3
+    125    108    110    129     1  180.0000000  -0.0477706  4
+    125    108    110    144     1  0.0000000  2.5938838  1
+    125    108    110    144     1  180.0000000  0.3736491  2
+    125    108    110    144     1  0.0000000  0.5128650  3
+    125    108    110    144     1  180.0000000  0.2895779  4
+    129    110    144    143     1  0.0000000  2.2922022  1
+    129    110    144    143     1  180.0000000  9.2082023  2
+    129    110    144    143     1  0.0000000  -0.0890469  3
+    129    110    144    143     1  180.0000000  1.1430210  4
+    129    110    144    145     1  0.0000000  4.1234588  1
+    129    110    144    145     1  180.0000000  5.0438319  2
+    129    110    144    145     1  0.0000000  -0.4608143  3
+    129    110    144    145     1  180.0000000  -0.9228799  4
     130    111    112    131     1  180.0000000  13.6752988  2
-    133    134    135    136     1  0.0000000  0.2364518  1
-    133    134    135    136     1  180.0000000  9.7407146  2
-    133    134    135    136     1  0.0000000  1.1710878  3
-    133    134    135    136     1  180.0000000  0.6733575  4
-    133    134    135    157     1  0.0000000  0.2364518  1
-    133    134    135    157     1  180.0000000  9.7407146  2
-    133    134    135    157     1  0.0000000  1.1710878  3
-    133    134    135    157     1  180.0000000  0.6733575  4
+    133    134    135    136     1  0.0000000  0.2365008  1
+    133    134    135    136     1  180.0000000  9.7407125  2
+    133    134    135    136     1  0.0000000  1.1711912  3
+    133    134    135    136     1  180.0000000  0.6733614  4
+    133    134    135    157     1  0.0000000  0.2365008  1
+    133    134    135    157     1  180.0000000  9.7407125  2
+    133    134    135    157     1  0.0000000  1.1711912  3
+    133    134    135    157     1  180.0000000  0.6733614  4
     134    135    136    137     1  180.0000000  13.6752988  2
     134    135    136    161     1  180.0000000  13.6752988  2
     134    135    157    147     1  180.0000000  13.6752988  2
@@ -2089,14 +2089,14 @@ system1          3
     138    139    140    163     1  180.0000000  13.6752988  2
     138    139    146    143     1  180.0000000  13.6752988  2
     138    139    146    166     1  180.0000000  13.6752988  2
-    138    147    148    149     1  0.0000000  -0.3048652  1
-    138    147    148    149     1  180.0000000  5.6342692  2
-    138    147    148    149     1  0.0000000  -0.3380011  3
-    138    147    148    149     1  180.0000000  -0.3063586  4
-    138    147    148    156     1  0.0000000  -0.3048652  1
-    138    147    148    156     1  180.0000000  5.6342692  2
-    138    147    148    156     1  0.0000000  -0.3380011  3
-    138    147    148    156     1  180.0000000  -0.3063586  4
+    138    147    148    149     1  0.0000000  -0.3040697  1
+    138    147    148    149     1  180.0000000  5.6361336  2
+    138    147    148    149     1  0.0000000  -0.3382255  3
+    138    147    148    149     1  180.0000000  -0.3083986  4
+    138    147    148    156     1  0.0000000  -0.3040697  1
+    138    147    148    156     1  180.0000000  5.6361336  2
+    138    147    148    156     1  0.0000000  -0.3382255  3
+    138    147    148    156     1  180.0000000  -0.3083986  4
     138    147    157    176     1  180.0000000  13.6752988  2
     139    138    137    162     1  180.0000000  13.6752988  2
     139    138    147    148     1  180.0000000  13.6752988  2
@@ -2114,18 +2114,18 @@ system1          3
     141    142    143    144     1  180.0000000  13.6752988  2
     141    142    143    146     1  180.0000000  13.6752988  2
     142    141    140    163     1  180.0000000  13.6752988  2
-    142    143    144    145     1  0.0000000  0.0349257  1
-    142    143    144    145     1  180.0000000  -0.2704555  2
-    142    143    144    145     1  0.0000000  0.1577093  3
-    142    143    144    145     1  180.0000000  0.3658574  4
+    142    143    144    145     1  0.0000000  0.0343119  1
+    142    143    144    145     1  180.0000000  -0.2688773  2
+    142    143    144    145     1  0.0000000  0.1642221  3
+    142    143    144    145     1  180.0000000  0.3393634  4
     142    143    146    166     1  180.0000000  13.6752988  2
     143    142    141    164     1  180.0000000  13.6752988  2
     144    143    142    165     1  180.0000000  13.6752988  2
     144    143    146    166     1  180.0000000  13.6752988  2
-    145    144    143    146     1  0.0000000  0.0349257  1
-    145    144    143    146     1  180.0000000  -0.2704555  2
-    145    144    143    146     1  0.0000000  0.1577093  3
-    145    144    143    146     1  180.0000000  0.3658574  4
+    145    144    143    146     1  0.0000000  0.0343119  1
+    145    144    143    146     1  180.0000000  -0.2688773  2
+    145    144    143    146     1  0.0000000  0.1642221  3
+    145    144    143    146     1  180.0000000  0.3393634  4
     146    139    138    147     1  180.0000000  5.1777217  2
     146    139    140    163     1  180.0000000  13.6752988  2
     146    143    142    165     1  180.0000000  13.6752988  2
@@ -2139,85 +2139,85 @@ system1          3
     148    149    150    168     1  180.0000000  13.6752988  2
     148    156    155    151     1  180.0000000  13.6752988  2
     148    156    155    174     1  180.0000000  13.6752988  2
-    149    148    147    157     1  0.0000000  0.3290863  1
-    149    148    147    157     1  180.0000000  6.2203539  2
-    149    148    147    157     1  0.0000000  0.3479749  3
-    149    148    147    157     1  180.0000000  2.0579757  4
+    149    148    147    157     1  0.0000000  0.3282282  1
+    149    148    147    157     1  180.0000000  6.2178581  2
+    149    148    147    157     1  0.0000000  0.3479820  3
+    149    148    147    157     1  180.0000000  2.0601563  4
     149    148    156    155     1  180.0000000  13.6752988  2
     149    148    156    175     1  180.0000000  13.6752988  2
     149    150    151    152     1  180.0000000  13.6752988  2
     149    150    151    155     1  180.0000000  13.6752988  2
     150    149    148    156     1  180.0000000  13.6752988  2
-    150    151    152    153     1  0.0000000  -0.0672942  1
-    150    151    152    153     1  180.0000000  0.0309357  2
-    150    151    152    153     1  0.0000000  0.3180441  3
-    150    151    152    153     1  180.0000000  0.0941923  4
-    150    151    152    154     1  0.0000000  0.1548113  1
-    150    151    152    154     1  180.0000000  1.0098872  2
-    150    151    152    154     1  0.0000000  0.3194687  3
-    150    151    152    154     1  180.0000000  0.0780017  4
-    150    151    152    169     1  0.0000000  -0.0906740  1
-    150    151    152    169     1  180.0000000  -0.7250588  2
-    150    151    152    169     1  0.0000000  0.3195407  3
-    150    151    152    169     1  180.0000000  0.2132848  4
+    150    151    152    153     1  0.0000000  -0.0704112  1
+    150    151    152    153     1  180.0000000  0.0332018  2
+    150    151    152    153     1  0.0000000  0.3114376  3
+    150    151    152    153     1  180.0000000  0.1161692  4
+    150    151    152    154     1  0.0000000  0.1585796  1
+    150    151    152    154     1  180.0000000  0.9913736  2
+    150    151    152    154     1  0.0000000  0.3128249  3
+    150    151    152    154     1  180.0000000  0.1083269  4
+    150    151    152    169     1  0.0000000  -0.0949043  1
+    150    151    152    169     1  180.0000000  -0.7347590  2
+    150    151    152    169     1  0.0000000  0.3133567  3
+    150    151    152    169     1  180.0000000  0.2386062  4
     150    151    155    156     1  180.0000000  13.6752988  2
     150    151    155    174     1  180.0000000  13.6752988  2
     151    150    149    167     1  180.0000000  13.6752988  2
     151    152    153    170     1  0.0000000  0.6020980  3
     151    152    153    171     1  0.0000000  0.6020980  3
     151    152    153    172     1  0.0000000  0.6020980  3
-    151    152    154    173     1  0.0000000  2.6191654  1
-    151    152    154    173     1  180.0000000  1.7864135  2
-    151    152    154    173     1  0.0000000  0.8638883  3
-    151    152    154    173     1  180.0000000  0.2449089  4
-    151    152    154    187     1  0.0000000  -4.3602351  1
-    151    152    154    187     1  180.0000000  2.0415553  2
-    151    152    154    187     1  0.0000000  -0.9049240  3
-    151    152    154    187     1  180.0000000  -0.2808415  4
+    151    152    154    173     1  0.0000000  2.6197615  1
+    151    152    154    173     1  180.0000000  1.8897318  2
+    151    152    154    173     1  0.0000000  0.8774934  3
+    151    152    154    173     1  180.0000000  0.2374883  4
+    151    152    154    187     1  0.0000000  -4.3193165  1
+    151    152    154    187     1  180.0000000  2.0195029  2
+    151    152    154    187     1  0.0000000  -0.9017119  3
+    151    152    154    187     1  180.0000000  -0.2933166  4
     151    155    156    175     1  180.0000000  13.6752988  2
     152    151    150    168     1  180.0000000  13.6752988  2
     152    151    155    156     1  180.0000000  13.6752988  2
     152    151    155    174     1  180.0000000  13.6752988  2
-    152    154    187    186     1  0.0000000  1.0465028  1
-    152    154    187    186     1  180.0000000  8.6876825  2
-    152    154    187    186     1  0.0000000  0.0768631  3
-    152    154    187    186     1  180.0000000  -0.6826822  4
-    152    154    187    188     1  0.0000000  1.1958241  1
-    152    154    187    188     1  180.0000000  8.2419917  2
-    152    154    187    188     1  0.0000000  1.4640056  3
-    152    154    187    188     1  180.0000000  -1.2927526  4
-    153    152    151    155     1  0.0000000  -0.0672942  1
-    153    152    151    155     1  180.0000000  0.0309357  2
-    153    152    151    155     1  0.0000000  0.3180441  3
-    153    152    151    155     1  180.0000000  0.0941923  4
-    153    152    154    173     1  0.0000000  -1.9814372  1
-    153    152    154    173     1  180.0000000  1.5862537  2
-    153    152    154    173     1  0.0000000  1.1712581  3
-    153    152    154    173     1  180.0000000  0.0623323  4
-    153    152    154    187     1  0.0000000  -0.7209774  1
-    153    152    154    187     1  180.0000000  -0.1002472  2
-    153    152    154    187     1  0.0000000  -1.4156571  3
-    153    152    154    187     1  180.0000000  -0.5390373  4
-    154    152    151    155     1  0.0000000  0.1548113  1
-    154    152    151    155     1  180.0000000  1.0098872  2
-    154    152    151    155     1  0.0000000  0.3194687  3
-    154    152    151    155     1  180.0000000  0.0780017  4
+    152    154    187    186     1  0.0000000  1.0304496  1
+    152    154    187    186     1  180.0000000  8.6656322  2
+    152    154    187    186     1  0.0000000  -0.0192556  3
+    152    154    187    186     1  180.0000000  -0.7385875  4
+    152    154    187    188     1  0.0000000  1.2135450  1
+    152    154    187    188     1  180.0000000  8.3326605  2
+    152    154    187    188     1  0.0000000  1.3608464  3
+    152    154    187    188     1  180.0000000  -1.3469156  4
+    153    152    151    155     1  0.0000000  -0.0704112  1
+    153    152    151    155     1  180.0000000  0.0332018  2
+    153    152    151    155     1  0.0000000  0.3114376  3
+    153    152    151    155     1  180.0000000  0.1161692  4
+    153    152    154    173     1  0.0000000  -2.0037126  1
+    153    152    154    173     1  180.0000000  1.5255031  2
+    153    152    154    173     1  0.0000000  1.1716171  3
+    153    152    154    173     1  180.0000000  -0.0395414  4
+    153    152    154    187     1  0.0000000  -0.7320032  1
+    153    152    154    187     1  180.0000000  -0.0610626  2
+    153    152    154    187     1  0.0000000  -1.3927625  3
+    153    152    154    187     1  180.0000000  -0.5369390  4
+    154    152    151    155     1  0.0000000  0.1585796  1
+    154    152    151    155     1  180.0000000  0.9913736  2
+    154    152    151    155     1  0.0000000  0.3128249  3
+    154    152    151    155     1  180.0000000  0.1083269  4
     154    152    153    170     1  0.0000000  0.6020980  3
     154    152    153    171     1  0.0000000  0.6020980  3
     154    152    153    172     1  0.0000000  0.6020980  3
-    154    187    186    183     1  0.0000000  1.7573657  1
-    154    187    186    183     1  180.0000000  18.4706012  2
-    154    187    186    183     1  0.0000000  -0.1789389  3
-    154    187    186    183     1  180.0000000  1.9031462  4
+    154    187    186    183     1  0.0000000  1.6955358  1
+    154    187    186    183     1  180.0000000  18.3867724  2
+    154    187    186    183     1  0.0000000  -0.1938821  3
+    154    187    186    183     1  180.0000000  2.0925426  4
     155    151    150    168     1  180.0000000  13.6752988  2
-    155    151    152    169     1  0.0000000  -0.0906740  1
-    155    151    152    169     1  180.0000000  -0.7250588  2
-    155    151    152    169     1  0.0000000  0.3195407  3
-    155    151    152    169     1  180.0000000  0.2132848  4
-    156    148    147    157     1  0.0000000  0.3290863  1
-    156    148    147    157     1  180.0000000  6.2203539  2
-    156    148    147    157     1  0.0000000  0.3479749  3
-    156    148    147    157     1  180.0000000  2.0579757  4
+    155    151    152    169     1  0.0000000  -0.0949043  1
+    155    151    152    169     1  180.0000000  -0.7347590  2
+    155    151    152    169     1  0.0000000  0.3133567  3
+    155    151    152    169     1  180.0000000  0.2386062  4
+    156    148    147    157     1  0.0000000  0.3282282  1
+    156    148    147    157     1  180.0000000  6.2178581  2
+    156    148    147    157     1  0.0000000  0.3479820  3
+    156    148    147    157     1  180.0000000  2.0601563  4
     156    148    149    167     1  180.0000000  13.6752988  2
     157    135    136    161     1  180.0000000  13.6752988  2
     161    136    137    162     1  180.0000000  13.6752988  2
@@ -2227,22 +2227,22 @@ system1          3
     169    152    153    170     1  0.0000000  0.9539296  3
     169    152    153    171     1  0.0000000  0.9539296  3
     169    152    153    172     1  0.0000000  0.9539296  3
-    169    152    154    173     1  0.0000000  -0.7804973  1
-    169    152    154    173     1  180.0000000  0.8623682  2
-    169    152    154    173     1  0.0000000  0.9423006  3
-    169    152    154    173     1  180.0000000  -0.8816882  4
-    169    152    154    187     1  0.0000000  2.2558950  1
-    169    152    154    187     1  180.0000000  0.7012420  2
-    169    152    154    187     1  0.0000000  0.2587786  3
-    169    152    154    187     1  180.0000000  0.4705982  4
-    173    154    187    186     1  0.0000000  1.9031382  1
-    173    154    187    186     1  180.0000000  8.4289825  2
-    173    154    187    186     1  0.0000000  -0.0005520  3
-    173    154    187    186     1  180.0000000  -1.5309016  4
-    173    154    187    188     1  0.0000000  4.8344928  1
-    173    154    187    188     1  180.0000000  1.7448278  2
-    173    154    187    188     1  0.0000000  1.1219479  3
-    173    154    187    188     1  180.0000000  -1.7493582  4
+    169    152    154    173     1  0.0000000  -0.7516748  1
+    169    152    154    173     1  180.0000000  0.8473582  2
+    169    152    154    173     1  0.0000000  0.9637156  3
+    169    152    154    173     1  180.0000000  -0.9640442  4
+    169    152    154    187     1  0.0000000  2.2072316  1
+    169    152    154    187     1  180.0000000  0.6962615  2
+    169    152    154    187     1  0.0000000  0.2554339  3
+    169    152    154    187     1  180.0000000  0.4930681  4
+    173    154    187    186     1  0.0000000  1.8649314  1
+    173    154    187    186     1  180.0000000  8.3580624  2
+    173    154    187    186     1  0.0000000  0.0325529  3
+    173    154    187    186     1  180.0000000  -1.6276038  4
+    173    154    187    188     1  0.0000000  4.8562472  1
+    173    154    187    188     1  180.0000000  1.7357423  2
+    173    154    187    188     1  0.0000000  1.1374227  3
+    173    154    187    188     1  180.0000000  -1.6786089  4
     174    155    156    175     1  180.0000000  13.6752988  2
     182    183    184    192     1  0.0000000  0.4122821  3
     182    183    184    193     1  0.0000000  0.4122821  3
@@ -2250,34 +2250,34 @@ system1          3
     182    183    185    195     1  0.0000000  0.4122821  3
     182    183    185    196     1  0.0000000  0.4122821  3
     182    183    185    197     1  0.0000000  0.4122821  3
-    182    183    186    187     1  0.0000000  1.5833599  1
-    182    183    186    187     1  180.0000000  0.1314055  2
-    182    183    186    187     1  0.0000000  -1.7556909  3
-    182    183    186    187     1  180.0000000  1.3037352  4
-    183    186    187    188     1  0.0000000  3.9142403  1
-    183    186    187    188     1  180.0000000  4.7529661  2
-    183    186    187    188     1  0.0000000  0.5732446  3
-    183    186    187    188     1  180.0000000  0.7869876  4
+    182    183    186    187     1  0.0000000  1.5960657  1
+    182    183    186    187     1  180.0000000  0.1164635  2
+    182    183    186    187     1  0.0000000  -1.7568598  3
+    182    183    186    187     1  180.0000000  1.3219146  4
+    183    186    187    188     1  0.0000000  3.8953867  1
+    183    186    187    188     1  180.0000000  4.7870058  2
+    183    186    187    188     1  0.0000000  0.5277614  3
+    183    186    187    188     1  180.0000000  0.6845277  4
     184    183    182    189     1  0.0000000  0.4122821  3
     184    183    182    190     1  0.0000000  0.4122821  3
     184    183    182    191     1  0.0000000  0.4122821  3
     184    183    185    195     1  0.0000000  0.4122821  3
     184    183    185    196     1  0.0000000  0.4122821  3
     184    183    185    197     1  0.0000000  0.4122821  3
-    184    183    186    187     1  0.0000000  1.5833599  1
-    184    183    186    187     1  180.0000000  0.1314055  2
-    184    183    186    187     1  0.0000000  -1.7556909  3
-    184    183    186    187     1  180.0000000  1.3037352  4
+    184    183    186    187     1  0.0000000  1.5960657  1
+    184    183    186    187     1  180.0000000  0.1164635  2
+    184    183    186    187     1  0.0000000  -1.7568598  3
+    184    183    186    187     1  180.0000000  1.3219146  4
     185    183    182    189     1  0.0000000  0.4122821  3
     185    183    182    190     1  0.0000000  0.4122821  3
     185    183    182    191     1  0.0000000  0.4122821  3
     185    183    184    192     1  0.0000000  0.4122821  3
     185    183    184    193     1  0.0000000  0.4122821  3
     185    183    184    194     1  0.0000000  0.4122821  3
-    185    183    186    187     1  0.0000000  1.5833599  1
-    185    183    186    187     1  180.0000000  0.1314055  2
-    185    183    186    187     1  0.0000000  -1.7556909  3
-    185    183    186    187     1  180.0000000  1.3037352  4
+    185    183    186    187     1  0.0000000  1.5960657  1
+    185    183    186    187     1  180.0000000  0.1164635  2
+    185    183    186    187     1  0.0000000  -1.7568598  3
+    185    183    186    187     1  180.0000000  1.3219146  4
     186    183    182    189     1  0.0000000  0.5486676  3
     186    183    182    189     1  0.0000000  1.8265113  1
     186    183    182    190     1  0.0000000  0.5486676  3
@@ -2296,249 +2296,249 @@ system1          3
     186    183    185    196     1  0.0000000  1.8265113  1
     186    183    185    197     1  0.0000000  0.5486676  3
     186    183    185    197     1  0.0000000  1.8265113  1
-    187    188    154    186     4  180.0000000  18.0130916  2
-     51     52     58     50     4  180.0000000  7.2952092  2
-     61     79     60     62     4  180.0000000  7.2952092  2
-     66    100     64     85     4  180.0000000  1.7520674  2
-     96     97    119     95     4  180.0000000  7.2952092  2
-    142    141    143    165     4  180.0000000  7.2952092  2
-    137    138    162    136     4  180.0000000  7.2952092  2
-      6      5      7     15     4  180.0000000  7.2952092  2
-     96    119     95     97     4  180.0000000  7.2952092  2
-    156    148    155    175     4  180.0000000  7.2952092  2
-    100     99    101     66     4  180.0000000  7.2952092  2
-    106    124    105    107     4  180.0000000  7.2952092  2
-    104    112    103    105     4  180.0000000  7.2952092  2
-     11     10     12     14     4  180.0000000  7.2952092  2
-     50     59     49     51     4  180.0000000  7.2952092  2
-     94    103     93     95     4  180.0000000  7.2952092  2
-     68     67     87     60     4  180.0000000  7.2952092  2
-     14     34      7     11     4  180.0000000  7.2952092  2
-    157    147    176    135     4  180.0000000  7.2952092  2
-     23     42     19     24     4  180.0000000  7.2952092  2
-     60     61     68     59     4  180.0000000  7.2952092  2
-     60     59     61     68     4  180.0000000  7.2952092  2
-     17     18     35     16     4  180.0000000  7.2952092  2
-    100     66     99    101     4  180.0000000  7.2952092  2
-     53     52     54     76     4  180.0000000  7.2952092  2
-     56     22     55     57     4  180.0000000  7.2952092  2
-    138    147    137    139     4  180.0000000  7.2952092  2
-    103     94    104    113     4  180.0000000  7.2952092  2
-     11     14     10     12     4  180.0000000  7.2952092  2
-      7      8     14      6     4  180.0000000  7.2952092  2
-     61     62     79     60     4  180.0000000  7.2952092  2
-     15     25      6     16     4  180.0000000  7.2952092  2
-     93     92     94    118     4  180.0000000  7.2952092  2
+    141    140    142    164     4  180.0000000  7.2952092  2
+    146    143    166    139     4  180.0000000  7.2952092  2
+    139    146    138    140     4  180.0000000  7.2952092  2
      95    102     94     96     4  180.0000000  7.2952092  2
-     16     15     17     24     4  180.0000000  7.2952092  2
-     98     97     99    121     4  180.0000000  7.2952092  2
-     49     50     74     48     4  180.0000000  7.2952092  2
-      5     30      4      6     4  180.0000000  7.2952092  2
-    187    186    188    154     4  180.0000000  18.0130916  2
-     94     93     95    103     4  180.0000000  7.2952092  2
-    111    107    112    130     4  180.0000000  7.2952092  2
-    156    175    148    155     4  180.0000000  7.2952092  2
-     61     60     62     79     4  180.0000000  7.2952092  2
-    150    168    149    151     4  180.0000000  7.2952092  2
-     92    117     91     93     4  180.0000000  7.2952092  2
-     23     24     42     19     4  180.0000000  7.2952092  2
+    137    136    138    162     4  180.0000000  7.2952092  2
     144    110    143    145     4  180.0000000  7.2952092  2
-     92     93    117     91     4  180.0000000  7.2952092  2
-    149    167    148    150     4  180.0000000  7.2952092  2
-     49     48     50     74     4  180.0000000  7.2952092  2
-     56     55     57     22     4  180.0000000  7.2952092  2
-      7      6      8     14     4  180.0000000  7.2952092  2
-     53     76     52     54     4  180.0000000  7.2952092  2
-     67     68     86     63     4  180.0000000  7.2952092  2
+     97     98    120     96     4  180.0000000  7.2952092  2
+     11     10     12     14     4  180.0000000  7.2952092  2
+    144    145    110    143     4  180.0000000  7.2952092  2
+    104    112    103    105     4  180.0000000  7.2952092  2
+    140    141    163    139     4  180.0000000  7.2952092  2
+    112    111    131    104     4  180.0000000  7.2952092  2
+      3     25      2      4     4  180.0000000  7.2952092  2
+     51     58     50     52     4  180.0000000  7.2952092  2
       5      4      6     30     4  180.0000000  7.2952092  2
-    102    122     95     99     4  180.0000000  7.2952092  2
-     49     74     48     50     4  180.0000000  7.2952092  2
-     17     16     18     35     4  180.0000000  7.2952092  2
-    102     99    122     95     4  180.0000000  7.2952092  2
+      9      8     10     32     4  180.0000000  7.2952092  2
+    147    138    148    157     4  180.0000000  7.2952092  2
+     23     24     42     19     4  180.0000000  7.2952092  2
+     54     55     77     53     4  180.0000000  7.2952092  2
+    143    144    146    142     4  180.0000000  7.2952092  2
+     12     13    178     11     4  180.0000000  18.0130916  2
     150    149    151    168     4  180.0000000  7.2952092  2
-     16     17     24     15     4  180.0000000  7.2952092  2
-    154    173    187    152     4  180.0000000  1.7520674  2
+     14     34      7     11     4  180.0000000  7.2952092  2
+      5     30      4      6     4  180.0000000  7.2952092  2
+     68     60     67     87     4  180.0000000  7.2952092  2
+     98     99    121     97     4  180.0000000  7.2952092  2
+      4      5     29      3     4  180.0000000  7.2952092  2
+    154    152    173    187     4  180.0000000  1.7520674  2
+    150    151    168    149     4  180.0000000  7.2952092  2
+     66     85    100     64     4  180.0000000  1.7520674  2
+     19     20     23     18     4  180.0000000  7.2952092  2
+      7      8     14      6     4  180.0000000  7.2952092  2
+      6      7     15      5     4  180.0000000  7.2952092  2
+     96    119     95     97     4  180.0000000  7.2952092  2
+      9     32      8     10     4  180.0000000  7.2952092  2
+     53     76     52     54     4  180.0000000  7.2952092  2
+    148    156    147    149     4  180.0000000  7.2952092  2
+    113     91    103    132     4  180.0000000  7.2952092  2
+     48     47     49     73     4  180.0000000  7.2952092  2
+    111    112    130    107     4  180.0000000  7.2952092  2
+    149    167    148    150     4  180.0000000  7.2952092  2
+    154    187    152    173     4  180.0000000  1.7520674  2
+    138    147    137    139     4  180.0000000  7.2952092  2
      25      3     15     44     4  180.0000000  7.2952092  2
+      8     31      7      9     4  180.0000000  7.2952092  2
+     99     98    100    102     4  180.0000000  7.2952092  2
+    157    135    147    176     4  180.0000000  7.2952092  2
+    135    136    157    134     4  180.0000000  7.2952092  2
+     17     18     35     16     4  180.0000000  7.2952092  2
+    148    147    149    156     4  180.0000000  7.2952092  2
+     19     23     18     20     4  180.0000000  7.2952092  2
+     60     61     68     59     4  180.0000000  7.2952092  2
+     19     18     20     23     4  180.0000000  7.2952092  2
+     96     97    119     95     4  180.0000000  7.2952092  2
+     25     44      3     15     4  180.0000000  7.2952092  2
+     52     75     51     53     4  180.0000000  7.2952092  2
+    135    157    134    136     4  180.0000000  7.2952092  2
+     94     93     95    103     4  180.0000000  7.2952092  2
+     69     59     88     47     4  180.0000000  7.2952092  2
+     60     59     61     68     4  180.0000000  7.2952092  2
+     67     68     86     63     4  180.0000000  7.2952092  2
+     69     47     59     88     4  180.0000000  7.2952092  2
+     94     95    103     93     4  180.0000000  7.2952092  2
+     91     92    113     90     4  180.0000000  7.2952092  2
+    146    166    139    143     4  180.0000000  7.2952092  2
+    140    139    141    163     4  180.0000000  7.2952092  2
+    187    188    154    186     4  180.0000000  18.0130916  2
+     53     54     76     52     4  180.0000000  7.2952092  2
+     97     96     98    120     4  180.0000000  7.2952092  2
+     92    117     91     93     4  180.0000000  7.2952092  2
+     56     55     57     22     4  180.0000000  7.2952092  2
+     25     15     44      3     4  180.0000000  7.2952092  2
+    102     95     99    122     4  180.0000000  7.2952092  2
+    141    142    164    140     4  180.0000000  7.2952092  2
+    103     94    104    113     4  180.0000000  7.2952092  2
+    113    103    132     91     4  180.0000000  7.2952092  2
+    147    148    157    138     4  180.0000000  7.2952092  2
+     15     25      6     16     4  180.0000000  7.2952092  2
+      6      5      7     15     4  180.0000000  7.2952092  2
+     68     87     60     67     4  180.0000000  7.2952092  2
+     17     16     18     35     4  180.0000000  7.2952092  2
+     60     68     59     61     4  180.0000000  7.2952092  2
+    140    163    139    141     4  180.0000000  7.2952092  2
+    100     99    101     66     4  180.0000000  7.2952092  2
+     98    121     97     99     4  180.0000000  7.2952092  2
+      8      9     31      7     4  180.0000000  7.2952092  2
+    110    129    144    108     4  180.0000000  1.7520674  2
+     59     69     50     60     4  180.0000000  7.2952092  2
+     93    118     92     94     4  180.0000000  7.2952092  2
+     56     22     55     57     4  180.0000000  7.2952092  2
+     53     52     54     76     4  180.0000000  7.2952092  2
+     52     51     53     75     4  180.0000000  7.2952092  2
+     62     61     63     80     4  180.0000000  7.2952092  2
+    187    154    186    188     4  180.0000000  18.0130916  2
+     18     36     17     19     4  180.0000000  7.2952092  2
+    135    134    136    157     4  180.0000000  7.2952092  2
+    112    104    111    131     4  180.0000000  7.2952092  2
+     14      7     11     34     4  180.0000000  7.2952092  2
+     54     53     55     77     4  180.0000000  7.2952092  2
+     63     62     64     67     4  180.0000000  7.2952092  2
+    155    174    151    156     4  180.0000000  7.2952092  2
+     14     11     34      7     4  180.0000000  7.2952092  2
+     22     41     56     20     4  180.0000000  1.7520674  2
+     11     12     14     10     4  180.0000000  7.2952092  2
+    156    175    148    155     4  180.0000000  7.2952092  2
+     18     17     19     36     4  180.0000000  7.2952092  2
+     50     59     49     51     4  180.0000000  7.2952092  2
+    149    148    150    167     4  180.0000000  7.2952092  2
+     96     95     97    119     4  180.0000000  7.2952092  2
+    103    104    113     94     4  180.0000000  7.2952092  2
+    100     66     99    101     4  180.0000000  7.2952092  2
+    110    108    129    144     4  180.0000000  1.7520674  2
+     16     24     15     17     4  180.0000000  7.2952092  2
+      5      6     30      4     4  180.0000000  7.2952092  2
+    106    107    124    105     4  180.0000000  7.2952092  2
+    147    157    138    148     4  180.0000000  7.2952092  2
+    139    138    140    146     4  180.0000000  7.2952092  2
+     66     64     85    100     4  180.0000000  1.7520674  2
+    137    162    136    138     4  180.0000000  7.2952092  2
+     59     50     60     69     4  180.0000000  7.2952092  2
+     51     50     52     58     4  180.0000000  7.2952092  2
+     93     92     94    118     4  180.0000000  7.2952092  2
+     91     90     92    113     4  180.0000000  7.2952092  2
+     61     79     60     62     4  180.0000000  7.2952092  2
+     95     96    102     94     4  180.0000000  7.2952092  2
+     15      6     16     25     4  180.0000000  7.2952092  2
+     16     15     17     24     4  180.0000000  7.2952092  2
+     49     48     50     74     4  180.0000000  7.2952092  2
+      6     15      5      7     4  180.0000000  7.2952092  2
+    136    135    137    161     4  180.0000000  7.2952092  2
+     17     35     16     18     4  180.0000000  7.2952092  2
+    142    143    165    141     4  180.0000000  7.2952092  2
+    151    150    152    155     4  180.0000000  7.2952092  2
+    110    144    108    129     4  180.0000000  1.7520674  2
+     22     20     41     56     4  180.0000000  1.7520674  2
+     49     74     48     50     4  180.0000000  7.2952092  2
+    157    147    176    135     4  180.0000000  7.2952092  2
+     11     14     10     12     4  180.0000000  7.2952092  2
+    106    105    107    124     4  180.0000000  7.2952092  2
+    146    139    143    166     4  180.0000000  7.2952092  2
+     62     63     80     61     4  180.0000000  7.2952092  2
+    151    155    150    152     4  180.0000000  7.2952092  2
+     24     23     43     16     4  180.0000000  7.2952092  2
+     55     58     54     56     4  180.0000000  7.2952092  2
+    142    165    141    143     4  180.0000000  7.2952092  2
+     58     55     78     51     4  180.0000000  7.2952092  2
+     55     56     58     54     4  180.0000000  7.2952092  2
+     10     11     33      9     4  180.0000000  7.2952092  2
+    111    130    107    112     4  180.0000000  7.2952092  2
+     22     56     20     41     4  180.0000000  1.7520674  2
+      3      2      4     25     4  180.0000000  7.2952092  2
+     18     19     36     17     4  180.0000000  7.2952092  2
+    143    146    142    144     4  180.0000000  7.2952092  2
+     24     16     23     43     4  180.0000000  7.2952092  2
+     94    103     93     95     4  180.0000000  7.2952092  2
+     12     11     13    178     4  180.0000000  18.0130916  2
+    113    132     91    103     4  180.0000000  7.2952092  2
+     99    100    102     98     4  180.0000000  7.2952092  2
+    149    150    167    148     4  180.0000000  7.2952092  2
+    107    108    111    106     4  180.0000000  7.2952092  2
+    107    106    108    111     4  180.0000000  7.2952092  2
+    105    123    104    106     4  180.0000000  7.2952092  2
+     63     67     62     64     4  180.0000000  7.2952092  2
     112    131    104    111     4  180.0000000  7.2952092  2
-    143    142    144    146     4  180.0000000  7.2952092  2
+      8      7      9     31     4  180.0000000  7.2952092  2
+     93     94    118     92     4  180.0000000  7.2952092  2
+    156    155    175    148     4  180.0000000  7.2952092  2
+    105    106    123    104     4  180.0000000  7.2952092  2
+    104    105    112    103     4  180.0000000  7.2952092  2
+      3      4     25      2     4  180.0000000  7.2952092  2
+     92     91     93    117     4  180.0000000  7.2952092  2
+    100    101     66     99     4  180.0000000  7.2952092  2
+    148    149    156    147     4  180.0000000  7.2952092  2
+     51     52     58     50     4  180.0000000  7.2952092  2
+     69     88     47     59     4  180.0000000  7.2952092  2
+    142    141    143    165     4  180.0000000  7.2952092  2
+     62     80     61     63     4  180.0000000  7.2952092  2
+    103    113     94    104     4  180.0000000  7.2952092  2
+     91    113     90     92     4  180.0000000  7.2952092  2
+     59     60     69     50     4  180.0000000  7.2952092  2
+     47     48     69     46     4  180.0000000  7.2952092  2
+    138    139    147    137     4  180.0000000  7.2952092  2
+     12    178     11     13     4  180.0000000  18.0130916  2
+     15     16     25      6     4  180.0000000  7.2952092  2
+     49     50     74     48     4  180.0000000  7.2952092  2
+    106    124    105    107     4  180.0000000  7.2952092  2
+    150    168    149    151     4  180.0000000  7.2952092  2
+    157    176    135    147     4  180.0000000  7.2952092  2
+     50     49     51     59     4  180.0000000  7.2952092  2
+     52     53     75     51     4  180.0000000  7.2952092  2
+      9     10     32      8     4  180.0000000  7.2952092  2
+     23     19     24     42     4  180.0000000  7.2952092  2
+    136    161    135    137     4  180.0000000  7.2952092  2
+    154    173    187    152     4  180.0000000  1.7520674  2
+    187    186    188    154     4  180.0000000  18.0130916  2
+     10     33      9     11     4  180.0000000  7.2952092  2
+    141    164    140    142     4  180.0000000  7.2952092  2
       7     14      6      8     4  180.0000000  7.2952092  2
     136    137    161    135     4  180.0000000  7.2952092  2
-     22     41     56     20     4  180.0000000  1.7520674  2
-     91    113     90     92     4  180.0000000  7.2952092  2
-    147    138    148    157     4  180.0000000  7.2952092  2
-     10      9     11     33     4  180.0000000  7.2952092  2
-     51     50     52     58     4  180.0000000  7.2952092  2
-    135    157    134    136     4  180.0000000  7.2952092  2
-     95     96    102     94     4  180.0000000  7.2952092  2
-    187    154    186    188     4  180.0000000  18.0130916  2
-     93     94    118     92     4  180.0000000  7.2952092  2
-     97     96     98    120     4  180.0000000  7.2952092  2
-     69     47     59     88     4  180.0000000  7.2952092  2
-    106    105    107    124     4  180.0000000  7.2952092  2
-     47     48     69     46     4  180.0000000  7.2952092  2
-     19     18     20     23     4  180.0000000  7.2952092  2
-     25     44      3     15     4  180.0000000  7.2952092  2
-     96     95     97    119     4  180.0000000  7.2952092  2
+     92     93    117     91     4  180.0000000  7.2952092  2
     155    151    156    174     4  180.0000000  7.2952092  2
-    151    155    150    152     4  180.0000000  7.2952092  2
-      4      5     29      3     4  180.0000000  7.2952092  2
-     18     19     36     17     4  180.0000000  7.2952092  2
-     51     58     50     52     4  180.0000000  7.2952092  2
-      8      7      9     31     4  180.0000000  7.2952092  2
-     67     86     63     68     4  180.0000000  7.2952092  2
-    107    111    106    108     4  180.0000000  7.2952092  2
-     23     19     24     42     4  180.0000000  7.2952092  2
-    141    140    142    164     4  180.0000000  7.2952092  2
-    110    129    144    108     4  180.0000000  1.7520674  2
-    106    107    124    105     4  180.0000000  7.2952092  2
-     54     53     55     77     4  180.0000000  7.2952092  2
-     52     75     51     53     4  180.0000000  7.2952092  2
-      8      9     31      7     4  180.0000000  7.2952092  2
-     62     61     63     80     4  180.0000000  7.2952092  2
-    147    157    138    148     4  180.0000000  7.2952092  2
-     16     24     15     17     4  180.0000000  7.2952092  2
-     63     64     67     62     4  180.0000000  7.2952092  2
-     99    100    102     98     4  180.0000000  7.2952092  2
-     22     20     41     56     4  180.0000000  1.7520674  2
-    140    141    163    139     4  180.0000000  7.2952092  2
-     14      7     11     34     4  180.0000000  7.2952092  2
-    141    142    164    140     4  180.0000000  7.2952092  2
-    112    111    131    104     4  180.0000000  7.2952092  2
-     69     59     88     47     4  180.0000000  7.2952092  2
-    149    150    167    148     4  180.0000000  7.2952092  2
-     48     47     49     73     4  180.0000000  7.2952092  2
-     50     51     59     49     4  180.0000000  7.2952092  2
-    148    147    149    156     4  180.0000000  7.2952092  2
-    154    187    152    173     4  180.0000000  1.7520674  2
-    140    163    139    141     4  180.0000000  7.2952092  2
-     66     64     85    100     4  180.0000000  1.7520674  2
-     98     99    121     97     4  180.0000000  7.2952092  2
-     63     62     64     67     4  180.0000000  7.2952092  2
-    102     95     99    122     4  180.0000000  7.2952092  2
-      6      7     15      5     4  180.0000000  7.2952092  2
-     91     90     92    113     4  180.0000000  7.2952092  2
-     15      6     16     25     4  180.0000000  7.2952092  2
-    146    139    143    166     4  180.0000000  7.2952092  2
      48     73     47     49     4  180.0000000  7.2952092  2
-     59     69     50     60     4  180.0000000  7.2952092  2
-     94     95    103     93     4  180.0000000  7.2952092  2
-    135    134    136    157     4  180.0000000  7.2952092  2
-    155    174    151    156     4  180.0000000  7.2952092  2
-      6     15      5      7     4  180.0000000  7.2952092  2
-     92     91     93    117     4  180.0000000  7.2952092  2
-    146    143    166    139     4  180.0000000  7.2952092  2
-    150    151    168    149     4  180.0000000  7.2952092  2
-    110    144    108    129     4  180.0000000  1.7520674  2
-    103    113     94    104     4  180.0000000  7.2952092  2
-    111    130    107    112     4  180.0000000  7.2952092  2
-     12     13    178     11     4  180.0000000  18.0130916  2
-     95     94     96    102     4  180.0000000  7.2952092  2
-     48     49     73     47     4  180.0000000  7.2952092  2
-     56     57     22     55     4  180.0000000  7.2952092  2
-     93    118     92     94     4  180.0000000  7.2952092  2
-     97    120     96     98     4  180.0000000  7.2952092  2
-      9     32      8     10     4  180.0000000  7.2952092  2
-     24     16     23     43     4  180.0000000  7.2952092  2
-     18     36     17     19     4  180.0000000  7.2952092  2
-    139    140    146    138     4  180.0000000  7.2952092  2
-     24     43     16     23     4  180.0000000  7.2952092  2
-    110    108    129    144     4  180.0000000  1.7520674  2
-     14     11     34      7     4  180.0000000  7.2952092  2
-     59     50     60     69     4  180.0000000  7.2952092  2
-     97     98    120     96     4  180.0000000  7.2952092  2
-    139    146    138    140     4  180.0000000  7.2952092  2
-    148    149    156    147     4  180.0000000  7.2952092  2
-    156    155    175    148     4  180.0000000  7.2952092  2
-     19     20     23     18     4  180.0000000  7.2952092  2
-     91     92    113     90     4  180.0000000  7.2952092  2
-    107    108    111    106     4  180.0000000  7.2952092  2
-    105    104    106    123     4  180.0000000  7.2952092  2
-     25     15     44      3     4  180.0000000  7.2952092  2
-     99     98    100    102     4  180.0000000  7.2952092  2
-     18     17     19     36     4  180.0000000  7.2952092  2
-    112    104    111    131     4  180.0000000  7.2952092  2
-    136    161    135    137     4  180.0000000  7.2952092  2
-    143    144    146    142     4  180.0000000  7.2952092  2
-     52     53     75     51     4  180.0000000  7.2952092  2
-     68     60     67     87     4  180.0000000  7.2952092  2
-    142    165    141    143     4  180.0000000  7.2952092  2
-    107    106    108    111     4  180.0000000  7.2952092  2
-     10     33      9     11     4  180.0000000  7.2952092  2
-     67     63     68     86     4  180.0000000  7.2952092  2
-     98    121     97     99     4  180.0000000  7.2952092  2
-     12    178     11     13     4  180.0000000  18.0130916  2
-     59     60     69     50     4  180.0000000  7.2952092  2
-      4     29      3      5     4  180.0000000  7.2952092  2
-     69     88     47     59     4  180.0000000  7.2952092  2
-     58     55     78     51     4  180.0000000  7.2952092  2
-      9      8     10     32     4  180.0000000  7.2952092  2
-    103    104    113     94     4  180.0000000  7.2952092  2
-     19     23     18     20     4  180.0000000  7.2952092  2
-     12     11     13    178     4  180.0000000  18.0130916  2
-    137    162    136    138     4  180.0000000  7.2952092  2
-    137    136    138    162     4  180.0000000  7.2952092  2
-      5      6     30      4     4  180.0000000  7.2952092  2
-    147    148    157    138     4  180.0000000  7.2952092  2
-    155    156    174    151     4  180.0000000  7.2952092  2
-     68     87     60     67     4  180.0000000  7.2952092  2
-    113    103    132     91     4  180.0000000  7.2952092  2
-    138    139    147    137     4  180.0000000  7.2952092  2
-     17     35     16     18     4  180.0000000  7.2952092  2
-      3     25      2      4     4  180.0000000  7.2952092  2
-    136    135    137    161     4  180.0000000  7.2952092  2
-    148    156    147    149     4  180.0000000  7.2952092  2
-    138    137    139    147     4  180.0000000  7.2952092  2
      58     78     51     55     4  180.0000000  7.2952092  2
-     55     56     58     54     4  180.0000000  7.2952092  2
-     54     55     77     53     4  180.0000000  7.2952092  2
-    141    164    140    142     4  180.0000000  7.2952092  2
-    146    166    139    143     4  180.0000000  7.2952092  2
-     11     12     14     10     4  180.0000000  7.2952092  2
-    157    176    135    147     4  180.0000000  7.2952092  2
-    144    143    145    110     4  180.0000000  7.2952092  2
-     15     16     25      6     4  180.0000000  7.2952092  2
-     99    102     98    100     4  180.0000000  7.2952092  2
-     52     51     53     75     4  180.0000000  7.2952092  2
-    143    146    142    144     4  180.0000000  7.2952092  2
-    140    139    141    163     4  180.0000000  7.2952092  2
-      3      2      4     25     4  180.0000000  7.2952092  2
-      9     10     32      8     4  180.0000000  7.2952092  2
-     22     56     20     41     4  180.0000000  1.7520674  2
-     58     51     55     78     4  180.0000000  7.2952092  2
-     55     58     54     56     4  180.0000000  7.2952092  2
-    105    123    104    106     4  180.0000000  7.2952092  2
-    149    148    150    167     4  180.0000000  7.2952092  2
-    135    136    157    134     4  180.0000000  7.2952092  2
-     54     77     53     55     4  180.0000000  7.2952092  2
-    144    145    110    143     4  180.0000000  7.2952092  2
-    105    106    123    104     4  180.0000000  7.2952092  2
-    104    103    105    112     4  180.0000000  7.2952092  2
-    157    135    147    176     4  180.0000000  7.2952092  2
-      4      3      5     29     4  180.0000000  7.2952092  2
-     47     69     46     48     4  180.0000000  7.2952092  2
+    102    122     95     99     4  180.0000000  7.2952092  2
+     97    120     96     98     4  180.0000000  7.2952092  2
+     56     57     22     55     4  180.0000000  7.2952092  2
+     66    100     64     85     4  180.0000000  1.7520674  2
      47     46     48     69     4  180.0000000  7.2952092  2
-    113     91    103    132     4  180.0000000  7.2952092  2
-    142    143    165    141     4  180.0000000  7.2952092  2
-    113    132     91    103     4  180.0000000  7.2952092  2
-      8     31      7      9     4  180.0000000  7.2952092  2
-     53     54     76     52     4  180.0000000  7.2952092  2
-    104    105    112    103     4  180.0000000  7.2952092  2
-     50     49     51     59     4  180.0000000  7.2952092  2
-    111    112    130    107     4  180.0000000  7.2952092  2
-     66     85    100     64     4  180.0000000  1.7520674  2
-    139    138    140    146     4  180.0000000  7.2952092  2
-      3      4     25      2     4  180.0000000  7.2952092  2
+    102     99    122     95     4  180.0000000  7.2952092  2
     151    152    155    150     4  180.0000000  7.2952092  2
-     63     67     62     64     4  180.0000000  7.2952092  2
+     58     51     55     78     4  180.0000000  7.2952092  2
+     98     97     99    121     4  180.0000000  7.2952092  2
+     10      9     11     33     4  180.0000000  7.2952092  2
+    111    107    112    130     4  180.0000000  7.2952092  2
+    138    137    139    147     4  180.0000000  7.2952092  2
+    155    156    174    151     4  180.0000000  7.2952092  2
+     47     69     46     48     4  180.0000000  7.2952092  2
+     16     17     24     15     4  180.0000000  7.2952092  2
+     48     49     73     47     4  180.0000000  7.2952092  2
+     61     62     79     60     4  180.0000000  7.2952092  2
+    144    143    145    110     4  180.0000000  7.2952092  2
+     67     63     68     86     4  180.0000000  7.2952092  2
+     50     51     59     49     4  180.0000000  7.2952092  2
+    107    111    106    108     4  180.0000000  7.2952092  2
+      4      3      5     29     4  180.0000000  7.2952092  2
      55     54     56     58     4  180.0000000  7.2952092  2
-    100    101     66     99     4  180.0000000  7.2952092  2
-     62     63     80     61     4  180.0000000  7.2952092  2
-     10     11     33      9     4  180.0000000  7.2952092  2
-    151    150    152    155     4  180.0000000  7.2952092  2
-     60     68     59     61     4  180.0000000  7.2952092  2
-     24     23     43     16     4  180.0000000  7.2952092  2
-     62     80     61     63     4  180.0000000  7.2952092  2
-    154    152    173    187     4  180.0000000  1.7520674  2
+     99    102     98    100     4  180.0000000  7.2952092  2
+     23     42     19     24     4  180.0000000  7.2952092  2
+    105    104    106    123     4  180.0000000  7.2952092  2
+    137    138    162    136     4  180.0000000  7.2952092  2
+     67     86     63     68     4  180.0000000  7.2952092  2
+     54     77     53     55     4  180.0000000  7.2952092  2
+     95     94     96    102     4  180.0000000  7.2952092  2
+    156    148    155    175     4  180.0000000  7.2952092  2
+     24     43     16     23     4  180.0000000  7.2952092  2
+    139    140    146    138     4  180.0000000  7.2952092  2
+    104    103    105    112     4  180.0000000  7.2952092  2
+     68     67     87     60     4  180.0000000  7.2952092  2
+    143    142    144    146     4  180.0000000  7.2952092  2
+      4     29      3      5     4  180.0000000  7.2952092  2
+     61     60     62     79     4  180.0000000  7.2952092  2
+     63     64     67     62     4  180.0000000  7.2952092  2
+      7      6      8     14     4  180.0000000  7.2952092  2
 
 
 [ moleculetype ]

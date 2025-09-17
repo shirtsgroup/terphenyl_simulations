@@ -106,6 +106,8 @@ def build_foldamer(job):
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def parameterize_foldamer(job):
+    tm = terphenyl_simulations.topology_manager.TopologyManager()
+    print(tm.topology_dictionary)
     mol_file = job.doc["foldamer_name"] + ".mol"
     pdb_file = job.doc["foldamer_name"] + ".pdb"
     top_generator = terphenyl_simulations.build.MoleculeTopologyGenerator(

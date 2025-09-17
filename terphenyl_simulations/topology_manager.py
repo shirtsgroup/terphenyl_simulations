@@ -229,6 +229,7 @@ class TopologyManager:
 
 
     def add_force_field(self, ff_file, build_file, label):
+        print("Addiing force-field", ff_file, "to TopologyManager...")
         build_file_id = self.get_entry_dir_id(build_file)
         # Save files internally
         label_directory = os.path.join(self.topology_dir, build_file_id, label)

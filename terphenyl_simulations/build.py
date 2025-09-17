@@ -264,7 +264,7 @@ class MoleculeTopologyGenerator:
 
         if ff_method in self._ff_generation_methods.keys():
             self.ff_generator = self._ff_generation_methods[ff_method](
-                molecule_file, pdb_file, path=self.path, ff_str=ff_name, build_file = self.build_file
+                molecule_file, pdb_file, path=self.path, ff_str=ff_name, build_file = self.build_file, topology_manager = self.topology_manager
             )
         else:
             warnings.warn(
@@ -296,7 +296,10 @@ class MoleculeTopologyGenerator:
             )
             if self.ff_method == "bespoke":
                 print("Bespoke parameters detected, re-generating force-field offxml...")
-                self.topology_manager.get_force_field(self.build_file, self.topology_label, self.path)
+                if self.topology_manager.check_file_type(self.build_file, self.topology_label, "offxml"):
+                    self.topology_manager.get_force_field(self.build_file, self.topology_label, self.path)
+                else:
+                    self.assign_parameters()
         else:
             self.assign_parameters()
 
@@ -304,6 +307,7 @@ class MoleculeTopologyGenerator:
         self.md_engine = md_engine_object
 
     def assign_parameters(self):
+        # Need to pass on existing topology manager to keep track of added strucutres/ff files
         top_file, gro_file, sdf_file = self.ff_generator.assign_parameters()
         self.top_file = top_file
         self.gro_file = gro_file
@@ -361,6 +365,7 @@ class SystemTopologyGenerator:
                 path=self.path,
                 force_field_strings = ff_names,
                 ff_id=ff_method,
+                topology_manager = self.topology_manager
             )
         else:
             print(
