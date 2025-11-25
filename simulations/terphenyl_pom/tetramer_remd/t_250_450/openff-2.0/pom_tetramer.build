@@ -1,5 +1,5 @@
 structure_file : pom_tetramer
-foldamer_smile : COc3ccc(c1cccc(C=O)c1)c(c2ccc([C@H](C)N)cc2)c3
+foldamer_smile : COc3ccc(c1cccc(C=O)c1)c(c2ccc([C@@H](C)N)cc2)c3
 upper_connect : 33
 lower_connect : 42
 residue_name : POM

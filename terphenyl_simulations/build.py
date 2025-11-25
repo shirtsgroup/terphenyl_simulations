@@ -397,6 +397,7 @@ class SystemTopologyGenerator:
             self.gro_file = self.topology_manager.get_structure(
                 self.build_file, self.label, self.path, filetype="gro"
             )
+            self.minimize()
         else:
             self.assign_parameters() 
             self.minimize()
