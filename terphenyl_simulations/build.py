@@ -119,7 +119,7 @@ class FoldamerBuilder:
                     self.chain.rotate_dihedral(bond[0:2], adjust)
 
                     # Minimize after each adjustment
-                    # self.chain.energy_minimize(forcefield="MMFF94")
+                    self.chain.energy_minimize(forcefield="MMFF94")
 
 
         self.chain.save("test.pdb", overwrite=True)
