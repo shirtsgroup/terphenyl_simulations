@@ -1,5 +1,5 @@
 structure_file : pmp_tetramer
-foldamer_smile : COc3cc(c1ccc(C=O)cc1)cc(c2ccc([C@H](C)N)cc2)c3
+foldamer_smile : COc3cc(c1ccc(C=O)cc1)cc(c2ccc([C@@H](C)N)cc2)c3
 upper_connect : 31
 lower_connect : 42
 residue_name : PMP

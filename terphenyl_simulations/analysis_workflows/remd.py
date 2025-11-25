@@ -23,7 +23,6 @@ warnings.filterwarnings("ignore")
 
 # Initialize Signac Project
 
-
 def signac_init():
     # Open parameter file and create a list of statepoints to define
     simulation_statepoints = []
