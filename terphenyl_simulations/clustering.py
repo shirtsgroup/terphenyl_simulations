@@ -45,23 +45,6 @@ def DBSCAN_clustering(
     print("Identified", len(cluster_ids), "cluster(s)!")
     return dbscan, labels
 
-def HDBSCAN_clustering(
-    rmsd_matrix, min_cluster_size, alpha = 1, parallel=True, metric="precomputed"
-):
-
-    # Create HDBSCAN object
-    # print("Running DBSCAN clustering...")
-    hdbscan = DBSCAN(
-        alpha = alpha,
-        metric='precomputed'
-    )
-    hdbscan.fit(rmsd_matrix)
-
-    labels = hdbscan.labels_
-    cluster_ids = np.unique(labels)
-    print("Identified", len(cluster_ids), "cluster(s)!")
-    return hdbscan, labels
-
 def write_medoids_to_file(
     labels,
     sil_scores,
@@ -503,8 +486,6 @@ def HDBSCAN_clustering(
     sil_scores = metrics.silhouette_samples(rmsd_matrix, labels)
     write_clusters_to_file(labels, write_traj_object, output_dir=output_dir)
     write_medoids_to_file(labels, sil_scores, write_traj_object, output_dir=output_dir)
-
-
 
 
 

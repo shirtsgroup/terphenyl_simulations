@@ -14,10 +14,10 @@ from flow import FlowProject
 from MDAnalysis import Universe
 import terphenyl_simulations
 from natsort import natsorted
-from tqdm import tqdm
 import mdtraj
 from terphenyl_simulations.utils import replace_all_pattern, get_solvent_structure_file
 from terphenyl_simulations.analysis_workflows.labels import *
+from terphenyl_simulations.observables import get_torsions
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -268,7 +268,7 @@ def apply_pbcs(job):
 
 @FlowProject.pre(lambda job: os.path.exists(job.fn("sim0/production_npt.whole.xtc")))
 @FlowProject.pre(lambda job: shutil.which("gmx"))
-@FlowProject.post(lambda job: os.path.isdir(job.fn("clustering_output")))
+@FlowProject.post(lambda job: os.path.isdir(job.fn("hdbscan_clustering_output")))
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def cluster_trajectory(job):
@@ -298,9 +298,76 @@ def cluster_trajectory(job):
         simulation_trajectories[:n_lowest_replicas],
         top_file,
         select_string,
+        clustering_kwargs = {"min_cluster_size" : 200, "alpha" : 1.0, "metric" : "precomputed"},
         frame_start = 2000,
         frame_stride=5
     )
+
+
+@FlowProject.pre.after(cluster_trajectory)
+@FlowProject.post(lambda job: os.path.isdir(job.fn("cluster_torsion_plots")))
+@FlowProject.operation(directives={"fork" : True})
+@cd_to_job_dir
+def plot_remd_torsions_clusters(job):
+    
+    # Load HDBSCAN clustering trajectories
+    if not os.path.exists("hdbscan_clustering_output"):
+        print("Unable to find HDBSCAN output, please run clustering first...")
+        return
+
+    # Load cluster trajectories
+    medoid_files = natsorted(glob.glob("hdbscan_clustering_output/medoid_*.gro"))
+    cluster_files = [medoid.replace("medoid", "cluster") for medoid in medoid_files]
+    cluster_trajs = [
+        mdtraj.load(cluster_file, top=medoid_file) for cluster_file, medoid_file in zip(cluster_files, medoid_files)
+        ]
+
+    # Get torsion from torsion.yml file
+    with open("torsions.yml", "r") as stream:
+        monomer_torsions = yaml.safe_load(stream)
+
+
+    # Analyze and plot torsions for each cluster
+    output_dir = "cluster_torsion_plots"
+    terphenyl_simulations.utils.make_path(output_dir)
+    cluster_mode_torsions = [{} for _ in range(len(cluster_trajs))]
+    for torsion_type in monomer_torsions["torsions"].keys():
+        print("Working on", torsion_type, "torsion...")
+        torsion_atom_ids = terphenyl_simulations.utils.get_torsion_atom_ids(
+            monomer_torsions["torsions"][torsion_type],
+            monomer_torsions["offset"],
+            job.doc["build_parameters"]["foldamer_length"],
+        )
+        for i, cluster_traj in enumerate(tqdm(cluster_trajs)):
+            # Get torsion data for cluster
+            torsions = get_torsions(cluster_traj, torsion_atom_ids)
+            hist, bin_edges = np.histogram(180 / np.pi * np.array(torsions), bins=100, range=(-180, 180), density = True)
+            max_density_index = np.where(hist == np.max(hist))[0][0]
+            print("Highest Probability Bin:", np.mean(bin_edges[max_density_index:max_density_index+1]))
+
+            # Save mode torsion for cluster
+            cluster_mode_torsions[i][torsion_type] = float(np.mean(bin_edges[max_density_index:max_density_index+1]))
+
+
+        # Plot cluster torsion distribution 
+        terphenyl_simulations.plotting.plot_torsions_distributions(
+            cluster_trajs,
+            torsion_atom_ids,
+            torsion_type + "Torsion (radians)",
+            os.path.join(output_dir, torsion_type + "_clusters"),
+            torsion_type + " Torsion Plot",
+            figsize=[5, 5],
+            legend = ["Cluster " + str(i) for i in range(len(cluster_trajs))],
+            cmap = "tab10"
+        )
+
+    # Save mode torsion to file
+    for i, mode_torsions in enumerate(cluster_mode_torsions):
+        print(mode_torsions)
+        with open(os.path.join(output_dir, f'torsions_cluster_{i}.yml'), "w") as f:
+            yaml.dump(mode_torsions, f, default_flow_style=False)
+    
+
 
 @FlowProject.pre(lambda job: os.path.exists(job.fn("sim0/production_npt.whole.xtc")))
 @FlowProject.post(lambda job: os.path.isdir(job.fn("torsion_plots")))
@@ -335,6 +402,7 @@ def plot_remd_torsion_distributions(job):
             job.doc["build_parameters"]["foldamer_length"],
         )
 
+        # Plot cluster torsion distributions
         terphenyl_simulations.plotting.plot_torsions_distributions(
             remd_trajs,
             torsion_atom_ids,

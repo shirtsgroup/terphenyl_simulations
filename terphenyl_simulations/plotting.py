@@ -123,6 +123,7 @@ def plot_torsions_distributions(
     figsize=None,
     cbar_params=None,
     entropy=False,
+    cmap = "plasma"
 ):
     """
     Function for plotting 1D torsion distributions using MDTraj objects
@@ -160,7 +161,7 @@ def plot_torsions_distributions(
 
     # Setup figure
     plt.figure(dpi=300)
-    sns.set_palette("plasma", n_colors=len(traj_obj_list))
+    sns.set_palette(cmap, n_colors=len(traj_obj_list))
 
     # Bins and centers for distributuion
     bin_edges = np.linspace(-180, 180, n_bins + 1)
@@ -187,7 +188,7 @@ def plot_torsions_distributions(
         plt.legend(legend)
 
     if cbar_params is not None:
-        colormap = plt.cm.get_cmap("plasma")
+        colormap = plt.cm.get_cmap(cmap)
         sm = plt.cm.ScalarMappable(cmap=colormap)
         sm.set_clim(vmin=cbar_params[0], vmax=cbar_params[1])
         cbar = fig.colorbar(sm, ax = fig.axes[0])

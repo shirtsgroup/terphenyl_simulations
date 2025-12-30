@@ -331,7 +331,6 @@ def get_torsion_atom_ids(torsion_base_index, offset, n_residues):
     for i in range(n_residues):
         torsion_atom_ids.append(torsion_base_index + offset * i)
 
-    print(torsion_atom_ids)
     return torsion_atom_ids
 
 def replace_all_pattern(pattern, replace, file):
