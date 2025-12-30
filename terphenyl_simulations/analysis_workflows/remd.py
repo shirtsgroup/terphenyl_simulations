@@ -298,20 +298,9 @@ def cluster_trajectory(job):
         simulation_trajectories[:n_lowest_replicas],
         top_file,
         select_string,
-<<<<<<< HEAD
-        n_min_samples=40,
-        n_eps=40,
-        n_processes=32,
-        prefix="grid_search",
-        eps_limits=[0.01, 0.2],
-        min_sample_limits=[0.005, 0.1],
-        plot_filename="ss.png",
-        frame_stride=1,
-=======
         clustering_kwargs = {"min_cluster_size" : 200, "alpha" : 1.0, "metric" : "precomputed"},
         frame_start = 2000,
         frame_stride=5
->>>>>>> 2be66a22a8d220085fcb0dd1e44d7d7e55ea80c8
     )
 
 
@@ -413,10 +402,7 @@ def plot_remd_torsion_distributions(job):
             job.doc["build_parameters"]["foldamer_length"],
         )
 
-<<<<<<< HEAD
-=======
         # Plot cluster torsion distributions
->>>>>>> 2be66a22a8d220085fcb0dd1e44d7d7e55ea80c8
         terphenyl_simulations.plotting.plot_torsions_distributions(
             remd_trajs,
             torsion_atom_ids,
