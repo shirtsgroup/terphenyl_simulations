@@ -61,6 +61,18 @@ class TopologyManager:
         # That are not present in filesystem
         for key in topology_keys:
             if key not in topology_entries:
+                print("Removing", key, "from TopologyManager...")
+                del self.topology_dictionary[key]
+                continue
+            # Check if labels are present too
+            label_entries = os.listdir(os.path.join(self.topology_dir, key))
+            for label in list(self.topology_dictionary[key].keys()):
+                if label not in label_entries:
+                    print("Removing label", label, "from", key, "TopologyManager entry...")
+                    del self.topology_dictionary[key][label]
+            # If no labels are under build_id, remove it
+            if len(self.topology_dictionary[key].keys()) == 0:
+                print("Removing", key, "from TopologyManager...")
                 del self.topology_dictionary[key]
 
     def get_build_json(self, build_file):
@@ -72,16 +84,29 @@ class TopologyManager:
 
     def get_entry_dir_id(self, build_file):
         build_json = self.get_build_json(build_file)
-        unique_dir_str = str(uuid.uuid5(uuid.NMESPACE_X500, str(build_json)))
+        unique_dir_str = str(uuid.uuid5(uuid.NAMESPACE_X500, str(build_json)))
         unique_dir = "".join([a for a in unique_dir_str if a != "-"])
         return unique_dir
 
     def check_file_type(self, build_file, label, filetype):
         build_file_id = self.get_entry_dir_id(build_file)
-        files = glob.glob(
-            os.path.join(self.topology_dir, build_file_id, label, "*." + filetype)
-        )
-        return len(files) > 0
+        # See if build_file_id exists
+        if build_file_id in self.topology_dictionary.keys() and \
+            os.path.isdir(os.path.join(self.topology_dir, build_file_id)):
+                # See if label exists
+                if label in self.topology_dictionary[build_file_id].keys() and \
+                    os.path.isdir(os.path.join(self.topology_dir, build_file_id, label)):
+
+                    # Aggregate all files from dictionary entry
+                    files = []
+                    for ftype in ["structure_files", "topology_files", "force_field_files"]:
+                        files += self.topology_dictionary[build_file_id][label][ftype]
+                    
+                    # Check if files are present in filesystem
+                    files = [file for file in files if os.path.isfile(os.path.join(self.topology_dir, build_file_id, label, file))]
+                    return filetype in [f.split(".")[-1] for f in files] 
+        # If file id or label or filetype is not present return false
+        return False
 
     def add_buildfile_entry(self, build_file):
         print("Adding", build_file, "to TopologyManager...")
@@ -94,23 +119,29 @@ class TopologyManager:
         # Generate unique key for JSON file
 
         output_dir = os.path.join(self.topology_dir, build_file_id)
-        os.makedirs(output_dir)
+        if not os.path.isdir(output_dir):
+            os.makedirs(output_dir)
         self.save()
 
     def add_entry_label(self, build_file, label):
         # Add label to entry
+        print("Adding label", label, "to", build_file)
         build_file_key = self.get_entry_dir_id(build_file)
 
-        self.topology_dictionary[build_file_key][label] = {
-            "structure_files": [],
-            "topology_files": [],
-            "force_field_files" : [],
-        }
+        if label not in self.topology_dictionary[build_file_key].keys():
+            self.topology_dictionary[build_file_key][label] = {
+                "structure_files": [],
+                "topology_files": [],
+                "force_field_files" : [],
+            }
 
-        # Add directory to local storage
-        label_dir = os.path.join(self.topology_dir, build_file_key, label)
-        os.makedirs(label_dir)
-        self.save()
+            # Add directory to local storage
+            label_dir = os.path.join(self.topology_dir, build_file_key, label)
+            if not os.path.isdir(label_dir):
+                os.makedirs(label_dir)
+            self.save()
+        else:
+            print("Label", label, "is already defined for", build_file)
 
     def add_structure(self, structure_file, build_file, label):
         build_file_id = self.get_entry_dir_id(build_file)
@@ -136,6 +167,7 @@ class TopologyManager:
 
     def get_structure(self, build_file, label, path, filetype=None):
         build_file_id = self.get_entry_dir_id(build_file)
+
         # Get most recently stored file
         if filetype is None:
             database_file = self.topology_dictionary[build_file_id][label][
@@ -159,6 +191,7 @@ class TopologyManager:
 
     def add_topology(self, topology_file, build_file, label):
         build_file_id = self.get_entry_dir_id(build_file)
+
         # Save files internally
         label_directory = os.path.join(self.topology_dir, build_file_id, label)
         stored_filename = os.path.join(label_directory, topology_file.split("/")[-1])
@@ -196,6 +229,7 @@ class TopologyManager:
 
 
     def add_force_field(self, ff_file, build_file, label):
+        print("Addiing force-field", ff_file, "to TopologyManager...")
         build_file_id = self.get_entry_dir_id(build_file)
         # Save files internally
         label_directory = os.path.join(self.topology_dir, build_file_id, label)

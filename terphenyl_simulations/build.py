@@ -8,6 +8,7 @@ import warnings
 from openbabel import openbabel
 from mbuild import load
 from mbuild.lib.recipes.polymer import Polymer
+from mbuild.utils.geometry import calc_dihedral
 from openff.toolkit import ForceField
 from openff.toolkit.topology import Molecule, Topology
 from openff.interchange import Interchange
@@ -16,7 +17,7 @@ from openff.units import unit
 from .assign_parameters import FoldamerOFFDefault, FoldamerOFFBespoke, SystemOFFDefault
 from .gromacs_wrapper import GromacsWrapper
 from .topology_manager import TopologyManager
-from .utils import ROOT_DIR, replace_all_pattern, make_path, renumber_pdb_atoms
+from .utils import ROOT_DIR, replace_all_pattern, make_path, renumber_pdb_atoms, get_solvent_structure_file
 
 
 class FoldamerBuilder:
@@ -48,7 +49,8 @@ class FoldamerBuilder:
 
     def get_foldamer(self):
         # Check DB of entries first
-        if self.topology_manager.check_file_type(self.build_file, self.label, "pdb"):
+        if self.topology_manager.check_file_type(self.build_file, self.label, "pdb") \
+             and self.topology_manager.check_file_type(self.build_file, self.label, "mol"):
             print("Using database structure_file...")
             self.topology_manager.get_structure(
                 self.build_file, self.label, self.path, filetype="pdb"
@@ -59,6 +61,7 @@ class FoldamerBuilder:
         else:
             print("Building Foldamer from", self.build_file + "...")
             self.build_foldamer()
+            self.fix_peptide_bonds()
             self.write_pdb()
             self.write_mol()
 
@@ -99,10 +102,27 @@ class FoldamerBuilder:
 
             if (atom_1.name == "C" and atom_2.name == "N") or (atom_2.name == "C" and atom_1.name == "N"):
                 if atom_1.n_direct_bonds == 3 and atom_2.n_direct_bonds == 3:
+                    bonded_1 = list(atom_1.direct_bonds())
+                    n_bonded_1 = [atom.n_direct_bonds for atom in bonded_1]
+                    bonded_2 = list(atom_2.direct_bonds())
+                    n_bonded_2 = [atom.n_direct_bonds for atom in bonded_2]
+
+                    # Dihedral between singly bonded H and O
+                    hydro = bonded_1[n_bonded_1.index(1)]
+                    carboxyl = bonded_2[n_bonded_2.index(1)]
+
+                    # Get dihedral of peptide bond
+                    dihe = calc_dihedral(hydro.pos, atom_1.pos, atom_2.pos, carboxyl.pos)
+                    adjust = np.pi - dihe
+
                     # This corrects dihedrals to be trans
-                    self.chain.rotate_dihedral(bond[0:2], np.pi + (50 * np.pi / 180))
+                    self.chain.rotate_dihedral(bond[0:2], adjust)
+
+                    # Minimize after each adjustment
+                    self.chain.energy_minimize(forcefield="MMFF94")
 
 
+        self.chain.save("test.pdb", overwrite=True)
         self.chain.energy_minimize(forcefield="MMFF94")
 
         # Change residue names in chain object
@@ -110,6 +130,9 @@ class FoldamerBuilder:
             label.name = self.build_params["residue_name"]
         for label in self.chain.labels["Compound"]:
             label.name = "CAP"
+
+    def fix_peptide_bonds(self):
+        pass
 
     def write_pdb(self):
         filename = os.path.join(self.path, self.build_params["structure_file"] + ".pdb")
@@ -134,44 +157,51 @@ class FoldamerBuilder:
 
 
 class SystemBuilderOpenFF:
-    """ """
+    """
+    """
 
     def __init__(
         self,
-        solute_sdf,
-        solvent_smiles,
+        solute_pdb,
+        solvent_id,
         build_file_yml,
         path="",
-        force_field="openff-2.0.0.offxml",
         topology_manager=TopologyManager(),
+        label = "system"
     ):
         self.build_file = build_file_yml
-        self.force_field = ForceField(force_field)
         self.topology_manager = topology_manager
-        self.topology_label = "system"
+        self.label = label
         self.path = path
         with open(build_file_yml, "r") as f:
             self.build_params = yaml.safe_load(f)
 
-        self.solute = Molecule.from_file(solute_sdf)
-        self.solvent = Molecule.from_smiles(solvent_smiles)
+        self.filename = self.build_params["structure_file"] + "_" + self.label
+
+        self.solute = Molecule.from_file(solute_pdb)
+        self.solvent = Molecule.from_file(get_solvent_structure_file(solvent_id))
         self.md_engine = GromacsWrapper()
 
-    def get_system_topology(self):
+    def get_system_structure(self):
         if self.topology_manager.check_file_type(
-            self.build_file, self.topology_label, "top"
+            self.build_file, self.label, "gro"
+        ) and self.topology_manager.check_file_type(
+            self.build_file, self.label, "pdb"
         ):
-            self.top_file = self.topology_manager.get_topology(
-                self.build_file, self.topology_label, self.path
-            )
+            print("Using database structure_file...")   
             self.gro_file = self.topology_manager.get_structure(
-                self.build_file, self.topology_label, self.path, filetype="gro"
+                self.build_file, self.label, self.path, filetype="gro"
+            )
+            self.pdb_file = self.topology_manager.get_structure(
+                self.build_file, self.label, self.path, filetype="pdb"
             )
         else:
-            self.build_system_topology()
+            self.build_system()
+            self.write_pdb()
+            self.write_gro()
 
-    def build_system_topology(self):
-        self.topology = pack_box(
+    def build_system(self):
+        self.system = pack_box(
             molecules=[self.solute, self.solvent],
             number_of_copies=[1, self.build_params["system"]["n_solvent"]],
             box_vectors=self.build_params["system"]["box_size"]
@@ -179,30 +209,31 @@ class SystemBuilderOpenFF:
             * unit.angstrom,
         )
 
-        interchange = Interchange.from_smirnoff(
-            force_field=self.force_field,
-            topology=self.topology,
-            charge_from_molecules=[self.solute],
-        )
-        self.gro_file = self.build_params["structure_file"] + "_system.gro"
-        self.top_file = self.build_params["structure_file"] + "_system.top"
-        interchange.to_gro(self.gro_file)
-        interchange.to_top(self.top_file)
+    def write_pdb(self):
+        self.pdb_file = self.filename + ".pdb"
+        self.system.to_file(self.pdb_file)
         self.topology_manager.add_structure(
-            self.gro_file, self.build_file, self.topology_label
-        )
-        self.topology_manager.add_topology(
-            self.top_file, self.build_file, self.topology_label
+            self.pdb_file, self.build_file, label = self.label
         )
 
-    def minimize_system(self):
-        centered_gro = self.gro_file.split(".gro")[0] + "_box.gro"
-        self.md_engine.center_configuration(
-            self.gro_file,
-            centered_gro,
+    def write_gro(self):
+        self.gro_file = self.filename + ".gro"
+        gmx = GromacsWrapper()
+        gmx.edit_conf(f = self.filename + ".pdb", o = self.filename + ".gro")
+        self.topology_manager.add_structure(
+            self.gro_file, self.build_file, label = self.label
         )
-        self.md_engine.minimize(centered_gro, self.top_file, prefix="em_solvated")
-        self.gro_file = "em_solvated.gro"
+
+
+
+    # def minimize_system(self):
+    #     centered_gro = self.gro_file.split(".gro")[0] + "_box.gro"
+    #     self.md_engine.center_configuration(
+    #         self.gro_file,
+    #         centered_gro,
+    #     )
+    #     self.md_engine.minimize(centered_gro, self.top_file, prefix="em_solvated")
+    #     self.gro_file = "em_solvated.gro"
 
 
 # I probably best to get rid of this class
@@ -222,17 +253,18 @@ class MoleculeTopologyGenerator:
         self.build_file = build_file
         self.topology_manager = topology_manager
         self.topology_label = topology_label
+        self.ff_method = ff_method
         if not os.path.isdir(self.path):
             make_path(path)
 
         self._ff_generation_methods = {
-            "openff-foldamer": FoldamerOFFDefault,
-            "bespoke-foldamer": FoldamerOFFBespoke,
+            "openff": FoldamerOFFDefault,
+            "bespoke": FoldamerOFFBespoke,
         }
 
         if ff_method in self._ff_generation_methods.keys():
             self.ff_generator = self._ff_generation_methods[ff_method](
-                molecule_file, pdb_file, path=self.path, ff_str=ff_name, build_file = self.build_file
+                molecule_file, pdb_file, path=self.path, ff_str=ff_name, build_file = self.build_file, topology_manager = self.topology_manager
             )
         else:
             warnings.warn(
@@ -242,7 +274,7 @@ class MoleculeTopologyGenerator:
                 + "force field parameter generation methods. Please pick from:\n"
                 + " ".join(self._ff_generation_methods.keys())
             )
-            sys.exit()
+            sys.exit(1)
 
         # Define other attributes populated by other functions
         self.md_engine = None
@@ -262,6 +294,12 @@ class MoleculeTopologyGenerator:
             self.sdf_file = self.topology_manager.get_structure(
                 self.build_file, self.topology_label, self.path, filetype="sdf"
             )
+            if self.ff_method == "bespoke":
+                print("Bespoke parameters detected, re-generating force-field offxml...")
+                if self.topology_manager.check_file_type(self.build_file, self.topology_label, "offxml"):
+                    self.topology_manager.get_force_field(self.build_file, self.topology_label, self.path)
+                else:
+                    self.assign_parameters()
         else:
             self.assign_parameters()
 
@@ -269,6 +307,7 @@ class MoleculeTopologyGenerator:
         self.md_engine = md_engine_object
 
     def assign_parameters(self):
+        # Need to pass on existing topology manager to keep track of added strucutres/ff files
         top_file, gro_file, sdf_file = self.ff_generator.assign_parameters()
         self.top_file = top_file
         self.gro_file = gro_file
@@ -295,31 +334,41 @@ class MoleculeTopologyGenerator:
 class SystemTopologyGenerator:
     def __init__(
         self,
-        molecule_files,
-        charge_files,
-        pdb_file,
+        system_pdb,
+        system_molecule_files,
+        system_charge_files,
         output_file,
         ff_method,
+        build_file,
         path="",
-        ff_name="openff-2.0.0.offxml",
+        ff_names=["openff-2.0.0"],
         topology_manager=TopologyManager(),
     ):
+        self.build_file = build_file
         self.label = "system"
         self.path = path
         self.name = output_file
+        self.topology_manager = topology_manager
         if not os.path.isdir(self.path):
             make_path(path)
 
         self._ff_generation_methods = {
-            "openff-system": SystemOFFDefault,
+            "openff": SystemOFFDefault,
+            "bespoke" : SystemOFFDefault,
         }
 
         if ff_method in self._ff_generation_methods.keys():
             self.ff_generator = self._ff_generation_methods[ff_method](
-                molecule_files, charge_files, pdb_file, path=self.path, ff_str=ff_name
+                system_molecule_files,
+                system_charge_files,
+                system_pdb, self.name,
+                path=self.path,
+                force_field_strings = ff_names,
+                ff_id=ff_method,
+                topology_manager = self.topology_manager
             )
         else:
-            warnings.warn(
+            print(
                 "WARNING: "
                 + ff_method
                 + " is not one of the available "
@@ -343,17 +392,17 @@ class SystemTopologyGenerator:
                 self.topology_manager.topology_object + "...",
             )
             self.top_file = self.topology_manager.get_topology(
-                self.build_file, self.topology_label, self.path
+                self.build_file, self.label, self.path
             )
             self.gro_file = self.topology_manager.get_structure(
-                self.build_file, self.topology_label, self.path
+                self.build_file, self.label, self.path, filetype="gro"
             )
-        else:
-            self.assign_parameters()
             self.minimize()
-            self.topology_manager.add_topology(self.top_file)
-            self.topology_manager.add_structure(self.gro_file)
-            self.topology_manager.add_structure(self.em_gro_file)
+        else:
+            self.assign_parameters() 
+            self.minimize()
+            self.topology_manager.add_structure(self.gro_file, self.build_file, label = self.label)
+            self.topology_manager.add_topology(self.top_file, self.build_file, label = self.label)
 
     def assign_parameters(self):
         top_file, gro_file = self.ff_generator.assign_parameters()
@@ -362,9 +411,8 @@ class SystemTopologyGenerator:
 
     def minimize(self):
         self.md_engine.center_configuration(
-            self.gro_file, self.gro_file.split(".gro") + "_box.gro"
+            self.gro_file, self.gro_file.split(".gro")[0] + "_box.gro"
         )
-        self.gro_file = self.gro_file.split(".gro") + "_box.gro"
-        self.output_file
-        self.md_engine.minimize(self.gro_file, self.top_file)
-        self.em_gro_file = "em_" + self.gro_file
+        self.gro_file = self.gro_file.split(".gro")[0] + "_box.gro"
+        self.md_engine.minimize(self.gro_file, self.top_file, prefix = "em_" + self.label)
+        self.gro_file = "em_" + self.label + ".gro"

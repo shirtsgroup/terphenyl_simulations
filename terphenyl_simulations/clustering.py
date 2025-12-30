@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 from tqdm import tqdm
+from hdbscan import HDBSCAN
 import os
 import shutil as sh
 from sklearn.cluster import DBSCAN
@@ -16,7 +17,7 @@ def construct_rmsd_matrix(traj):
     rmsd_matrix = np.zeros((traj.n_frames, traj.n_frames))
     for i in range(traj.n_frames):
         rmsd = md.rmsd(
-            traj, traj, frame=i, precentered=False, parallel=False
+            traj, traj, frame=i, precentered=False, parallel=True
         )  # RMSD between frame i and j
         rmsd_matrix[i, :] = rmsd
 
@@ -41,9 +42,8 @@ def DBSCAN_clustering(
 
     labels = dbscan.labels_
     cluster_ids = np.unique(labels)
-    # print("Identified", len(cluster_ids), "cluster(s)!")
+    print("Identified", len(cluster_ids), "cluster(s)!")
     return dbscan, labels
-
 
 def write_medoids_to_file(
     labels,
@@ -69,6 +69,8 @@ def write_medoids_to_file(
         prefix = ""
 
     for label in np.unique(labels):
+        if label == -1:
+            continue
         cluster_traj = traj_object[np.where(labels == label)]
         ss_cluster = sil_scores[np.where(labels == label)]
         medoid = cluster_traj[np.argmax(ss_cluster)]
@@ -262,7 +264,6 @@ def torsion_clustering_grid_search(
     # Get max value of first metric
     max_ss = np.nanmax(ss)
     max_indices = list(zip(*np.where(ss == max_ss)))
-    print(max_indices)
 
     print("The maximum avg. silhouette score:", max_ss)
     print(
@@ -289,7 +290,6 @@ def torsion_clustering_grid_search(
     sil_scores = metrics.silhouette_samples(clustering_matrix, labels)
     write_clusters_to_file(labels, write_traj_object, output_dir=output_dir)
     write_medoids_to_file(labels, sil_scores, write_traj_object, output_dir=output_dir)
-
 
 def clustering_grid_search(
     file_list,
@@ -352,7 +352,7 @@ def clustering_grid_search(
     # Grid search for DBSCAN hyperparameters
     max_rmsd = np.max(rmsd_matrix)
     eps_values = np.linspace(eps_limits[0] * max_rmsd, eps_limits[1] * max_rmsd, n_eps)
-    total_frames = traj_object.n_frames
+    total_frames = traj_object.n_frames 
     print("Total Frames:", total_frames)
     min_sample_values = np.linspace(
         min_sample_limits[0] * total_frames,
@@ -363,6 +363,8 @@ def clustering_grid_search(
     min_samples_values = [int(a) for a in min_sample_values]
     ss = np.zeros((len(eps_values), len(min_sample_values)))
     n_clusters = np.zeros((len(eps_values), len(min_sample_values)))
+    print("EPS Range:", eps_values[0], eps_values[-1])
+    print("Min Samples Range:", min_sample_values[0], min_sample_values[-1])
     print("Performing grid search...")
     for i, eps in enumerate(tqdm(eps_values)):
         for j, ms in enumerate(min_samples_values):
@@ -371,31 +373,39 @@ def clustering_grid_search(
             )
             n_clusters[i, j] = len(np.unique(labels))
             if len(np.unique(labels)) > 1:
-                ss[i, j] = metrics.silhouette_score(rmsd_matrix, labels)
+                ss[i, j] = metrics.silhouette_score(rmsd_matrix, labels, metric='precomputed')
             else:
                 ss[i, j] = np.nan
 
+    m1 = ss - np.nanmin(ss) / (np.nanmax(ss) - np.nanmin(ss))
+    m2 = (-n_clusters - np.min(-n_clusters)) / (np.max(-n_clusters) - np.min(-n_clusters))
+
+    combined_metric = np.power(m1, 2) + np.power(m2, 2)
+
     plot_grid_search(
-        ss,
+        combined_metric,
         min_samples_values,
         [round(eps, 2) for eps in eps_values],
         "Min. Samples",
         "$\\epsilon_{DBSCAN}$",
         prefix + "_" + plot_filename,
-        "Avg. Silhouette Score",
+        "Combined metric",
     )
 
     # Get max value of first metric
-    max_ss = np.nanmax(ss)
-    max_indices = list(zip(*np.where(ss == max_ss)))
+    max_metric = np.nanmax(combined_metric)
+    max_indices = list(zip(*np.where(combined_metric == max_metric)))
     print(max_indices)
 
-    print("The maximum avg. silhouette score:", max_ss)
+    print("The maximum avg. metric score:", max_metric)
     print(
         "N Clusters:",
         int(n_clusters[max_indices[0]]),
+        "Metric Score",
+        combined_metric[max_indices[0]],
         "Silhouette Score",
-        ss[max_indices[0]],
+        ss[max_indices[0]]
+        
     )
     print(
         "Eps:",
@@ -414,6 +424,69 @@ def clustering_grid_search(
     sil_scores = metrics.silhouette_samples(rmsd_matrix, labels)
     write_clusters_to_file(labels, write_traj_object, output_dir=output_dir)
     write_medoids_to_file(labels, sil_scores, write_traj_object, output_dir=output_dir)
+
+
+def HDBSCAN_clustering(
+    file_list,
+    top_file,
+    cluster_selection,
+    clustering_kwargs = {"min_cluster_size" : 300, "alpha" : 1.0, "metric" : "precomputed"},
+    frame_start=0,
+    frame_end=-1,
+    frame_stride=1,
+    output_dir="hdbscan_clustering_output",
+    overwrite=True,
+    write_selection=None,
+):
+    if overwrite == False:
+        if os.path.isdir(output_dir):
+            print(
+                "The output directory",
+                output_dir,
+                "already exists. "
+                + "Skipping clustering. If you want to overwrite the existsing "
+                + "clustering ouput, set `overwrite = True`.",
+            )
+            return
+
+    if write_selection is None:
+        write_selection = cluster_selection
+
+    # Load trajectory
+    if type(file_list) == list:
+        traj = md.load(file_list[0], top=top_file)
+        for i in range(1, len(file_list)):
+            tmp_traj = md.load(file_list[i], top=top_file)
+            tmp_traj = tmp_traj[frame_start:frame_end:frame_stride]
+            traj = traj.join(tmp_traj)
+
+    else:
+        traj = md.load(file_list, top=top_file)
+        traj = traj[frame_start:frame_end:frame_stride]
+
+    # Remove solvent
+    top = traj.topology
+    selection = top.select(cluster_selection)
+    traj_object = traj.atom_slice(selection)
+
+    write_selection = top.select(write_selection)
+    write_traj_object = traj.atom_slice(write_selection)
+
+    # Construct RMSD matrix once
+    rmsd_matrix = construct_rmsd_matrix(traj_object)
+
+    plot_RMSD_histogram(rmsd_matrix)
+
+    hdbscan = HDBSCAN(**clustering_kwargs)
+    hdbscan.fit(rmsd_matrix)
+
+    labels = hdbscan.labels_
+
+    # Identify cluster medoids
+    sil_scores = metrics.silhouette_samples(rmsd_matrix, labels)
+    write_clusters_to_file(labels, write_traj_object, output_dir=output_dir)
+    write_medoids_to_file(labels, sil_scores, write_traj_object, output_dir=output_dir)
+
 
 
 def main():

@@ -8,5 +8,6 @@ mdps :
 sim_id : sim
 build_foldamer : pop_tetramer.build
 param_method : bespoke
-n_simulations : 3
+n_simulations : 1
 gromacs_exe : gmx
+system : blackbird

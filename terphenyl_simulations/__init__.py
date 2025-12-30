@@ -15,6 +15,7 @@ import terphenyl_simulations.gromacs_wrapper
 import terphenyl_simulations.utils
 import terphenyl_simulations.remd_utils
 import terphenyl_simulations.topology_manager
+import terphenyl_simulations.analysis_workflows.labels
 
 
 # Handle versioneer

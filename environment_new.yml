@@ -208,7 +208,3 @@ dependencies:
   - mdtraj
   - scikit-learn
   - mdanalysis
-variables:
-  LD_LIBRARY_PATH: /projects/thfo9888/software/anaconda/envs/hs_analysis/lib/:/projects/thfo9888/software/gromacs-2022.5/lib64
-  PATH: /projects/thfo9888/software/anaconda/envs/hs_analysis/bin/:/projects/thfo9888/software/anaconda/envs/hs_analysis/bin:/curc/sw/anaconda3/2022.10/condabin:/usr/lpp/mmfs/bin:/projects/thfo9888/software/gromacs-2022.5/bin:/curc/sw/curc-quota/5.0/bin:/curc/slurm/alpine/scripts:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/thfo9888/bin
-prefix: /projects/thfo9888/software/anaconda/envs/hs_analysis
