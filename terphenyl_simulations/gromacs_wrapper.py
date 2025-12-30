@@ -50,6 +50,13 @@ class GromacsWrapper(MDEngineWrapper):
         process = subprocess.Popen(editconf_call.split(" "))
         process.wait()
 
+    def trjcat(self, **kwargs):
+        editconf_call = self.gmx + " trjcat"
+        for flag, value in kwargs.items():
+            editconf_call += " -" + flag + " " + value
+        process = subprocess.Popen(editconf_call.split(" "))
+        process.wait()
+
     def trjconv(self, inputs = [0], hide_outputs = True, **kwargs):
         stderr = None
         if hide_outputs:

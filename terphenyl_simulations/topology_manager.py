@@ -52,6 +52,8 @@ class TopologyManager:
         with open(self.topology_object, "rb") as fr:
             tmp_dict = pickle.load(fr)
         self.__dict__.update(tmp_dict)
+        if self.topology_dir != os.path.join(ROOT_DIR, "data/topology_manager"):
+            self.topology_dir = os.path.join(ROOT_DIR, "data/topology_manager")
 
         topology_entries = os.listdir(self.topology_dir)
         topology_keys = list(self.topology_dictionary.keys())

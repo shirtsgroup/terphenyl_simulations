@@ -353,6 +353,7 @@ def clustering_grid_search(
     max_rmsd = np.max(rmsd_matrix)
     eps_values = np.linspace(eps_limits[0] * max_rmsd, eps_limits[1] * max_rmsd, n_eps)
     total_frames = traj_object.n_frames
+    print("Total Frames:", total_frames)
     min_sample_values = np.linspace(
         min_sample_limits[0] * total_frames,
         min_sample_limits[1] * total_frames,
