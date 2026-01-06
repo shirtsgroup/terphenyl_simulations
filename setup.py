@@ -77,6 +77,7 @@ setup(
             'bemetad_analysis = terphenyl_simulations.analysis_workflows.bemetad:main',
             'md_analysis = terphenyl_simulations.analysis_workflows.md_temperature:main',
             'remd_workflow = terphenyl_simulations.analysis_workflows.remd:main',
+            'md_workflow = terphenyl_simulations.analysis_workflows.md:main',
             'RMSD_demux = terphenyl_simulations.scripts:RMSD_demux',
             'REMD_merge_trajectories = terphenyl_simulations.scripts:merge_REMD_trajectories',
         ]

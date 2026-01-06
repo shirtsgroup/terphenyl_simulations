@@ -68,7 +68,7 @@ def signac_init():
             simulation_parameters["build_foldamer"],
             job.fn(simulation_parameters["build_foldamer"]),
         )
-        shutil.copy("remd_parameters.yml", job.fn("remd_parameters.yml"))
+        shutil.copy("md_parameters.yml", job.fn("rd_parameters.yml"))
 
         with open(job.fn(simulation_parameters["build_foldamer"]), "r") as f:
             job.doc["build_parameters"] = yaml.safe_load(f)
@@ -122,6 +122,10 @@ def parameterize_foldamer(job):
     job.doc["foldamer_gro"] = top_generator.gro_file
 
 
+@FlowProject.pre.after(parameterize_foldamer)
+@FlowProject.post(
+    lambda job: os.path.exists(job.fn("helix_" + job.doc["foldamer_name"] + ".gro"))
+)
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def set_helix_torsions(job):
@@ -133,7 +137,24 @@ def set_helix_torsions(job):
     with open("torsions.yml", "r") as stream:
         monomer_torsions = yaml.safe_load(stream)
 
+    with open("helix_torsions.yml", "r") as stream:
+        helix_torsions = yaml.safe_load(stream)
 
+    for torsion_type in monomer_torsions.keys():
+        torsion_atom_ids = terphenyl_simulations.utils.get_torsion_atom_ids(
+            monomer_torsions["torsions"][torsion_type],
+            monomer_torsions["offset"],
+            job.doc["build_parameters"]["foldamer_length"],
+        )
+
+        for torsion_id in torsion_atom_ids:
+            ice.set_torsion(torsion_id, helix_torsions[torsion_type])
+            ice.update_internal_coordinates()
+    
+    ice.write_structure("helix_" + job.doc["foldamer_gro"])
+    job.doc["foldamer_gro"] = "helix_" + job.doc["foldamer_gro"]
+
+    
 @FlowProject.pre.after(parameterize_foldamer)
 @FlowProject.post(
     lambda job: os.path.exists(job.fn("em_" + job.doc["foldamer_name"] + ".pdb"))
@@ -222,3 +243,38 @@ def apply_hmr_to_topology(job):
         replace_all_pattern("INITIAL_STRUCTURE", job.doc["system_gro"], submit_file)
         replace_all_pattern("SIMULATION_NAME", job.doc["build_parameters"]["structure_file"], submit_file)
 
+@FlowProject.pre(lambda job: os.path.exists(job.fn("production_npt.gro")))
+@FlowProject.pre(lambda job: os.path.exists(job.fn("production_npt.xtc")))
+@FlowProject.pre(lambda job: shutil.which("gmx"))
+@FlowProject.post(lambda job: os.path.exists(job.fn("production_npt.whole.xtc")))
+@FlowProject.operation(directives={"fork": True})
+@cd_to_job_dir
+def apply_pbcs(job):
+    gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(
+        job.sp["gromacs_exe"]
+    )
+    for simulation_file in glob.glob(os.path.join(replica_dir, "*.xtc")):
+        if "whole.xtc" in simulation_file:
+            continue
+        output_filename = simulation_file.split(".xtc")[0] + ".whole.xtc"
+        tpr_file = simulation_file.split(".xtc")[0] + ".tpr"
+        gmx_wrapper.trjconv(
+            inputs = [0],
+            hide_outputs = False,
+            f = simulation_file,
+            o = output_filename,
+            s = tpr_file,
+            pbc = "whole"
+        )
+
+
+
+def main():
+    if not os.path.isdir("workspace"):
+        subprocess.run("signac init".split(" "))
+        signac_init()
+    FlowProject().main()
+
+
+if __name__ == "__main__":
+    main()
