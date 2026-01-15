@@ -70,6 +70,12 @@ def signac_init():
         )
         shutil.copy("md_parameters.yml", job.fn("rd_parameters.yml"))
 
+        if os.path.exists(simulation_parameters["helix_torsions"]):
+            shutil.copy(
+                simulation_parameters["helix_torsions"],
+                job.fn("helix_torsions.yml"),
+            )
+
         with open(job.fn(simulation_parameters["build_foldamer"]), "r") as f:
             job.doc["build_parameters"] = yaml.safe_load(f)
         job.doc["foldamer_name"] = job.doc["build_parameters"]["structure_file"]
@@ -124,41 +130,8 @@ def parameterize_foldamer(job):
 
 @FlowProject.pre.after(parameterize_foldamer)
 @FlowProject.post(
-    lambda job: os.path.exists(job.fn("helix_" + job.doc["foldamer_name"] + ".gro"))
-)
-@FlowProject.operation(directives={"fork": True})
-@cd_to_job_dir
-def set_helix_torsions(job):
-    internal_coor_editor = InternalCoordinateEditor(
-        job.doc["foldamer_gro"], job.doc["foldamer_topology"]
+    lambda job: os.path.exists(job.fn("em_" + job.doc["foldamer_name"] + ".tpr"))
     )
-
-    # Torsion definitions for first residue
-    with open("torsions.yml", "r") as stream:
-        monomer_torsions = yaml.safe_load(stream)
-
-    with open("helix_torsions.yml", "r") as stream:
-        helix_torsions = yaml.safe_load(stream)
-
-    for torsion_type in monomer_torsions.keys():
-        torsion_atom_ids = terphenyl_simulations.utils.get_torsion_atom_ids(
-            monomer_torsions["torsions"][torsion_type],
-            monomer_torsions["offset"],
-            job.doc["build_parameters"]["foldamer_length"],
-        )
-
-        for torsion_id in torsion_atom_ids:
-            ice.set_torsion(torsion_id, helix_torsions[torsion_type])
-            ice.update_internal_coordinates()
-    
-    ice.write_structure("helix_" + job.doc["foldamer_gro"])
-    job.doc["foldamer_gro"] = "helix_" + job.doc["foldamer_gro"]
-
-    
-@FlowProject.pre.after(parameterize_foldamer)
-@FlowProject.post(
-    lambda job: os.path.exists(job.fn("em_" + job.doc["foldamer_name"] + ".pdb"))
-)
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def minimize_foldamer(job):
@@ -172,16 +145,85 @@ def minimize_foldamer(job):
         job.doc["foldamer_topology"],
         prefix="em_" + job.doc["foldamer_name"],
     )
-    gmx_wrapper.edit_conf(
-        f="em_" + job.doc["foldamer_name"] + ".tpr",
+    gmx_wrapper.trjconv(
+        f="em_" + job.doc["foldamer_name"] + ".gro",
+        s = "em_" + job.doc["foldamer_name"] + ".tpr",
         o="em_" + job.doc["foldamer_name"] + ".pdb",
         conect="yes",
     )
     job.doc["foldamer_gro"] = "em_" + job.doc["foldamer_name"] + ".gro"
     job.doc["foldamer_pdb"] = "em_" + job.doc["foldamer_name"] + ".pdb"
 
-
 @FlowProject.pre.after(minimize_foldamer)
+@FlowProject.post(
+    lambda job: os.path.exists(job.fn("helix_" + job.doc["foldamer_name"] + ".gro"))
+)
+@FlowProject.operation(directives={"fork": True})
+@cd_to_job_dir
+def set_helix_torsions(job):
+    internal_coor_editor = InternalCoordinateEditor(
+        job.doc["foldamer_gro"], "em_" + job.doc["foldamer_name"] + ".tpr",
+    )
+
+    # Torsion definitions for first residue
+    with open("torsions.yml", "r") as yml_read:
+        monomer_torsions = yaml.safe_load(yml_read)
+
+    with open("helix_torsions.yml", "r") as stream:
+        helix_torsions = dict(yaml.safe_load(stream))
+
+    for torsion_type in monomer_torsions['torsions'].keys():
+        print("Adjusting Torsion Type:", torsion_type)
+        torsion_atom_ids = terphenyl_simulations.utils.get_torsion_atom_ids(
+            monomer_torsions['torsions'][torsion_type],
+            monomer_torsions['offset'],
+            job.doc["build_parameters"]["foldamer_length"],
+        )
+
+        ag = internal_coor_editor.universe.select_atoms("all")
+        for torsion_id in torsion_atom_ids:
+            torsion_atom_names = [ag.atoms[atom_id].name for atom_id in torsion_id]
+            print(torsion_atom_names)
+            torsion_atom_ids, torsion_values = internal_coor_editor.find_torsions(torsion_atom_names[1:3], positions = [1, 2])
+            print("Valid Torsions:", torsion_atom_ids)
+            internal_coor_editor.set_torsion(torsion_atom_names, helix_torsions[torsion_type] * np.pi / 180)
+            reversed_torsion = (((helix_torsions[torsion_type] + 360) % 360) - 180)
+            reversed_torsion =  helix_torsions[torsion_type]
+            internal_coor_editor.set_torsion(torsion_atom_names[::-1], reversed_torsion * np.pi / 180)
+            internal_coor_editor.update_internal_coordinates()
+    
+    internal_coor_editor.write_structure("helix_" + job.doc["foldamer_name"] + ".gro")
+    job.doc["foldamer_gro"] = "helix_" + job.doc["foldamer_name"] + ".gro"
+
+    
+@FlowProject.pre.after(set_helix_torsions)
+@FlowProject.post(
+    lambda job: os.path.exists(job.fn("em_helix_" + job.doc["foldamer_name"] + ".gro"))
+)
+@FlowProject.operation(directives={"fork": True})
+@cd_to_job_dir
+def minimize_helix_foldamer(job):
+    gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(
+        job.sp["gromacs_exe"]
+    )
+    centered_out_name = job.doc["foldamer_gro"].split(".gro")[0] + "_centered.gro"
+    gmx_wrapper.center_configuration(job.doc["foldamer_gro"], centered_out_name)
+    gmx_wrapper.minimize(
+        centered_out_name,
+        job.doc["foldamer_topology"],
+        prefix="em_helix_" + job.doc["foldamer_name"],
+    )
+    gmx_wrapper.trjconv(
+        f="em_helix_" + job.doc["foldamer_name"] + ".gro",
+        s="em_helix_" + job.doc["foldamer_name"] + ".tpr",
+        o="em_helix_" + job.doc["foldamer_name"] + ".pdb",
+        conect="yes",
+    )
+    job.doc["foldamer_gro"] = "em_helix_" + job.doc["foldamer_name"] + ".gro"
+    job.doc["foldamer_pdb"] = "em_helix_" + job.doc["foldamer_name"] + ".pdb"
+
+
+@FlowProject.pre.after(minimize_helix_foldamer)
 @FlowProject.post(
     lambda job: os.path.exists(job.fn(job.doc["foldamer_name"] + "_" + job.doc["system_name"] + "_" + job.doc["build_parameters"]["ff_method"] + ".top"))
 )
