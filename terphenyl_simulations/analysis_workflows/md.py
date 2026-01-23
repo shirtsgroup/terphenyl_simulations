@@ -32,10 +32,16 @@ def signac_init():
 
     # Remove replicas and replace with replica_id
     for i in range(simulation_parameters["n_simulations"]):
-        sp_i = dict(simulation_parameters)
-        sp_i["replica"] = i
-        del sp_i["n_simulations"]
-        simulation_statepoints.append(sp_i)
+        for temp in simulation_parameters["temperatures"]:
+            # Replica index
+            sp_i = dict(simulation_parameters)
+            sp_i["replica"] = i
+            del sp_i["n_simulations"]
+
+            # Simulation temperatures
+            sp_i["temperature"] = temp
+            del sp_i["temperatures"]
+            simulation_statepoints.append(sp_i)
 
     project = signac.get_project()
 
@@ -53,7 +59,7 @@ def signac_init():
             job.sp["system"] = "cu_alpine"
 
         # Setup job directory with template files
-        remd_files = glob.glob(
+        md_files = glob.glob(
             os.path.join(
                 terphenyl_simulations.utils.ROOT_DIR,
                 "data/simulation_templates",
@@ -62,8 +68,14 @@ def signac_init():
             )
         )
 
-        for sim_file in remd_files:
+        for sim_file in md_files:
             shutil.copy(sim_file, job.path)
+            if ".mdp" in sim_file:
+                replace_all_pattern(
+                    "TEMP",
+                    str(job.sp["temperature"]),
+                    job.fn(sim_file.split("/")[-1])
+                )
         shutil.copy(
             simulation_parameters["build_foldamer"],
             job.fn(simulation_parameters["build_foldamer"]),
