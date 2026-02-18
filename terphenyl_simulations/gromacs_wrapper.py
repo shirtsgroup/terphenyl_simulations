@@ -116,3 +116,27 @@ class GromacsWrapper(MDEngineWrapper):
 
         process = subprocess.Popen(mdrun_call.split(" "))
         process.wait()
+
+    def gmx_command(self, gmx_function, cmd_line_dict, inputs = None, show_output=True):
+        # Change output of STDERR to see gromacs output
+        # This is good for trouble shotting
+        stderr = None
+        if not show_output:
+            stderr = subprocess.PIPE
+
+        gmx_call = self.gmx + " " + gmx_function + " "
+        for flag in cmd_line_dict.keys():
+            if "-" not in flag:
+                gmx_call += "-"
+            gmx_call += flag + " " + cmd_line_dict[flag] + " "
+        print(gmx_call)
+        process = subprocess.Popen(
+            gmx_call.split(),
+            text=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=stderr,
+        )
+        if inputs is not None:
+            process.communicate(input=inputs)
+        process.wait()

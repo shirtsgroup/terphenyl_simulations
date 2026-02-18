@@ -93,6 +93,8 @@ class FoldamerBuilder:
             compound=tail_cap, index=-1, separation=0.15, label="tail", duplicate=False
         )
         self.chain.build(n=self.build_params["foldamer_length"], sequence="A")
+        self.chain.energy_minimize(forcefield="MMFF94")
+        self.chain.save("test_pre_peptide_bond_fix.pdb", overwrite=True)
         self.chain.name = self.build_params["residue_name"]
 
         # Adjust peptide bonds to be trans
@@ -106,6 +108,13 @@ class FoldamerBuilder:
                     n_bonded_1 = [atom.n_direct_bonds for atom in bonded_1]
                     bonded_2 = list(atom_2.direct_bonds())
                     n_bonded_2 = [atom.n_direct_bonds for atom in bonded_2]
+                    
+                    bonded_1_atoms = [atom.name for atom in bonded_1]
+                    carbon_index = bonded_1_atoms.index("C")
+                    adjust_atom = bonded_1[carbon_index]
+                    
+
+
 
                     # Dihedral between singly bonded H and O
                     hydro = bonded_1[n_bonded_1.index(1)]
@@ -117,9 +126,16 @@ class FoldamerBuilder:
 
                     # This corrects dihedrals to be trans
                     self.chain.rotate_dihedral(bond[0:2], adjust)
+                    # self.chain.save(f'test_bond_rot_1.pdb', overwrite=True)
+
+                    # Adjust neighboring dihedral in oposite direction to reduce clashes
+                    self.chain.rotate_dihedral([atom_1, adjust_atom], adjust)
+                    # self.chain.save(f'test_bond_rot_2.pdb', overwrite=True)
+
 
                     # Minimize after each adjustment
                     self.chain.energy_minimize(forcefield="MMFF94")
+                    #self.chain.save(f'test_bond_rot_min.pdb', overwrite=True)
 
 
         self.chain.save("test.pdb", overwrite=True)
@@ -207,6 +223,7 @@ class SystemBuilderOpenFF:
             box_vectors=self.build_params["system"]["box_size"]
             * UNIT_CUBE
             * unit.angstrom,
+            center_solute = True,
         )
 
     def write_pdb(self):

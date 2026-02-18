@@ -1,5 +1,5 @@
 simulation_id : mop_octamer
-temperatures : [300, 305, 310, 315, 320]
+temperatures : [300] #, 305, 310, 315, 320]
 mdps : 
        - berendsen_nvt.mdp
        - berendsen_npt.mdp
