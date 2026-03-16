@@ -27,7 +27,7 @@ class InternalCoordinateEditor:
         self.initial_atom = initial_atom
         self.get_IC_lists()
 
-        print(self.torsion_ids)
+        # print(self.torsion_ids)
 
     def get_IC_lists(self, frame=0):
         """
@@ -143,16 +143,17 @@ class InternalCoordinateEditor:
                     i for i in torsion_id_list if torsion_id_list.index(i) in positions
                 ]
             for atom_id in atom_list:
-                if any(c.isdigit() for c in atom_id):
-                    if any(atom_id == t_atom for t_atom in torsion_id_list):
+                # Element check
+                if not any(c.isdigit() for c in atom_id):
+                    if any(atom_id in t_atom for t_atom in torsion_id_list):
                         include += 1
+                # Specific atom name check
                 else:
-                    if atom_id in torsion_id:
+                    if atom_id in torsion_id_list:
                         include += 1
             if include == len(atom_list):
-                if include == len(atom_list):
-                    result.append(torsion_id)
-                    torsions.append(self.torsions[i])
+                result.append(torsion_id)
+                torsions.append(self.torsions[i])
         return result, torsions
 
     def identify_chain_prop_torsion(self, torsion_id_list):

@@ -22,30 +22,60 @@ class TopFileObject:
 
     def parse_file(self):
         section_name = None
-        section_data = {}
+        self.header = None
+        self.section_data = {}
         for i, line in enumerate(self.top_file):
             # Skip commented lines
-            if line[0] == ";":
+            if line[0] == ";" and len(self.section_data.keys()) == 0:
+                self.header.append(line)
                 continue
             # New section
             if "[" in line and "]" in line:
                 section_name = line.split()[1]
-                section_data[section_name] = {"data": []}
+                self.section_data[section_name] = {"data": []}
                 # Use legends to store values a dict
                 if self.top_file[i + 1][0] == ";":
                     labels = self.top_file[i + 1]
                 else:
                     labels = None
-                section_data[section_name]["labels"] = labels
+                self.section_data[section_name]["labels"] = labels
                 continue
             if section_name is not None:
                 entries = line.split()
                 if len(entries) > 0:
-                    section_data[section_name]["data"].append(line)
+                    self.section_data[section_name]["data"].append(line)
                 else:
                     continue
-        self.__dict__.update(**section_data)
 
+    def write_file(self, new_filename):
+        with open(new_filename, "w") as fw:
+            # write header
+            fw.write("; itp topology file\n")
+            fw.write(
+                "; Generated using heteropolymer_simulations.util.write_itp_file()\n"
+            )
+            fw.write("; Original file: " + self.filename + "\n")
+            fw.write("; Author: " + getpass.getuser() + "\n")
+            fw.write("; Date: " + datetime.now().strftime("%A, %d. %B %Y") + "\n")
+            fw.write("; Time: " + datetime.now().strftime("%I:%M%p") + "\n")
+            fw.write("; System: " + platform.platform() + "\n\n")
+
+            for section in self.section_data.keys():
+                if section in [
+                    "moleculetype",
+                    "atoms",
+                    "bonds",
+                    "pairs",
+                    "angles",
+                    "dihedrals",
+                ]:
+                    fw.write("[ " + section + " ]\n")
+                    if getattr(self, section)["labels"] is not None:
+                        fw.write(getattr(self, section)["labels"])
+                    for line in getattr(self, section)["data"]:
+                        fw.write(line)
+                    fw.write("\n\n")
+ 
 
 def write_itp_file(top_object, filename, itp_sections=None):
 
@@ -75,18 +105,24 @@ def write_itp_file(top_object, filename, itp_sections=None):
             if itp_s in dir(top_object):
                 f.write("[ " + itp_s + " ]\n")
                 if getattr(top_object, itp_s)["labels"] is not None:
-                    f.write(getattr(top_object, itp_s)["labels"])
-                for line in getattr(top_object, itp_s)["data"]:
+                    f.write(top_object.section_data[itp_s]["labels"])
+                for line in top_object.section_data[itp_s]["data"]:
                     f.write(line)
                 f.write("\n\n")
+                
 
 
 def renumber_pdb_atoms(pdb_file, out_pdb):
     rdmol = Chem.rdmolfiles.MolFromPDBFile(pdb_file, removeHs=False)
 
+    atom_counts = {}
     for atom in rdmol.GetAtoms():
         ri = atom.GetPDBResidueInfo()
-        new_name = "{0:<4}".format(atom.GetSymbol() + str(atom.GetIdx() + 1))
+        if atom.GetSymbol() not in atom_counts:
+            atom_counts[atom.GetSymbol()] = 1
+        else:
+            atom_counts[atom.GetSymbol()] += 1
+        new_name = "{0:<4}".format(atom.GetSymbol() + str( atom_counts[atom.GetSymbol()]))
         ri.SetName(new_name)
         ri.SetIsHeteroAtom(False)
 

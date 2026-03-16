@@ -59,9 +59,11 @@ class TopologyManager:
         topology_keys = list(self.topology_dictionary.keys())
         # Remove topologies from internal dict
         # That are not present in filesystem
+        update = False
         for key in topology_keys:
             if key not in topology_entries:
                 print("Removing", key, "from TopologyManager...")
+                update = True
                 del self.topology_dictionary[key]
                 continue
             # Check if labels are present too
@@ -69,11 +71,16 @@ class TopologyManager:
             for label in list(self.topology_dictionary[key].keys()):
                 if label not in label_entries:
                     print("Removing label", label, "from", key, "TopologyManager entry...")
+                    update = True
                     del self.topology_dictionary[key][label]
             # If no labels are under build_id, remove it
             if len(self.topology_dictionary[key].keys()) == 0:
                 print("Removing", key, "from TopologyManager...")
+                update = True
                 del self.topology_dictionary[key]
+        # if any physical files are missing, update internal object and save
+        if update:
+            self.save()
 
     def get_build_json(self, build_file):
         with open(build_file, "r") as stream:
