@@ -115,9 +115,14 @@ def write_itp_file(top_object, filename, itp_sections=None):
 def renumber_pdb_atoms(pdb_file, out_pdb):
     rdmol = Chem.rdmolfiles.MolFromPDBFile(pdb_file, removeHs=False)
 
+    atom_counts = {}
     for atom in rdmol.GetAtoms():
         ri = atom.GetPDBResidueInfo()
-        new_name = "{0:<4}".format(atom.GetSymbol() + str(atom.GetIdx() + 1))
+        if atom.GetSymbol() not in atom_counts:
+            atom_counts[atom.GetSymbol()] = 1
+        else:
+            atom_counts[atom.GetSymbol()] += 1
+        new_name = "{0:<4}".format(atom.GetSymbol() + str( atom_counts[atom.GetSymbol()]))
         ri.SetName(new_name)
         ri.SetIsHeteroAtom(False)
 
