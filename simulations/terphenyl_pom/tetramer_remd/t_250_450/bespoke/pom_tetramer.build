@@ -1,0 +1,9 @@
+structure_file : pom_tetramer
+foldamer_smile : COc3ccc(c1cccc(C=O)c1)c(c2ccc([C@@H](C)N)cc2)c3
+upper_connect : 33
+lower_connect : 42
+residue_name : POM
+cap_smiles : {upper : CO, lower : CC(C)(C)OC=O}
+foldamer_length : 4
+system : {solvent : TCM, solvent_smile_str : ClC(Cl)Cl, n_solvent : 634, box_size : 55.4}
+ff_method : bespoke

@@ -4,10 +4,10 @@ from MDAnalysis.analysis.rms import RMSD
 import sys
 import copy
 import numpy as np
-
+import scipy as sp
 
 class InternalCoordinateEditor:
-    def __init__(self, structure_file, topology_file):
+    def __init__(self, structure_file, topology_file, initial_atom = None):
         """
         Initialize an InternalCoordinateEditor object. This object can extract
         all internal coordinates of a system and has tools to identify and modify
@@ -24,7 +24,10 @@ class InternalCoordinateEditor:
         self._structure_file = structure_file
         self._top_file = topology_file
         self.universe = mda.Universe(self._top_file, self._structure_file)
+        self.initial_atom = initial_atom
         self.get_IC_lists()
+
+        # print(self.torsion_ids)
 
     def get_IC_lists(self, frame=0):
         """
@@ -43,7 +46,9 @@ class InternalCoordinateEditor:
         selected_atoms = self.universe.select_atoms("all")
 
         # Run bond-angle-torsion analysis on structure
-        self.bat = BAT(selected_atoms)
+        if self.initial_atom is not None:
+            self.initial_atom = self.universe.select_atoms("name " + self.initial_atom)[0]
+        self.bat = BAT(selected_atoms, initial_atom = self.initial_atom)
         self.bat.run()
 
         # Remove header from BAT array
@@ -138,16 +143,17 @@ class InternalCoordinateEditor:
                     i for i in torsion_id_list if torsion_id_list.index(i) in positions
                 ]
             for atom_id in atom_list:
-                if any(c.isdigit() for c in atom_id):
-                    if any(atom_id == t_atom for t_atom in torsion_id_list):
+                # Element check
+                if not any(c.isdigit() for c in atom_id):
+                    if any(atom_id in t_atom for t_atom in torsion_id_list):
                         include += 1
+                # Specific atom name check
                 else:
-                    if atom_id in torsion_id:
+                    if atom_id in torsion_id_list:
                         include += 1
             if include == len(atom_list):
-                if include == len(atom_list):
-                    result.append(torsion_id)
-                    torsions.append(self.torsions[i])
+                result.append(torsion_id)
+                torsions.append(self.torsions[i])
         return result, torsions
 
     def identify_chain_prop_torsion(self, torsion_id_list):
@@ -169,6 +175,7 @@ class InternalCoordinateEditor:
         # Earlier torsions propagate chains
         t_inds = [self.torsion_ids.index(t_id) for t_id in torsion_id_list]
         min_index = np.argmin(t_inds)
+        print(torsion_id_list[min_index])
         return torsion_id_list[min_index]
 
     def get_torsion(self, torsion_id):
@@ -240,13 +247,23 @@ class InternalCoordinateEditor:
             New torsion value in radians
         """
 
-        if torsion_id in self.torsion_ids:
+        if not torsion_id in self.torsion_ids:
+            print(torsion_id, "is not a valid torsion ID.")
+            return
+
+        # check if torsion is chain propagating
+        valid_torsions, torsions_values = self.find_torsions(torsion_id[1:3], positions = [1,2])
+
+        # Chain propagating torsion is listed first
+        if torsion_id == valid_torsions[0]:
             torsion_index = self.torsion_ids.index(torsion_id)
             self.torsions[torsion_index] = new_torsion
             self.ic_list[self.torsion_indices[0] + 9 + torsion_index] = new_torsion
-            # print("Setting", torsion_id, "to", new_torsion * 180 / np.pi)
+            print("Setting", torsion_id, "to", new_torsion * 180 / np.pi)
         else:
-            print(torsion_id, "is not a valid torsion ID.")
+            print(torsion_id, "is not chain-propagating.")
+            self.set_non_prop_torsion(valid_torsions[0], torsion_id, new_torsion)
+        self.update_internal_coordinates()
 
     def set_angle(self, angle_id, new_angle):
         """
@@ -304,3 +321,17 @@ class InternalCoordinateEditor:
         """
         selected_atoms = self.universe.select_atoms("all")
         selected_atoms.write(structure_file)
+
+    def set_non_prop_torsion(self, prop_torsion_id, non_prop_torsion, value):
+        print("Target torsion:", value * 180 / np.pi)
+        def loss(x):
+            self.set_torsion(prop_torsion_id, x[0])
+            self.update_internal_coordinates()
+            atom_coords = [self.universe.select_atoms("name " + atom)[0].position for atom in non_prop_torsion]
+            torsion = mda.lib.distances.calc_dihedrals(*atom_coords)
+            return (value - torsion) ** 2
+
+        sp.optimize.minimize(loss, np.array([value]), options={'eps':0.00001})
+        atom_coords = [self.universe.select_atoms("name " + atom)[0].position for atom in non_prop_torsion]
+        torsion = mda.lib.distances.calc_dihedrals(*atom_coords)
+        print("Final torsion:",  torsion * 180 / np.pi)

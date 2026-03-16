@@ -1,0 +1,12 @@
+simulation_id : mop_octamer
+temperatures : [300] #, 305, 310, 315, 320]
+mdps : 
+       - berendsen_nvt.mdp
+       - berendsen_npt.mdp
+       - production_npt.mdp
+build_foldamer : mop_octamer.build
+param_method : openff
+n_simulations : 1
+gromacs_exe : gmx
+system : blackbird
+helix_torsions : helix_torsions.yml

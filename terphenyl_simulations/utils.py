@@ -8,6 +8,7 @@ import numpy as np
 import re
 import shutil as sh
 import sys
+import shutil
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))  # This is your Project Root
 
@@ -21,30 +22,60 @@ class TopFileObject:
 
     def parse_file(self):
         section_name = None
-        section_data = {}
+        self.header = None
+        self.section_data = {}
         for i, line in enumerate(self.top_file):
             # Skip commented lines
-            if line[0] == ";":
+            if line[0] == ";" and len(self.section_data.keys()) == 0:
+                self.header.append(line)
                 continue
             # New section
             if "[" in line and "]" in line:
                 section_name = line.split()[1]
-                section_data[section_name] = {"data": []}
+                self.section_data[section_name] = {"data": []}
                 # Use legends to store values a dict
                 if self.top_file[i + 1][0] == ";":
                     labels = self.top_file[i + 1]
                 else:
                     labels = None
-                section_data[section_name]["labels"] = labels
+                self.section_data[section_name]["labels"] = labels
                 continue
             if section_name is not None:
                 entries = line.split()
                 if len(entries) > 0:
-                    section_data[section_name]["data"].append(line)
+                    self.section_data[section_name]["data"].append(line)
                 else:
                     continue
-        self.__dict__.update(**section_data)
 
+    def write_file(self, new_filename):
+        with open(new_filename, "w") as fw:
+            # write header
+            fw.write("; itp topology file\n")
+            fw.write(
+                "; Generated using heteropolymer_simulations.util.write_itp_file()\n"
+            )
+            fw.write("; Original file: " + self.filename + "\n")
+            fw.write("; Author: " + getpass.getuser() + "\n")
+            fw.write("; Date: " + datetime.now().strftime("%A, %d. %B %Y") + "\n")
+            fw.write("; Time: " + datetime.now().strftime("%I:%M%p") + "\n")
+            fw.write("; System: " + platform.platform() + "\n\n")
+
+            for section in self.section_data.keys():
+                if section in [
+                    "moleculetype",
+                    "atoms",
+                    "bonds",
+                    "pairs",
+                    "angles",
+                    "dihedrals",
+                ]:
+                    fw.write("[ " + section + " ]\n")
+                    if getattr(self, section)["labels"] is not None:
+                        fw.write(getattr(self, section)["labels"])
+                    for line in getattr(self, section)["data"]:
+                        fw.write(line)
+                    fw.write("\n\n")
+ 
 
 def write_itp_file(top_object, filename, itp_sections=None):
 
@@ -74,18 +105,24 @@ def write_itp_file(top_object, filename, itp_sections=None):
             if itp_s in dir(top_object):
                 f.write("[ " + itp_s + " ]\n")
                 if getattr(top_object, itp_s)["labels"] is not None:
-                    f.write(getattr(top_object, itp_s)["labels"])
-                for line in getattr(top_object, itp_s)["data"]:
+                    f.write(top_object.section_data[itp_s]["labels"])
+                for line in top_object.section_data[itp_s]["data"]:
                     f.write(line)
                 f.write("\n\n")
+                
 
 
 def renumber_pdb_atoms(pdb_file, out_pdb):
     rdmol = Chem.rdmolfiles.MolFromPDBFile(pdb_file, removeHs=False)
 
+    atom_counts = {}
     for atom in rdmol.GetAtoms():
         ri = atom.GetPDBResidueInfo()
-        new_name = "{0:<4}".format(atom.GetSymbol() + str(atom.GetIdx() + 1))
+        if atom.GetSymbol() not in atom_counts:
+            atom_counts[atom.GetSymbol()] = 1
+        else:
+            atom_counts[atom.GetSymbol()] += 1
+        new_name = "{0:<4}".format(atom.GetSymbol() + str( atom_counts[atom.GetSymbol()]))
         ri.SetName(new_name)
         ri.SetIsHeteroAtom(False)
 
@@ -132,7 +169,6 @@ def backoff_directory(dir_name):
         old_path = "#" + dir_name + "." + str(i_backoff) + "#"
     print("Backoff! Moving the old " + dir_name + " to " + old_path)
     sh.move(dir_name, old_path)
-
 
 def get_torsion_ids(universe, resname, torsion_id, template_residue_i=1):
     """
@@ -232,7 +268,6 @@ def get_torsion_ids(universe, resname, torsion_id, template_residue_i=1):
 
     return dihedral_ids
 
-
 def get_angle_ids(universe, resname, angle_id, template_residue_i=0):
     """
     Using an MDAnalysis universe with proper residue definitions, this function
@@ -326,6 +361,13 @@ def get_angle_ids(universe, resname, angle_id, template_residue_i=0):
         pass
     return angle_ids
 
+def get_torsion_atom_ids(torsion_base_index, offset, n_residues):
+    torsion_base_index = np.array(torsion_base_index)
+    torsion_atom_ids = []
+    for i in range(n_residues):
+        torsion_atom_ids.append(torsion_base_index + offset * i)
+
+    return torsion_atom_ids
 
 def replace_all_pattern(pattern, replace, file):
     """
@@ -462,6 +504,31 @@ class GromacsLogFile:
                     ex_probs.append([float(p) for p in ex_prob_str])
 
                 self.transition_matrix = np.array(ex_probs)
+
+
+def get_solvent_structure_file(solvent_str):
+    # Check current directory for solvent file
+    cur_dir_files = os.listdir(".")
+    if solvent_str in [cdfile.split(".")[0] for cdfile in cur_dir_files]:
+        solvent_i = [cdfile.split(".")[0] for cdfile in cur_dir_files].index(solvent_str)
+        return cur_dir_files[solvent_i]
+    
+    else:
+        # Otherwise check the solvents stored in repo
+        solvent_files = os.listdir(os.path.join(ROOT_DIR, "data", "solvents"))
+        print(solvent_files)
+        solvent_ids = [solvent_file.split(".")[0] for solvent_file in solvent_files]
+
+        if solvent_str in solvent_ids:
+            solvent_index = solvent_ids.index(solvent_str)
+            shutil.copy(os.path.join(ROOT_DIR, "data", "solvents", solvent_files[solvent_index]),
+                        os.path.join(os.getcwd(), solvent_files[solvent_index])
+            )
+
+            return solvent_files[solvent_index]
+        else:
+            print("Unable to find a solvent structure file for", solvent_str)
+            return sys.exit(1)
 
 
 def main():
