@@ -1,318 +1,207 @@
 import MDAnalysis as mda
-from MDAnalysis.analysis.bat import BAT
-from MDAnalysis.analysis.rms import RMSD
-import sys
-import copy
 import numpy as np
-import scipy as sp
+import sys
+from terphenyl_simulations.utils import get_torsion_ids
 
 class InternalCoordinateEditor:
     def __init__(self, structure_file, topology_file, initial_atom = None):
         """
-        Initialize an InternalCoordinateEditor object. This object can extract
-        all internal coordinates of a system and has tools to identify and modify
-        specific bond lengths, bond-angles and torsions.
+        Initialize an InternalCoordinateEditor object. This object can identify and modify
+        specific bond lengths, bond-angles and torsions in a molecular structure.
 
         Parameters
         ----------
         structure_file : string
-            String of structure file to run MDAnalysis BAT method on
+            String of structure file to edit
         topology_file : string
             String of the topology file used to identify internal coordinates. Compatible with all
             MDAnalysis compatible topology files.
+        initial_atom : string, optional
+            Name of the initial atom for internal coordinate definition (used by some analyses)
         """
         self._structure_file = structure_file
         self._top_file = topology_file
-        self.universe = mda.Universe(self._top_file, self._structure_file)
+        self.universe = mda.Universe(self._top_file, self._structure_file, context = 'default', to_guess = ['types', 'masses', 'angles', 'bonds', 'dihedrals'])
         self.initial_atom = initial_atom
-        self.get_IC_lists()
 
-        # print(self.torsion_ids)
+    @staticmethod
+    def _get_downstream_group(universe, start_atom, blocked_atom):
+        """Get all atoms reachable from start_atom without passing through blocked_atom"""
+        # Build adjacency list from bonds
+        bonds = universe.bonds
+        adjacency = {}
+        for bond in bonds:
+            a1, a2 = bond.atoms[0], bond.atoms[1]
+            if a1 not in adjacency:
+                adjacency[a1] = []
+            if a2 not in adjacency:
+                adjacency[a2] = []
+            adjacency[a1].append(a2)
+            adjacency[a2].append(a1)
 
-    def get_IC_lists(self, frame=0):
+        # BFS from start_atom, avoiding blocked_atom
+        visited = set()
+        queue = [start_atom]
+        visited.add(start_atom)
+
+        while queue:
+            current = queue.pop(0)
+            if current in adjacency:
+                for neighbor in adjacency[current]:
+                    if neighbor == blocked_atom:
+                        continue
+                    if neighbor not in visited:
+                        visited.add(neighbor)
+                        queue.append(neighbor)
+
+        visited_indices = [atom.index for atom in visited]
+        return universe.atoms[visited_indices]  # Return as AtomGroup
+
+    @staticmethod
+    def _rotate_group_around_axis(group, point_on_axis, axis_vector, angle):
+        """Rotate group of atoms around axis defined by point and vector using Rodrigues' formula"""
+        # Convert to numpy arrays
+        point = np.array(point_on_axis)
+        axis = np.array(axis_vector)
+        # Normalize axis
+        axis_norm = np.linalg.norm(axis)
+        if axis_norm < 1e-12:
+            return  # Avoid division by zero
+        axis = axis / axis_norm
+
+        # Get positions
+        positions = group.positions
+
+        # Translate so point_on_axis is at origin
+        translated = positions - point
+
+        # Rodrigues' formula: v_rot = v*cosθ + (k×v)*sinθ + k*(k·v)*(1-cosθ)
+        cos_theta = np.cos(angle)
+        sin_theta = np.sin(angle)
+
+        # Cross product k × v
+        cross = np.cross(axis, translated)
+
+        # Dot product k · v
+        dot = np.dot(translated, axis)  # shape (N,)
+
+        # Apply rotation
+        rotated = translated * cos_theta + cross * sin_theta + axis * dot[:, np.newaxis] * (1 - cos_theta)
+
+        # Translate back
+        group.positions = rotated + point
+
+    def set_torsions_from_template(self, template_universe, residue_name,
+                                 template_residue_index=0):
         """
-        Function used to extract all torsions from a given structure file.
-        This function assumes a single structure and will default to reading
-        the first frame of a given trajectory.
+        Set torsions in the current universe to match those in a template universe
+        by copying torsion values residue-by-residue with periodic boundary conditions.
 
         Parameters
         ----------
-        frame : int
-            Optional parameter to specify which frame of a trajectory to extract torsions.
+        template_universe : MDAnalysis.Universe
+            Universe containing the template structure (e.g., helix)
+        residue_name : str
+            Name of the residue to match torsions for
+        template_residue_index : int, default 0
+            Index of the residue in template_universe to use as the pattern template
+
+        Notes
+        -----
+        This method:
+        1. Identifies a torsion pattern from the specified residue in the template
+        2. Finds all matching torsions in both template and current universe
+        3. Extracts torsion values per residue from the template
+        4. Applies these values to the current universe with periodic boundary conditions
+        5. Uses direct coordinate rotation (not BAT/Z-matrix) for better compatibility
+           with aromatic systems and complex chemistry
         """
-        # Load .gro file
+        # Get residues of interest
+        template_residues = [r for r in template_universe.residues if r.resname == residue_name]
+        current_residues = [r for r in self.universe.residues if r.resname == residue_name]
 
-        # atom selection
-        selected_atoms = self.universe.select_atoms("all")
+        if not template_residues:
+            print(f"ERROR: No residues named {residue_name} found in template")
+            return False
+        if not current_residues:
+            print(f"ERROR: No residues named {residue_name} found in current structure")
+            return False
+        if template_residue_index >= len(template_residues):
+            print(f"ERROR: template_residue_index {template_residue_index} out of range")
+            return False
 
-        # Run bond-angle-torsion analysis on structure
-        if self.initial_atom is not None:
-            self.initial_atom = self.universe.select_atoms("name " + self.initial_atom)[0]
-        self.bat = BAT(selected_atoms, initial_atom = self.initial_atom)
-        self.bat.run()
+        ref_residue = template_residues[template_residue_index]
+        ref_resid = ref_residue.resid
 
-        # Remove header from BAT array
-        self.ic_list = self.bat.results.bat[frame, :]
-        z_matrix_header = self.ic_list[0:9]
-        z_matrix_body = self.ic_list[9:]
+        # Collect dihedral patterns fully contained in the reference residue
+        patterns = []
+        for dih in template_universe.dihedrals:
+            if all(a.resid == ref_resid for a in dih):
+                pattern = tuple(a.name for a in dih)
+                if pattern not in patterns:
+                    patterns.append(pattern)
 
-        # Extract root atoms and information
-        self.root_atoms = self.bat._root.names
-        self.root_atom_com = z_matrix_header[0:3]
-        self.root_ext_angles = z_matrix_header[3:6]
-        self.root_ics = z_matrix_header[6:9]
+        if not patterns:
+            print(f"ERROR: No dihedral patterns found in reference residue")
+            return False
 
-        # Extract remaining atoms and internal coorinates
-        n_entries = int(len(z_matrix_body) / 3)
-        self.bond_indices = [0, n_entries]
-        self.bond_angle_indices = [n_entries, 2 * n_entries]
-        self.torsion_indices = [2 * n_entries, 3 * n_entries]
+        print(f"Found {len(patterns)} dihedral patterns in reference residue")
 
-        self.bonds = z_matrix_body[0:n_entries]
-        self.bond_angles = z_matrix_body[n_entries : 2 * n_entries]
-        self.torsions = z_matrix_body[2 * n_entries : 3 * n_entries]
-        self.torsion_ids = [list(torsion.names) for torsion in self.bat._torsions]
+        torsions_set = 0
+        total_torsions = 0
 
-        assert len(self.bonds) == len(self.bond_angles)
-        assert len(self.bonds) == len(self.torsions)
+        for pattern in patterns:
+            # Get torsion IDs for all residues using the helper
+            template_ids = get_torsion_ids(template_universe, residue_name, list(pattern),
+                                          template_residue_i=template_residue_index)
+            current_ids = get_torsion_ids(self.universe, residue_name, list(pattern),
+                                          template_residue_i=template_residue_index)
 
-    def find_bonds(self, atom_list):
-        """
-        Return a list of bond ids with a given atoms
+            if not template_ids or not current_ids:
+                continue
 
-        Parameters
-        ----------
-        atom_list : list
-            List of strings of atom names used to identify bond
+            n_template = len(template_ids)
+            n_current = len(current_ids)
 
-        Returns
-        -------
-        result : list
-            List of bond ids including atoms in atom_list
-        bond_length : list
-            List of bond lengths corresponding to bond IDs
-        """
+            for i in range(n_current):
+                t_idx = i % n_template
+                t_names = template_ids[t_idx]
+                c_names = current_ids[i]
 
-        result = []
-        bond_lengths = []
-        for i, torsion_id in enumerate(self.torsion_ids):
-            bond_id = torsion_id[0:2]
-            include = 0
-            for atom_id in atom_list:
-                if any(c.isdigit() for c in atom_id):
-                    if any(atom_id in b_atom for b_atom in bond_id):
-                        include += 1
-                else:
-                    if atom_id in bond_id:
-                        include += 1
-            if include == len(atom_list):
-                result.append(bond_id)
-                bond_lengths.append(self.bonds[i])
+                t_res = template_residues[t_idx]
+                c_res = current_residues[i]
 
-        return result, bond_lengths
+                try:
+                    t_atoms = [template_universe.select_atoms(f"resid {t_res.resid} and name {n}")[0] for n in t_names]
+                    c_atoms = [self.universe.select_atoms(f"resid {c_res.resid} and name {n}")[0] for n in c_names]
+                except IndexError:
+                    continue
 
-    def find_torsions(self, atom_list, positions=None):
-        """
-        Return a list of torsions ids from with a specific atoms
+                total_torsions += 1
+                t_angle = mda.lib.distances.calc_dihedrals(*[a.position for a in t_atoms])
+                c_angle = mda.lib.distances.calc_dihedrals(*[a.position for a in c_atoms])
 
-        Parameters
-        ----------
-        atom_list : list
-            List of atom names used to identify torsions including those atoms. Here you
-            can use specific atom names or elements names.
-        positions : list
-            List of integers indicating which positions to search for provided atom names
+                delta = t_angle - c_angle
+                delta = (delta + np.pi) % (2 * np.pi) - np.pi
 
-        Returns
-        -------
-        result : list
-            List of torsions ids including atoms in atom_list
-        torsions : list
-            List of torsions angles reported in radians
-        """
+                if abs(delta) < 1e-6:
+                    continue
 
-        result = []
-        torsions = []
+                # Rotate downstream group around B-C bond
+                point_on_axis = c_atoms[1].position
+                axis_vector = c_atoms[2].position - c_atoms[1].position
+                downstream_group = self._get_downstream_group(self.universe, c_atoms[3], c_atoms[2])
+                if len(downstream_group) == 0:
+                    continue
+                self._rotate_group_around_axis(downstream_group, point_on_axis, axis_vector, delta)
+                torsions_set += 1
 
-        for i, torsion_id in enumerate(self.torsion_ids):
-            include = 0
-            torsion_id_list = torsion_id
-            # Filter torsion_id positions based on given position selection
-            if positions is not None:
-                torsion_id_list = [
-                    i for i in torsion_id_list if torsion_id_list.index(i) in positions
-                ]
-            for atom_id in atom_list:
-                # Element check
-                if not any(c.isdigit() for c in atom_id):
-                    if any(atom_id in t_atom for t_atom in torsion_id_list):
-                        include += 1
-                # Specific atom name check
-                else:
-                    if atom_id in torsion_id_list:
-                        include += 1
-            if include == len(atom_list):
-                result.append(torsion_id)
-                torsions.append(self.torsions[i])
-        return result, torsions
-
-    def identify_chain_prop_torsion(self, torsion_id_list):
-        """
-        This function identifies the torsion id that propagates downstream changes to
-        the overall structure. Provided torsion IDs must contain the same internal atoms.
-
-        Parameters
-        ----------
-        torsion_id_list : list
-            List of lists of atom ids
-
-        Returns
-        -------
-        torsion_id : list
-            The torsion id that propagates movements downstream
-        """
-        # Check for the earliest definition of a given torsion
-        # Earlier torsions propagate chains
-        t_inds = [self.torsion_ids.index(t_id) for t_id in torsion_id_list]
-        min_index = np.argmin(t_inds)
-        print(torsion_id_list[min_index])
-        return torsion_id_list[min_index]
-
-    def get_torsion(self, torsion_id):
-        """
-        Get torsion value for a specified torsion id string
-
-        Parameters
-        ----------
-        torsion_id : list
-            Torsion ID for torsion value to return
-        """
-        if torsion_id in self.torsion_ids:
-            torsion_index = self.torsion_ids.index(torsion_id)
-            return self.torsions[torsion_index]
-        else:
-            print(
-                " ".join(torsion_id),
-                "is not a valid torsion ID. Available torsion \
-                can be found in InternalCoordinateEditor.torsion_ids",
-            )
-
-    def get_bond_angle(self, bond_angle_id):
-        """
-        Get bond angle value for a specified angle id
-
-        Parameters
-        angle_id : string
-            Angle ID for desired angle
-        """
-
-        ice_angle_ids = [t_id[1:] for t_id in self.torsion_ids]
-        if bond_angle_id in ice_angle_ids:
-            angle_index = ice_angle_ids.index(bond_angle_id)
-            return self.bond_angles[angle_index]
-        elif bond_angle_id == self.root_atoms or bond_angle_id == self.root_atoms[::-1]:
-            return self.root_ics[2]
-        else:
-            print(bond_angle_id, "is not a valid angle ID.")
-
-    def get_bond(self, bond_id):
-        """
-        Get bond length value for a specified bond id
-
-        Parameters
-        bond_id : list
-            Bond ID for desired bond length
-        """
-
-        ice_bond_ids = [t_id[2:] for t_id in self.torsion_ids]
-        if bond_id in ice_bond_ids:
-            bond_index = ice_bond_ids.index(bond_id)
-            return self.bond_angles[bond_index]
-        elif bond_id in self.root_atoms[:2] or bond_id in self.root_atoms[:2][::-1]:
-            return self.root_ics[0]
-        elif bond_id in self.root_atoms[2:] or bond_id in self.root_atoms[2:][::-1]:
-            return self.root_ics[1]
-        else:
-            print(bond_id, "is not a valid angle ID.")
-
-    def set_torsion(self, torsion_id, new_torsion):
-        """
-        Set a torsion, specified by its torsion id, to a new value
-
-        Parameters
-        ----------
-        torsion_id : string
-            Torsion ID for torsion to change
-        new_torsion : float
-            New torsion value in radians
-        """
-
-        if not torsion_id in self.torsion_ids:
-            print(torsion_id, "is not a valid torsion ID.")
-            return
-
-        # check if torsion is chain propagating
-        valid_torsions, torsions_values = self.find_torsions(torsion_id[1:3], positions = [1,2])
-
-        # Chain propagating torsion is listed first
-        if torsion_id == valid_torsions[0]:
-            torsion_index = self.torsion_ids.index(torsion_id)
-            self.torsions[torsion_index] = new_torsion
-            self.ic_list[self.torsion_indices[0] + 9 + torsion_index] = new_torsion
-            print("Setting", torsion_id, "to", new_torsion * 180 / np.pi)
-        else:
-            print(torsion_id, "is not chain-propagating.")
-            self.set_non_prop_torsion(valid_torsions[0], torsion_id, new_torsion)
-        self.update_internal_coordinates()
-
-    def set_angle(self, angle_id, new_angle):
-        """
-        Set a new angle within the InternalCoordinateEditor specified by its atom ids
-
-        Parameters
-        ----------
-        angle_id : string
-            Angle ID with atom names in angle
-        new_angle : float
-            New angle value in radians
-        """
-
-        # print("Angle ID:", angle_id)
-        # print("fwd:", angle_id in [t_id[:-1] for t_id in self.torsion_ids])
-        # print("bwd:", angle_id[::-1] in [t_id[:-1] for t_id in self.torsion_ids])
-        angle_ids = [t_id[:-1] for t_id in self.torsion_ids]
-
-        if angle_id in angle_ids:
-            # print("1) Setting angle", angle_id, "to", new_angle * 180 / np.pi)
-            angle_index = angle_ids.index(angle_id)
-            self.bond_angles[angle_index] = new_angle
-            self.ic_list[self.bond_angle_indices[0] + 9 + angle_index] = new_angle
-        if angle_id[::-1] in angle_ids:
-            # print("2) Setting angle", angle_id[::-1], "to", new_angle * 180 / np.pi)
-            angle_index = angle_ids.index(angle_id[::-1])
-            self.bond_angles[angle_index] = new_angle
-            self.ic_list[self.bond_angle_indices[0] + 9 + angle_index] = new_angle
-        if angle_id == list(self.root_atoms):
-            # print("root atoms")
-            self.root_ics[2] = new_angle
-            self.ic_list[8] = new_angle
-        if angle_id[::-1] == list(self.root_atoms):
-            # print("root atoms")
-            self.root_ics[2] = new_angle
-            self.ic_list[8] = new_angle
-        else:
-            print(angle_id, "is not a valid angle ID.")
-
-    def update_internal_coordinates(self):
-        """
-        Update internal universe coordinates from BAT object
-        """
-        XYZ = self.bat.Cartesian(self.ic_list)
-        self.universe.atoms.positions = XYZ
+        print(f'Successfully set {torsions_set} out of {total_torsions} torsions')
+        return torsions_set > 0
 
     def write_structure(self, structure_file):
         """
-        Function to rebuild structure with updated internal coordiante
+        Function to rebuild structure with updated internal coordinates
 
         Parameters
         ----------
@@ -321,17 +210,3 @@ class InternalCoordinateEditor:
         """
         selected_atoms = self.universe.select_atoms("all")
         selected_atoms.write(structure_file)
-
-    def set_non_prop_torsion(self, prop_torsion_id, non_prop_torsion, value):
-        print("Target torsion:", value * 180 / np.pi)
-        def loss(x):
-            self.set_torsion(prop_torsion_id, x[0])
-            self.update_internal_coordinates()
-            atom_coords = [self.universe.select_atoms("name " + atom)[0].position for atom in non_prop_torsion]
-            torsion = mda.lib.distances.calc_dihedrals(*atom_coords)
-            return (value - torsion) ** 2
-
-        sp.optimize.minimize(loss, np.array([value]), options={'eps':0.00001})
-        atom_coords = [self.universe.select_atoms("name " + atom)[0].position for atom in non_prop_torsion]
-        torsion = mda.lib.distances.calc_dihedrals(*atom_coords)
-        print("Final torsion:",  torsion * 180 / np.pi)

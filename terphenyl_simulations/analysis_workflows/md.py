@@ -14,11 +14,10 @@ from flow import FlowProject
 from MDAnalysis import Universe
 import terphenyl_simulations
 from natsort import natsorted
-from tqdm import tqdm
 import mdtraj
-from terphenyl_simulations.utils import replace_all_pattern, get_solvent_structure_file
-from terphenyl_simulations.analysis_workflows.labels import *
+from terphenyl_simulations.utils import replace_all_pattern, get_solvent_structure_file, get_torsion_ids
 from terphenyl_simulations.edit_conf import InternalCoordinateEditor
+from terphenyl_simulations.analysis_workflows.labels import *
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -82,11 +81,12 @@ def signac_init():
         )
         shutil.copy("md_parameters.yml", job.fn("md_parameters.yml"))
 
-        if os.path.exists(simulation_parameters["helix_torsions"]):
+        if os.path.exists(simulation_parameters["helix_structure"]):
             shutil.copy(
-                simulation_parameters["helix_torsions"],
-                job.fn("helix_torsions.yml"),
+                simulation_parameters["helix_structure"],
+                job.fn("helix_structure.gro"),
             )
+            job.doc["helix_structure"] = "helix_structure.gro"
 
         if os.path.exists("torsions.yml"):
             shutil.copy(
@@ -179,48 +179,46 @@ def minimize_foldamer(job):
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def set_helix_torsions(job):
-    internal_coor_editor = InternalCoordinateEditor(
-        job.doc["foldamer_gro"], "em_" + job.doc["foldamer_name"] + ".tpr",
+    # Load universes
+    helix_u = md.Universe(job.doc["helix_structure"], job.doc["helix_structure"], context='default', to_guess=['dihedrals'])
+    em_u = md.Universe(job.doc["foldamer_gro"], job.doc["foldamer_gro"], context='default', to_guess=['dihedrals'])
+
+    # Get residue name
+    resname = job.doc["build_parameters"]["residue_name"]
+
+    # Use InternalCoordinateEditor to set torsions from template
+    ice = InternalCoordinateEditor(
+        job.doc["foldamer_gro"], job.doc["foldamer_gro"]
     )
 
-    # Torsion definitions for first residue
-    with open("torsions.yml", "r") as yml_read:
-        monomer_torsions = yaml.safe_load(yml_read)
+    # Set torsions from helix template (using residue index 2 which corresponds to resid 3)
+    success = ice.set_torsions_from_template(
+        template_universe=helix_u,
+        residue_name=resname,
+        template_residue_index=2  # This corresponds to resid 3 (0-indexed)
+    )
 
-    with open("helix_torsions.yml", "r") as stream:
-        helix_torsions = dict(yaml.safe_load(stream))
+    if not success:
+        print("WARNING: Failed to set torsions from template")
+        # Still continue with the workflow but the structure may not be properly set
 
+    # Write the modified structure
+    helix_gro_name = "helix_" + job.doc["foldamer_name"] + ".gro"
+    ice.write_structure(job.fn(helix_gro_name))
 
-    for torsion_type in monomer_torsions['torsions'].keys():
-        print("Adjusting Torsion Type:", torsion_type)
-        torsion_atom_ids = terphenyl_simulations.utils.get_torsion_atom_ids(
-            monomer_torsions['torsions'][torsion_type],
-            monomer_torsions['offset'],
-            job.doc["build_parameters"]["foldamer_length"],
-        )
-
-        ag = internal_coor_editor.universe.select_atoms("all")
-        for torsion_id in torsion_atom_ids:
-            torsion_atom_names = [ag.atoms[atom_id].name for atom_id in torsion_id]
-            torsion_atom_ids, torsion_values = internal_coor_editor.find_torsions(torsion_atom_names[1:3], positions = [1, 2])
-            internal_coor_editor.set_torsion(torsion_atom_names, helix_torsions[torsion_type] * np.pi / 180)
-            reversed_torsion = (((helix_torsions[torsion_type] + 360) % 360) - 180)
-            reversed_torsion =  helix_torsions[torsion_type]
-            internal_coor_editor.set_torsion(torsion_atom_names[::-1], reversed_torsion * np.pi / 180)
-            internal_coor_editor.update_internal_coordinates()
-    
-    internal_coor_editor.write_structure("helix_" + job.doc["foldamer_name"] + ".gro")
-
+    # Continue with rest of workflow (minimization, etc.)
     gmx_wrapper = terphenyl_simulations.gromacs_wrapper.GromacsWrapper(
         job.sp["gromacs_exe"]
     )
 
+    centered_name = helix_gro_name.replace(".gro", "_centered.gro")
     gmx_wrapper.center_configuration(
-        "helix_" + job.doc["foldamer_name"] + ".gro",
-        "helix_" + job.doc["foldamer_name"] + "_centered.gro",
+        helix_gro_name,
+        centered_name,
     )
 
-    job.doc["foldamer_gro"] = "helix_" + job.doc["foldamer_name"] + "_centered.gro"
+    job.doc["foldamer_gro"] = centered_name
+    job.doc["foldamer_pdb"] = helix_gro_name.replace(".gro", ".pdb")
 
     
 @FlowProject.pre.after(set_helix_torsions)
