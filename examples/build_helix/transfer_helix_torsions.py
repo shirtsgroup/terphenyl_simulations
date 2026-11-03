@@ -137,9 +137,6 @@ def transfer_torsions(template_path, target_path, residue_name, output_path,
     if not fit_impropers:
         improper_patterns = []
 
-    n_template_windows = max(1, len(template_residues) - window_size + 1)
-    n_target_windows = max(1, len(target_residues) - window_size + 1)
-
     torsions_set = 0
     total_torsions = 0
     angles_set = 0
@@ -147,30 +144,46 @@ def transfer_torsions(template_path, target_path, residue_name, output_path,
     impropers_set = 0
     total_impropers = 0
 
-    def get_atoms(universe, base_resid, pattern, resid_offsets, ref_resid = base_resid):
+    def get_atoms(universe, base_resid, pattern, resid_offsets, ref_resid=None):
         atoms = []
+        # ref_resid is the template's base_resid; default keeps offset 0.
+        # Passing ref_resid=base_resid (template) when querying the target
+        # enables atom_per_residue remapping for globally-incrementing names.
+        if ref_resid is None:
+            ref_resid = base_resid
         template_offset = base_resid - ref_resid
         for name, off in zip(pattern, resid_offsets):
             resid = base_resid + off
             atom_type = ''.join([c for c in name if not c.isdigit()])
-            atom_num = int(name.replace(atom_type, '')) + template_offset * atom_per_residue[atom_type]
-            atom_name = atom_type + str(atom_num)
+            if atom_type in atom_per_residue and any(c.isdigit() for c in name):
+                try:
+                    atom_num = int(name.replace(atom_type, '')) + template_offset * atom_per_residue[atom_type]
+                    atom_name = atom_type + str(atom_num)
+                except ValueError:
+                    atom_name = name
+            else:
+                atom_name = name
             sel = universe.select_atoms(f"resid {resid} and name {atom_name}")
             if len(sel) == 0:
-                raise IndexError(f"Atom {atom_name} resid {resid} not found")
+                # Fallback to original pattern name for per-residue naming
+                if atom_name != name:
+                    sel = universe.select_atoms(f"resid {resid} and name {name}")
+                if len(sel) == 0:
+                    raise IndexError(f"Atom {atom_name} resid {resid} not found")
             atoms.append(sel[0])
         return atoms
 
-    # Angles
+    # Angles — fixed template lookup so the same angle is applied to
+    # every target window; atom_per_residue remaps globally-incrementing names
     for pattern, resid_offsets in angle_patterns:
+        # Get atoms from template region
+        t_atoms = get_atoms(template_u, base_resid, pattern, resid_offsets)
         max_offset = max(resid_offsets)
         for i in range(len(target_residues) - max_offset):
-            t_idx = i % n_template_windows
-            template_base_resid = template_residues[t_idx].resid
             target_base_resid = target_residues[i].resid
+            # Get atoms that match in the target structure
             try:
-                t_atoms = get_atoms(template_u, template_base_resid, pattern, resid_offsets)
-                c_atoms = get_atoms(target_u, target_base_resid, pattern, resid_offsets)
+                c_atoms = get_atoms(target_u, target_base_resid, pattern, resid_offsets, ref_resid=base_resid)
             except IndexError:
                 continue
             total_angles += 1
@@ -198,16 +211,16 @@ def transfer_torsions(template_path, target_path, residue_name, output_path,
             _rotate_group_around_axis(downstream, c_atoms[1].position, axis, delta)
             angles_set += 1
 
-    # Impropers
+    # Impropers — fixed template lookup (mirrors dihedral logic)
     for pattern, resid_offsets in improper_patterns:
+        # Get atoms from template region
+        t_atoms = get_atoms(template_u, base_resid, pattern, resid_offsets)
         max_offset = max(resid_offsets)
         for i in range(len(target_residues) - max_offset):
-            t_idx = i % n_template_windows
-            template_base_resid = template_residues[t_idx].resid
             target_base_resid = target_residues[i].resid
+            # Get atoms that match in the target structure
             try:
-                t_atoms = get_atoms(template_u, template_base_resid, pattern, resid_offsets)
-                c_atoms = get_atoms(target_u, target_base_resid, pattern, resid_offsets)
+                c_atoms = get_atoms(target_u, target_base_resid, pattern, resid_offsets, ref_resid=base_resid)
             except IndexError:
                 continue
             total_impropers += 1
@@ -242,13 +255,10 @@ def transfer_torsions(template_path, target_path, residue_name, output_path,
         t_atoms = get_atoms(template_u, base_resid, pattern, resid_offsets)
         max_offset = max(resid_offsets)
         for i in range(len(target_residues) - max_offset):
-            residue_offset = i - base_resid
-            t_idx = i % n_template_windows
             target_base_resid = target_residues[i].resid
             # Get atoms that match in the target structure
             try:
-                c_atoms = get_atoms(target_u, target_base_resid, pattern, resid_offsets)
-                print(c_atoms)
+                c_atoms = get_atoms(target_u, target_base_resid, pattern, resid_offsets, ref_resid=base_resid)
             except IndexError:
                 continue
             total_torsions += 1

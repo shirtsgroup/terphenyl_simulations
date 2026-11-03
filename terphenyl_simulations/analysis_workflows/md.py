@@ -179,23 +179,39 @@ def minimize_foldamer(job):
 @FlowProject.operation(directives={"fork": True})
 @cd_to_job_dir
 def set_helix_torsions(job):
-    # Load universes
-    helix_u = md.Universe(job.doc["helix_structure"], job.doc["helix_structure"], context='default', to_guess=['dihedrals'])
-    em_u = md.Universe(job.doc["foldamer_gro"], job.doc["foldamer_gro"], context='default', to_guess=['dihedrals'])
+    # Load template universe with full guessed topology (mirrors standalone script)
+    helix_u = md.Universe(
+        job.doc["helix_structure"], job.doc["helix_structure"],
+        context='default', to_guess=['bonds', 'angles', 'dihedrals', 'impropers']
+    )
 
     # Get residue name
     resname = job.doc["build_parameters"]["residue_name"]
+
+    # Allow build parameters to override transfer behaviour; fall back to standalone defaults
+    helix_opts = job.doc["build_parameters"].get("helix_transfer", {})
+    template_residue_index = helix_opts.get("template_residue_index", 2)
+    window_size = helix_opts.get("window_size", 2)
+    verbose = helix_opts.get("verbose", False)
+    fit_angles = helix_opts.get("fit_angles", False)
+    fit_impropers = helix_opts.get("fit_impropers", False)
+    heavy_only = helix_opts.get("heavy_only", False)
 
     # Use InternalCoordinateEditor to set torsions from template
     ice = InternalCoordinateEditor(
         job.doc["foldamer_gro"], job.doc["foldamer_gro"]
     )
 
-    # Set torsions from helix template (using residue index 2 which corresponds to resid 3)
+    # Set torsions from helix template using windowed pattern transfer
     success = ice.set_torsions_from_template(
         template_universe=helix_u,
         residue_name=resname,
-        template_residue_index=2  # This corresponds to resid 3 (0-indexed)
+        template_residue_index=template_residue_index,
+        window_size=window_size,
+        verbose=verbose,
+        fit_angles=fit_angles,
+        fit_impropers=fit_impropers,
+        heavy_only=heavy_only,
     )
 
     if not success:
@@ -218,8 +234,6 @@ def set_helix_torsions(job):
     )
 
     job.doc["foldamer_gro"] = centered_name
-    job.doc["foldamer_pdb"] = helix_gro_name.replace(".gro", ".pdb")
-
     
 @FlowProject.pre.after(set_helix_torsions)
 @FlowProject.post(
