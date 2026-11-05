@@ -2,29 +2,44 @@ name: terphenyl
 channels:
   - conda-forge
   - omnia
+  - openeye
 dependencies:
   - python
-  - pip
+  - ca-certificates
+  - openssl
+  - ambertools
+  - openeye-toolkits
+  - psi4
+  - dftd3-python
+  - xtb-python
+  - mbuild
+  - tqdm
   - pytest
   - rdkit
   - pyyaml
-  - mbuild=0.14.2
   - mdtraj
   - numpy
   - matplotlib
   - scikit-learn
-  - tqdm
   - mdanalysis
   - signac
   - signac-flow
   - panedr
   - pandas
   - seaborn
-  - openff-toolkit
-  - mbuild ==0.14.2
-  - rdkit
-  - ca-certificates
-  - certifi
-  - openssl
+  - gromacs
   - openbabel
-prefix: /home/lenny/miniforge3/envs/terphenyl
+  - certifi
+  - openmm
+  - openff-units
+  - cachetools
+  - xmltodict
+  - openff-toolkit
+  - openff-bespokefit=0.4.0
+  - openff-qcsubmit=0.50
+  - qcelemental=0.28
+  - openff-interchange
+  - qcportal
+  - natsort
+  - mbuild
+# prefix: /home/lenny/miniforge3/envs/ts_env

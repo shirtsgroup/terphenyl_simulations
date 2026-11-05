@@ -1,0 +1,10 @@
+structure_file : mom_tetramer
+foldamer_smile : COc3ccc(c1cc(C=O)ccc1)c(c2cc([C@@H](C)N)ccc2)c3
+upper_connect : 31
+lower_connect : 41
+residue_name : MOP
+cap_smiles : {upper : CO, lower : CC(C)(C)OC=O}
+foldamer_length : 4
+system : {solvent : TCM, solvent_smile_str : ClC(Cl)Cl, n_solvent : 634, box_size : 55.4}
+ff_method : bespoke
+force_fields : ["openff-2.0.0", "openff-1.0.0"]

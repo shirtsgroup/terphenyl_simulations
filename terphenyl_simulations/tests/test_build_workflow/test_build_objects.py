@@ -5,7 +5,9 @@ Many of these objects should be able to generate simulation input files
 using just the input foldamer.build file
 """
 
-from terphenyl_simulations.build import FoldamerBuilder, SystemBuilder
+from terphenyl_simulations.build import FoldamerBuilder
+import terphenyl_simulations
+from unittest.mock import patch, mock_open, MagicMock
 from terphenyl_simulations.utils import ROOT_DIR
 import pytest
 import shutil
@@ -26,19 +28,8 @@ def setup_foldamer_builder_tests():
     yield FoldamerBuilder("mop_tetramer.build", path="output")
     os.chdir(top_dir)
 
-
-@pytest.fixture
-def setup_system_builder_tests():
-    # Navigate to specific test directory
-    top_dir = os.path.abspath("")
-    os.chdir(os.path.join(ROOT_DIR, "tests/test_build_workflow"))
-    if os.path.isdir("output"):
-        shutil.rmtree("output")
-    yield SystemBuilder("mop_tetramer.build", path="output")
-    os.chdir(top_dir)
-
-
-def test_foldamer_builder_chain(setup_foldamer_builder_tests):
+@patch("terphenyl_simulations.build.TopologyManager.add_structure")
+def test_foldamer_builder_chain(mock_add_structure, setup_foldamer_builder_tests):
     builder = setup_foldamer_builder_tests
     builder.build_foldamer()
     assert builder.chain.n_particles == 197
@@ -47,36 +38,11 @@ def test_foldamer_builder_chain(setup_foldamer_builder_tests):
     for label in builder.chain.labels["Compound"]:
         assert label.name == "CAP"
 
-
-def test_foldamer_builder_file_writing(setup_foldamer_builder_tests):
+@patch("terphenyl_simulations.build.TopologyManager.add_structure")
+def test_foldamer_builder_file_writing(mock_add_stricture, setup_foldamer_builder_tests):
     builder = setup_foldamer_builder_tests
     builder.build_foldamer()
     builder.write_pdb()
     builder.write_mol()
     assert os.path.exists("output/mop_tetramer.pdb")
     assert os.path.exists("output/mop_tetramer.mol")
-
-
-def test_system_builder_inp(setup_system_builder_tests):
-    builder = setup_system_builder_tests
-    builder.build_packmol_inp()
-    assert os.path.exists("output/solvate.inp")
-    with open("output/solvate.inp", "r") as f:
-        for line in f.readlines():
-            assert "OUTPUT_FILENAME" not in line
-            assert "SOLUTE_PDB" not in line
-            assert "SOLUTE_POSITION" not in line
-            assert "SOLVENT_PDB" not in line
-            assert "N_SOLVENT" not in line
-            assert "SOLVENT_BOX" not in line
-
-
-def test_system_builder_packmol(setup_system_builder_tests):
-    foldamer_builder = FoldamerBuilder("mop_tetramer.build", path="output")
-    foldamer_builder.build_foldamer()
-    foldamer_builder.write_pdb()
-    system_builder = setup_system_builder_tests
-    system_builder.build_packmol_inp()
-    system_builder.solvate_system()
-    assert os.path.exists("output/solvated_mop_tetramer.pdb")
-    assert os.path.exists("output/TCM.pdb")

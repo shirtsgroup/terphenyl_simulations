@@ -123,6 +123,7 @@ def plot_torsions_distributions(
     figsize=None,
     cbar_params=None,
     entropy=False,
+    cmap = "plasma"
 ):
     """
     Function for plotting 1D torsion distributions using MDTraj objects
@@ -160,7 +161,7 @@ def plot_torsions_distributions(
 
     # Setup figure
     plt.figure(dpi=300)
-    sns.set_palette("plasma", n_colors=len(traj_obj_list))
+    sns.set_palette(cmap, n_colors=len(traj_obj_list))
 
     # Bins and centers for distributuion
     bin_edges = np.linspace(-180, 180, n_bins + 1)
@@ -171,22 +172,12 @@ def plot_torsions_distributions(
     )
 
     # Get torsions, bin and plot
-    plt.figure(figsize=figsize)
+    fig = plt.figure(figsize=figsize)
 
     for i, traj_obj in enumerate(traj_obj_list):
-        if type(torsion_atom_names[0]) is str:
-            torsions = get_torsions(
-                traj_obj, [torsion_atom_names], mirror_sym=mirror_sym
-            )
-        if type(torsion_atom_names[0]) is list:
-            if type(torsion_atom_names[0][0]) is str:
-                torsions = get_torsions(
-                    traj_obj, torsion_atom_names, mirror_sym=mirror_sym
-                )
-            if type(torsion_atom_names[0][0]) is list:
-                torsions = get_torsions(
-                    traj_obj, torsion_atom_names[i], mirror_sym=mirror_sym
-                )
+        torsions = get_torsions(
+            traj_obj, torsion_atom_names, mirror_sym=mirror_sym
+        )
         if offsets is not None:
             torsions += offsets[i]
         hist, bin_edges_out = np.histogram(
@@ -197,10 +188,10 @@ def plot_torsions_distributions(
         plt.legend(legend)
 
     if cbar_params is not None:
-        colormap = plt.cm.get_cmap("plasma")
+        colormap = plt.cm.get_cmap(cmap)
         sm = plt.cm.ScalarMappable(cmap=colormap)
         sm.set_clim(vmin=cbar_params[0], vmax=cbar_params[1])
-        cbar = plt.colorbar(sm)
+        cbar = fig.colorbar(sm, ax = fig.axes[0])
         cbar.set_label(cbar_params[2])
     plt.xlabel(x_axis)
     plt.ylabel("Density")

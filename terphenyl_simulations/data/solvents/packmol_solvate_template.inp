@@ -13,6 +13,8 @@ nloop0 10000
 
 filetype pdb
 
+connect yes
+
 # The name of the output file
 
 output OUTPUT_FILENAME

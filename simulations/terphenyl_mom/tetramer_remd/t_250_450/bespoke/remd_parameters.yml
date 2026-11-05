@@ -1,0 +1,14 @@
+simulation_id : mom_tetramer_bespoke_hmr
+n_replicas : 64
+t_range : [250, 450]
+mdps : 
+       - berendsen_nvt.mdp
+       - berendsen_npt.mdp
+       - production_npt.mdp
+sim_id : sim
+build_foldamer : mom_tetramer.build
+param_method : bespoke
+n_simulations : 1
+gromacs_exe : gmx
+system : blackbird
+

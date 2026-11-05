@@ -19,9 +19,12 @@ import time
 import shutil
 import numpy as np
 import sys
+import yaml
 import shutil
 import signac
+from glob import glob
 from .utils import replace_all_pattern
+from .gromacs_wrapper import GromacsWrapper
 from .remd_utils import RMSD_demux_trajectories
 
 
@@ -567,3 +570,73 @@ def RMSD_demux():
         selection=args.selection,
         gmx_tpr=args.gmx_tpr,
     )
+
+
+def merge_REMD_trajectories():
+
+    def parse_args():
+        parser = argparse.ArgumentParser(
+            description="A script to add files to signac projects",
+        )
+
+        parser.add_argument(
+            "-w", "--workspace",
+            help = "signac workspace directory of trajectories that need to be merged",
+            required = True
+        )
+
+        return parser.parse_args()
+
+    args = parse_args()
+    workspace_path = args.workspace
+    # Basically going to initialize a new signac entry and
+    
+    signac_sp_dirs = os.listdir(workspace_path)
+    remd_parameter_file = os.path.join(workspace_path, signac_sp_dirs[0], "remd_parameters.yml")
+
+
+    with open(remd_parameter_file, "r") as f:
+        sim_parameters_sp = yaml.safe_load(f)
+
+    
+
+    sim_parameters_sp =dict(sim_parameters_sp)
+    del sim_parameters_sp["n_simulations"]
+    sim_parameters_sp["replica"] = "MERGED"
+
+    project = signac.get_project()
+    job = project.open_job(sim_parameters_sp)
+    job.doc["init"] = True
+
+    # Expensive
+    print("Initial file copying...")
+    shutil.copytree(os.path.join(workspace_path, signac_sp_dirs[0]),  job.path, ignore=shutil.ignore_patterns("signac_statepoint.json"), dirs_exist_ok=True)
+
+    # Iterate through other files appending trajectories to existing file
+    gmx_object = GromacsWrapper()
+
+    xtc_files = glob(os.path.join(job.path, sim_parameters_sp["sim_id"] + "*", "*.xtc"))
+
+    for xtc_file in xtc_files:
+        concat_xtc_files = []
+        for signac_id in signac_sp_dirs[1:]:
+            concat_xtc_files.append(xtc_file.replace(job.id, signac_id))
+
+        concat_xtc_files = " ".join(concat_xtc_files) 
+        gmx_object.trjcat(
+                f = concat_xtc_files,
+                o = xtc_file,
+        )
+
+
+    
+
+    
+    
+    
+
+
+
+    
+
+    
